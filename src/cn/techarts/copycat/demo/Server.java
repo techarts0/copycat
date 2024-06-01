@@ -11,6 +11,7 @@ public class Server {
         var config = new Context<NumberFrame>();
         config.setPort(10086);
         config.setMaxThreads(0);
+        config.enableVirtualThread();
         config.setDecoder(new LengthFieldFrameDecoder<NumberFrame>(2, 1), NumberFrame.class);
         config.setHandler(new TestDataHandler(), true);
     	var startup = new Startup<>(config);

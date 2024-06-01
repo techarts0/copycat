@@ -9,7 +9,6 @@ import cn.techarts.copycat.core.Handler;
  */
 public class Context<T extends Frame> {
 	private int port;
-	
 	private int maxThreads = 0;
 	private int decoderCacheSize = 1024;
 	private boolean directBuffer = false;
@@ -23,7 +22,7 @@ public class Context<T extends Frame> {
 	private boolean keepAlive = false;
 	private boolean reuseAddr = false;
 	
-	
+	private boolean virtualThreadEnabled = false;	
 	
 	public Context<T> checkRequiredProperties() {
 		if(handler == null) {
@@ -70,7 +69,7 @@ public class Context<T extends Frame> {
 	}
 	
 	public Handler getHandler() {
-		if(this.isSingletonHanlder()) return getHandler();
+		if(this.isSingletonHanlder()) return this.handler;
 		try {
 			return handler.getClass().getConstructor().newInstance();
 		}catch(Exception e) {
@@ -140,5 +139,16 @@ public class Context<T extends Frame> {
 
 	public void setSingletonHanlder(boolean singletonHanlder) {
 		this.singletonHanlder = singletonHanlder;
+	}
+	
+	/**
+	 * Please ensure the version of JDK you installed is greater than 19(21 and later).
+	 */
+	public void enableVirtualThread() {
+		this.virtualThreadEnabled = true;
+	}
+	
+	public boolean isVirtualThreadEnabled() {
+		return this.virtualThreadEnabled;
 	}
 }

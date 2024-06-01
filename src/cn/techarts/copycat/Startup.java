@@ -15,17 +15,21 @@ import cn.techarts.copycat.core.Session;
  
 public class Startup<T extends Frame> {
  
-    private Context<T> config = null;
-	private ExecutorService executorService;
-    private ExecutorService workerkExecutorService;
+    private Context<T> context = null;
+    private ExecutorService executorService;
+    private ExecutorService workerExecutorService;
     private AsynchronousChannelGroup channelGroup;
     private AsynchronousServerSocketChannel serverSocketChannel;
  
     public Startup(Context<T> context) throws CopycatException{
     	try {
-        	this.config = context.checkRequiredProperties();
+        	this.context = context.checkRequiredProperties();
             executorService = Executors.newCachedThreadPool();
-            workerkExecutorService = Executors.newFixedThreadPool(context.getMaxThreads());
+            if(context.isVirtualThreadEnabled()) {
+            	workerExecutorService = Executors.newVirtualThreadPerTaskExecutor();
+            }else {
+            	workerExecutorService = Executors.newFixedThreadPool(context.getMaxThreads());
+            }
             channelGroup = AsynchronousChannelGroup.withCachedThreadPool(executorService, 1);
             this.setServerSocketOptions();
             serverSocketChannel = AsynchronousServerSocketChannel.open(channelGroup);
@@ -39,8 +43,12 @@ public class Startup<T extends Frame> {
     class ConnectionAcceptor implements CompletionHandler<AsynchronousSocketChannel, AsynchronousServerSocketChannel>{
 		@Override
 		public void completed(AsynchronousSocketChannel client, AsynchronousServerSocketChannel server) {
-			var session = new Session<T>(client, config);
-			workerkExecutorService.execute(session);
+			var session = new Session<T>(client, context);
+			if(context.isVirtualThreadEnabled()) {
+				workerExecutorService.submit(session);
+			}else {
+				workerExecutorService.execute(session);
+			}
 			server.accept(serverSocketChannel, this);
 		}
 
@@ -56,24 +64,24 @@ public class Startup<T extends Frame> {
 	    	if(channelGroup.isShutdown()) return;
 	    	this.channelGroup.shutdown();
 	    	this.executorService.shutdown();
-	    	this.workerkExecutorService.shutdown();
+	    	this.workerExecutorService.shutdown();
     	}catch(Exception e) {
     		throw new CopycatException(e, "Failed to release resource while shutdown.");
     	}
     }
     
     private void setServerSocketOptions() throws IOException {
-    	if(config.getSendBuffer() > 0) { //default: 16384(512K) bytes
-    		serverSocketChannel.setOption(StandardSocketOptions.SO_SNDBUF, config.getSendBuffer());
+    	if(context.getSendBuffer() > 0) { //default: 16384(512K) bytes
+    		serverSocketChannel.setOption(StandardSocketOptions.SO_SNDBUF, context.getSendBuffer());
     	}
-    	if(config.getRedvBuffer() > 0) { //default: 1048576(1M) bytes
-    		serverSocketChannel.setOption(StandardSocketOptions.SO_RCVBUF, config.getRedvBuffer());
+    	if(context.getRedvBuffer() > 0) { //default: 1048576(1M) bytes
+    		serverSocketChannel.setOption(StandardSocketOptions.SO_RCVBUF, context.getRedvBuffer());
     	}
-    	if(config.isReuseAddr()) { //default: disabled
-    		serverSocketChannel.setOption(StandardSocketOptions.SO_REUSEADDR, config.isReuseAddr());
+    	if(context.isReuseAddr()) { //default: disabled
+    		serverSocketChannel.setOption(StandardSocketOptions.SO_REUSEADDR, context.isReuseAddr());
     	}
-    	if(config.isKeepAlive()) { //default: disabled
-    		serverSocketChannel.setOption(StandardSocketOptions.SO_KEEPALIVE, config.isKeepAlive());
+    	if(context.isKeepAlive()) { //default: disabled
+    		serverSocketChannel.setOption(StandardSocketOptions.SO_KEEPALIVE, context.isKeepAlive());
     	}
     }
 }
