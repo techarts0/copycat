@@ -5,7 +5,7 @@ import java.nio.channels.AsynchronousSocketChannel;
 /**
  * Process your business in implementations of Handler interface.<br>
  * The implementation MUST have a default constructor without argument.<br>
- * If the handler works on singleton mode, you MUST guarantee the thread-safe.
+ * If the handler works on singleton mode, you MUST guarantee the thread-safety.
  * */
 public interface Handler {
 	/**
