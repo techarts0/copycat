@@ -47,30 +47,37 @@ public class Session<T extends Frame> implements Runnable{
 		}
 	}
 	
-	private void onDataArriving() {
+	private void prepare2ReceiveDataFromPeerAsync() {
 		var buffer = allocateMemoryOnHeapOrPhysical();
 		connection.read(buffer, null, new CompletionHandler<Integer, Void>() {
             @Override
             public void completed(Integer length, Void v) {
-            	decoderCache.append(buffer);
-            	var frames = decoder.decode(decoderCache);
-            	if(frames != null && frames.length > 0) {
-            		for(var f : frames) {
-            			handler.onFrameReceived(f, connection);
-            		}
+            	if(length == -1) {
+            		handler.onDisconnected(connection);
+            		Thread.currentThread().interrupt();
+            	}else {
+            		decoderCache.append(buffer);
+                	var frames = decoder.decode(decoderCache);
+                	if(frames != null && frames.length > 0) {
+                		for(var f : frames) {
+                			handler.onFrameReceived(f, connection);
+                		}
+                	}
+                	connection.read(buffer, null, this);
             	}
-            	connection.read(buffer, null, this);
             }
  
             @Override
             public void failed(Throwable e, Void v) {
-                handler.onExceptionCaused(e, connection);
+                handler.onDisconnected(connection);
+            	handler.onExceptionCaught(e, connection);
+                Thread.currentThread().interrupt();
             }
         });
     }
 
 	@Override
 	public void run() {
-		this.onDataArriving();
+		this.prepare2ReceiveDataFromPeerAsync();
 	}
 }

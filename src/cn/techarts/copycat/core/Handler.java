@@ -13,13 +13,16 @@ public interface Handler {
 	 */
 	public void onConnected(AsynchronousSocketChannel socket);
 	
+	public void onDisconnected(AsynchronousSocketChannel socket);
+	
 	/**
 	 * Do your business here
 	 */
-	public void onExceptionCaused(Throwable e, AsynchronousSocketChannel socket);
+	public void onExceptionCaught(Throwable e, AsynchronousSocketChannel socket);
 	
 	/**
 	 * If something goes wrong...
 	 */
 	public<T extends Frame> void onFrameReceived(T frame, AsynchronousSocketChannel socket);
+	
 }

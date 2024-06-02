@@ -19,7 +19,13 @@ public class TestDataHandler implements Handler {
 	}
 
 	@Override
-	public void onExceptionCaused(Throwable e, AsynchronousSocketChannel socket) {
+	public void onExceptionCaught(Throwable e, AsynchronousSocketChannel socket) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onDisconnected(AsynchronousSocketChannel socket) {
 		// TODO Auto-generated method stub
 		
 	}
