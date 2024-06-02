@@ -1,6 +1,7 @@
 package cn.techarts.copycat;
 
 import java.lang.reflect.Array;
+import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 
@@ -50,7 +51,7 @@ public class Utility {
     		var buf = ByteBuffer.wrap(data);
         	return socket.write(buf).get();
         } catch (Exception e) {
-            throw new CopycatException(e, "Failed to send data.");
+        	throw new CopycatException(e, "Failed to send data.");
         }
 	}
 }

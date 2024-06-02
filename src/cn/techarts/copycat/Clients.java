@@ -3,7 +3,7 @@ package cn.techarts.copycat;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.AsynchronousSocketChannel;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -17,7 +17,7 @@ public class Clients {
 	
 	public static void init(int capacity) {
 		if(clients != null) return;
-		clients = new HashMap<>(capacity <= 0 ? 128 : capacity);
+		clients = new LinkedHashMap<>(capacity <= 0 ? 128 : capacity);
 	}
 	
 	private static Map<String, AsynchronousSocketChannel> getClients() {

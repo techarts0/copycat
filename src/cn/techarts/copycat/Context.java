@@ -12,7 +12,7 @@ public class Context<T extends Frame> {
 	private int maxThreads = 0;
 	private int decoderCacheSize = 1024;
 	private boolean directBuffer = false;
-	private boolean singletonHanlder = true;
+	private boolean singletonHandler = true;
 	
 	private Handler handler;
 	private Decoder<T> decoder;
@@ -78,7 +78,7 @@ public class Context<T extends Frame> {
 	}
 	public void setHandler(Handler handler, boolean singleton) {
 		this.handler = handler;
-		this.singletonHanlder = singleton;
+		this.singletonHandler = singleton;
 	}
 	public int getDecoderCacheSize() {
 		return decoderCacheSize;
@@ -134,11 +134,11 @@ public class Context<T extends Frame> {
 	}
 
 	public boolean isSingletonHanlder() {
-		return singletonHanlder;
+		return singletonHandler;
 	}
 
 	public void setSingletonHanlder(boolean singletonHanlder) {
-		this.singletonHanlder = singletonHanlder;
+		this.singletonHandler = singletonHanlder;
 	}
 	
 	/**
