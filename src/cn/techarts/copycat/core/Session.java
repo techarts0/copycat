@@ -8,18 +8,21 @@ import java.nio.channels.AsynchronousSocketChannel;
 
 import cn.techarts.copycat.Context;
 import cn.techarts.copycat.CopycatException;
+import cn.techarts.copycat.Monitor;
 
 /**
  * A connection wrapper
  */
 public class Session<T extends Frame> implements Runnable{
+	private Monitor monitor = null;
 	private Handler handler = null;
 	private Decoder<T> decoder = null;
 	private ByteBuf decoderCache = null;
 	private boolean directBuffer = false;
 	private AsynchronousSocketChannel connection;
 	
-	public Session(AsynchronousSocketChannel connection, Context<T> context) {
+	public Session(AsynchronousSocketChannel connection, Context<T> context, Monitor monitor) {
+		this.monitor = monitor;
 		this.connection = connection;
 		this.handler = context.getHandler();
 		this.decoder = context.getDecoder();
@@ -32,7 +35,8 @@ public class Session<T extends Frame> implements Runnable{
 		}catch(IOException e) {
 			throw new CopycatException(e, "Failed to set socket keepalive.");
 		}
-		this.handler.onConnected(connection); //Just calls once during a session
+		this.monitor.activeConnection(false);		//Active and in second connections
+		this.handler.onConnected(connection); 	//Just calls once during a session
 	}
 	
 	public AsynchronousSocketChannel getConnection() {
@@ -53,11 +57,13 @@ public class Session<T extends Frame> implements Runnable{
             @Override
             public void completed(Integer length, Void v) {
             	if(length == -1) {
+            		monitor.activeConnection(true);
             		handler.onDisconnected(connection);
             		Thread.currentThread().interrupt();
             	}else {
             		decoderCache.append(buffer);
-                	var frames = decoder.decode(decoderCache);
+            		monitor.readBytesInSecond(length);
+            		var frames = decoder.decode(decoderCache);
                 	if(frames != null && frames.length > 0) {
                 		for(var f : frames) {
                 			handler.onFrameReceived(f, connection);
@@ -69,6 +75,7 @@ public class Session<T extends Frame> implements Runnable{
  
             @Override
             public void failed(Throwable e, Void v) {
+            	monitor.activeConnection(true);
                 handler.onDisconnected(connection);
             	handler.onExceptionCaught(e, connection);
                 Thread.currentThread().interrupt();

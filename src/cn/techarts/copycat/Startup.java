@@ -14,16 +14,17 @@ import cn.techarts.copycat.core.Frame;
 import cn.techarts.copycat.core.Session;
  
 public class Startup<T extends Frame> {
- 
-    private Context<T> context = null;
-    private ExecutorService executorService;
+	private Monitor monitor = null;
+	private Context<T> context = null;
+	private ExecutorService executorService;
     private ExecutorService workerExecutorService;
     private AsynchronousChannelGroup channelGroup;
     private AsynchronousServerSocketChannel serverSocketChannel;
  
     public Startup(Context<T> context) throws CopycatException{
     	try {
-        	this.context = context.checkRequiredProperties();
+    		this.monitor = new Monitor();
+    		this.context = context.checkRequiredProperties();
             executorService = Executors.newCachedThreadPool();
             if(context.isVirtualThreadEnabled()) {
             	workerExecutorService = Executors.newVirtualThreadPerTaskExecutor();
@@ -43,7 +44,7 @@ public class Startup<T extends Frame> {
     class ConnectionAcceptor implements CompletionHandler<AsynchronousSocketChannel, AsynchronousServerSocketChannel>{
 		@Override
 		public void completed(AsynchronousSocketChannel client, AsynchronousServerSocketChannel server) {
-			var session = new Session<T>(client, context);
+			var session = new Session<T>(client, context, monitor);
 			if(context.isVirtualThreadEnabled()) {
 				workerExecutorService.submit(session);
 			}else {
@@ -83,5 +84,9 @@ public class Startup<T extends Frame> {
     	if(context.isKeepAlive()) { //default: disabled
     		serverSocketChannel.setOption(StandardSocketOptions.SO_KEEPALIVE, context.isKeepAlive());
     	}
+    }
+    
+    public Monitor getMonitorObject() {
+    	return this.monitor;
     }
 }

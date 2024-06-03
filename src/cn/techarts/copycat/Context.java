@@ -12,7 +12,7 @@ public class Context<T extends Frame> {
 	private int maxThreads = 0;
 	private int decoderCacheSize = 1024;
 	private boolean directBuffer = false;
-	private boolean singletonHandler = true;
+	private boolean singletonHandler = false;
 	
 	private Handler handler;
 	private Decoder<T> decoder;
@@ -21,7 +21,7 @@ public class Context<T extends Frame> {
 	private int recvBuffer = 0;
 	private boolean keepAlive = false;
 	private boolean reuseAddr = false;
-	
+
 	private boolean virtualThreadEnabled = false;	
 	
 	public Context<T> checkRequiredProperties() {
