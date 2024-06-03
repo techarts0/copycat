@@ -114,7 +114,7 @@ public final class ByteBuf {
 	}
 	
 	private void arrangeByteLayout2ReleaseSpace() {
-		var free = data.length - current;
+		var free = data.length - position;
 		if((free << 1) < this.current) {
 			int len = position - current;
 			System.arraycopy(data, current, data, 0, len);
@@ -129,7 +129,7 @@ public final class ByteBuf {
 	
 	//Extends the array capacity
 	private void resize() {
-		byte[] swap = new byte[data.length << 1];
+		var swap = new byte[data.length << 1];
 		System.arraycopy(data, 0, swap, 0, data.length);
 		this.data = swap;
 	}
