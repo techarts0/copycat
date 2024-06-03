@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 import cn.techarts.copycat.Context;
 import cn.techarts.copycat.Startup;
-import cn.techarts.copycat.decoder.LengthFieldFrameDecoder;
+import cn.techarts.copycat.codec.LengthFieldFrameDecoder;
 
 public class Server {
 	public static void main(String[] args){

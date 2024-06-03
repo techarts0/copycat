@@ -1,4 +1,4 @@
-package cn.techarts.copycat.decoder;
+package cn.techarts.copycat.codec;
 
 import cn.techarts.copycat.core.ByteBuf;
 import cn.techarts.copycat.core.Decoder;
