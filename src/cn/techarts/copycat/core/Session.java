@@ -1,7 +1,6 @@
 package cn.techarts.copycat.core;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.net.StandardSocketOptions;
 import java.nio.channels.CompletionHandler;
 import java.nio.channels.AsynchronousSocketChannel;
@@ -9,6 +8,7 @@ import java.nio.channels.AsynchronousSocketChannel;
 import cn.techarts.copycat.Context;
 import cn.techarts.copycat.CopycatException;
 import cn.techarts.copycat.Monitor;
+import cn.techarts.copycat.Utility;
 
 /**
  * A connection wrapper
@@ -35,7 +35,7 @@ public class Session<T extends Frame> implements Runnable{
 		}catch(IOException e) {
 			throw new CopycatException(e, "Failed to set socket keepalive.");
 		}
-		this.monitor.activeConnection(false);		//Active and in second connections
+		this.monitor.activeConnection(false);	//Active and in second connections
 		this.handler.onConnected(connection); 	//Just calls once during a session
 	}
 	
@@ -43,16 +43,8 @@ public class Session<T extends Frame> implements Runnable{
 		return this.connection;
 	}
 	
-	private ByteBuffer allocateMemoryOnHeapOrPhysical() {
-		if(directBuffer) {
-			return ByteBuffer.allocate(1024);
-		}else {
-			return ByteBuffer.allocateDirect(1024);
-		}
-	}
-	
 	private void prepare2ReceiveDataFromPeerAsync() {
-		var buffer = allocateMemoryOnHeapOrPhysical();
+		var buffer = Utility.allocateMemory(directBuffer);
 		connection.read(buffer, null, new CompletionHandler<Integer, Void>() {
             @Override
             public void completed(Integer length, Void v) {

@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * So, you should hold these connections in a global cache. Normally, the client IP address
  * is the KEY and the socket connection is the VALUE.
  */
-public class Clients {
+public class Registry {
 	private static Map<String, AsynchronousSocketChannel> clients;
 	
 	public static void init(int capacity) {

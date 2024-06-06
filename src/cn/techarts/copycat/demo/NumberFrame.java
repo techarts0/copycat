@@ -9,9 +9,15 @@ public class NumberFrame extends Frame {
 	}
 
 	@Override
-	public void parse(byte[] raw) {
+	protected void parse() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public byte[] serialize() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

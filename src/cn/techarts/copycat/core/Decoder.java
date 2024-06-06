@@ -16,7 +16,8 @@ public abstract class Decoder<T extends Frame> {
 		return this.frameClass;
 	}
 	
-	public void setFrameClass(Class<T> frameClass) {
+	public Decoder<T> setFrameClass(Class<T> frameClass) {
 		this.frameClass = frameClass;
+		return this;
 	}
 }

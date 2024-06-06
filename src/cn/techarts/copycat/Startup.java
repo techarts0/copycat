@@ -12,7 +12,11 @@ import java.util.concurrent.Executors;
 
 import cn.techarts.copycat.core.Frame;
 import cn.techarts.copycat.core.Session;
- 
+
+/**
+ * The server bootstrap class
+ * 
+ */
 public class Startup<T extends Frame> {
 	private Monitor monitor = null;
 	private Context<T> context = null;

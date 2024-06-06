@@ -4,16 +4,16 @@ import java.util.Scanner;
 
 import cn.techarts.copycat.Context;
 import cn.techarts.copycat.Startup;
-import cn.techarts.copycat.codec.LengthFieldFrameDecoder;
+import cn.techarts.copycat.decoder.LengthFieldFrameDecoder;
 
-public class Server {
+public class ServerDemo {
 	public static void main(String[] args){
         var config = new Context<NumberFrame>();
         config.setPort(10086);
         config.setMaxThreads(0);
         config.enableVirtualThread();
         config.setDecoder(new LengthFieldFrameDecoder<NumberFrame>(2, 1), NumberFrame.class);
-        config.setHandler(new TestDataHandler(), true);
+        config.setHandler(new ServerDataHandler(), true);
     	var startup = new Startup<>(config);
     	processCommandLineInstruction();
     	startup.releaseResourcesAndCleanup();

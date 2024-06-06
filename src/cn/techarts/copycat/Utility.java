@@ -4,6 +4,8 @@ import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 
+import cn.techarts.copycat.core.Frame;
+
 public class Utility {
 	
 	@SuppressWarnings("unchecked")
@@ -32,6 +34,13 @@ public class Utility {
 	            (bytes[0] & 0xFF) << 24;
 	}
 	
+//	public static int toInt2(byte[] bytes) {
+//		var len = bytes.length;
+//		if(len == 1) return bytes[0] & (byte)128;
+//		var b = (a & (byte)255);
+//	}
+	
+	
 	/**
 	 * big_endian
 	 */
@@ -43,6 +52,9 @@ public class Utility {
 		return (short)result;
 	}
 	
+	/**
+	 * SYNC
+	 */
 	public static int sendData(byte[] data, AsynchronousSocketChannel socket) {
 		if(data == null || data.length == 0) return 0;
 		if(socket == null || !socket.isOpen()) return -1;
@@ -52,5 +64,22 @@ public class Utility {
         } catch (Exception e) {
         	throw new CopycatException(e, "Failed to send data.");
         }
+	}
+	
+	/**
+	 * SYNC
+	 */
+	public static<T extends Frame>  int sendData(T data, AsynchronousSocketChannel socket) {
+		if(data == null) return 0;
+		return sendData(data.serialize(), socket);
+	}
+	
+	//On JVM heap or physical memory
+	public static ByteBuffer allocateMemory(boolean direct) {
+		if(direct) {
+			return ByteBuffer.allocate(1024);
+		}else {
+			return ByteBuffer.allocateDirect(1024);
+		}
 	}
 }

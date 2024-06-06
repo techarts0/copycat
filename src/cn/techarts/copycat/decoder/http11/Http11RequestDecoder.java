@@ -1,10 +1,10 @@
-package cn.techarts.copycat.codec.http2;
+package cn.techarts.copycat.decoder.http11;
 
 import cn.techarts.copycat.core.ByteBuf;
 import cn.techarts.copycat.core.Decoder;
 import cn.techarts.copycat.core.Frame;
 
-public class Http2RequestDecoder<T extends Frame> extends Decoder<T> {
+public class Http11RequestDecoder<T extends Frame> extends Decoder<T> {
 
 	@Override
 	public T[] decode(ByteBuf data) {

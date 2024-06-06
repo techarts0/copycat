@@ -1,4 +1,4 @@
-package cn.techarts.copycat.codec;
+package cn.techarts.copycat.decoder;
 
 import java.util.ArrayList;
 import java.util.List;

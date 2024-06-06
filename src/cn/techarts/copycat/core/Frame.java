@@ -2,6 +2,8 @@ package cn.techarts.copycat.core;
 
 import java.util.Arrays;
 
+import cn.techarts.copycat.CopycatException;
+
 /**
  * The protocol frame structure
  */
@@ -10,7 +12,10 @@ public abstract class Frame {
 	
 	public Frame(byte[] raw) {
 		this.rawdata = raw;
-		parse(this.rawdata);
+		if(raw == null || raw.length == 0) {
+			throw new CopycatException("Failed to contruct a null frame.");
+		}
+		this.parse();
 	}
 	
 	public int length() {
@@ -21,8 +26,9 @@ public abstract class Frame {
 	/**
 	 * You MUST implement the method to convert bytes to your protocol frame structure.
 	 */
-	public abstract void parse(byte[] raw);
+	protected abstract void parse();
 	
+	public abstract byte[] serialize();
 	
 	@Override
 	public String toString() {
