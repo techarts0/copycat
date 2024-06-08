@@ -38,6 +38,17 @@ public final class ByteBuf {
 	}
 	
 	/**
+	 * Move the current pointer to the specific position.<br>
+	 * IMPORTANT!!! It's very dangers to handle this pointer manually.
+	 */
+	public boolean current(int pos) {
+		if(pos < 0) return false;
+		if(pos >= position) return false;
+		this.current = pos;
+		return true;
+	}
+	
+	/**
 	 * The total length of the bytes array.
 	 */
 	public int capacity() {
@@ -86,6 +97,20 @@ public final class ByteBuf {
 	public byte[] consume(int length, int skip) {
 		var result = consume(length);
 		this.skip(skip);
+		return result;
+	}
+	
+	/**
+	 * Consumes the given bytes but actually return (length - backspace) bytes.<br>
+	 * but the current pointer does not move backwards(same to) {@link consume(length)}
+	 */ 
+	public byte[] consume2(int length, int backspace) {
+		int remaining = position - current;
+		if(remaining < length) return null; //Not enough
+		var result = new byte[length - 2];
+		System.arraycopy(data, current, result, 0, length - 2);
+		this.current += length;
+		arrangeByteLayout2ReleaseSpace();
 		return result;
 	}
 	

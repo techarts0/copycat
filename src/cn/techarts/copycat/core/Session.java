@@ -8,7 +8,7 @@ import java.nio.channels.AsynchronousSocketChannel;
 import cn.techarts.copycat.Context;
 import cn.techarts.copycat.CopycatException;
 import cn.techarts.copycat.Monitor;
-import cn.techarts.copycat.Utility;
+import cn.techarts.copycat.util.Utility;
 
 /**
  * A connection wrapper

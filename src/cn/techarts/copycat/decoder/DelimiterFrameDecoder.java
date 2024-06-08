@@ -3,10 +3,10 @@ package cn.techarts.copycat.decoder;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.techarts.copycat.Utility;
 import cn.techarts.copycat.core.ByteBuf;
 import cn.techarts.copycat.core.Decoder;
 import cn.techarts.copycat.core.Frame;
+import cn.techarts.copycat.util.Utility;
 
 public class DelimiterFrameDecoder<T extends Frame> extends Decoder<T> {
 	private byte[] delimiters = null;

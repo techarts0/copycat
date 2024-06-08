@@ -5,7 +5,7 @@ import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
 
 import cn.techarts.copycat.CopycatException;
-import cn.techarts.copycat.Utility;
+import cn.techarts.copycat.util.Utility;
 
 /**
  * Process the life-cycle of a session in implementations of the interface.<br>

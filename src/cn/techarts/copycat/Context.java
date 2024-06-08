@@ -13,6 +13,7 @@ public class Context<T extends Frame> {
 	private int decoderCacheSize = 1024;
 	private boolean directBuffer = false;
 	private boolean singletonHandler = false;
+	private boolean singletonDecoder = false;
 	
 	private Handler handler;
 	private Decoder<T> decoder;
@@ -54,10 +55,21 @@ public class Context<T extends Frame> {
 		}
 	}
 	public Decoder<T> getDecoder() {
-		return decoder;
+		if(isSingletonDecoder()) {
+			return this.decoder;
+		}else {
+			return this.decoder.clone();
+		}
 	}
 	public<D extends Decoder<T>> void setDecoder(D decoder, Class<T> frameClass) {
 		this.decoder = decoder;
+		this.singletonDecoder = false;
+		this.decoder.setFrameClass(frameClass);
+	}
+	
+	public<D extends Decoder<T>> void setSingletonDecoder(D decoder, Class<T> frameClass) {
+		this.decoder = decoder;
+		this.singletonDecoder = true;
 		this.decoder.setFrameClass(frameClass);
 	}
 	
@@ -73,7 +85,7 @@ public class Context<T extends Frame> {
 		try {
 			return handler.getClass().getConstructor().newInstance();
 		}catch(Exception e) {
-			throw new CopycatException(e, "Failed to create a handler instance.");
+			throw new CopycatException(e, "Failed to create a handler.");
 		}
 	}
 	public void setHandler(Handler handler, boolean singleton) {
@@ -150,5 +162,13 @@ public class Context<T extends Frame> {
 	
 	public boolean isVirtualThreadEnabled() {
 		return this.virtualThreadEnabled;
+	}
+
+	public boolean isSingletonDecoder() {
+		return singletonDecoder;
+	}
+
+	public void setSingletonDecoder(boolean singletonDecoder) {
+		this.singletonDecoder = singletonDecoder;
 	}
 }

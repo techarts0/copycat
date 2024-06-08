@@ -3,10 +3,10 @@ package cn.techarts.copycat.decoder;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.techarts.copycat.Utility;
 import cn.techarts.copycat.core.ByteBuf;
 import cn.techarts.copycat.core.Decoder;
 import cn.techarts.copycat.core.Frame;
+import cn.techarts.copycat.util.Utility;
 
 public class LengthFieldFrameDecoder<T extends  Frame> extends Decoder<T> {
 	
@@ -29,7 +29,8 @@ public class LengthFieldFrameDecoder<T extends  Frame> extends Decoder<T> {
 			var fbs = data.consume(size);
 			result.add(Utility.frame(frameClass, fbs));
 		}
-		return result.isEmpty() ? null : result.toArray(Utility.array(frameClass, 0));
+		if(result.isEmpty()) return null;
+		return result.toArray(Utility.array(frameClass, 0));
 	}
 	
 	private static int len(byte[] bytes) {

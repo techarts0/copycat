@@ -1,9 +1,9 @@
 package cn.techarts.copycat.decoder;
 
-import cn.techarts.copycat.Utility;
 import cn.techarts.copycat.core.ByteBuf;
 import cn.techarts.copycat.core.Decoder;
 import cn.techarts.copycat.core.Frame;
+import cn.techarts.copycat.util.Utility;
 
 public class FixedLengthFrameDecoder<T extends Frame> extends Decoder<T>{
 	

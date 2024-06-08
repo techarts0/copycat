@@ -8,10 +8,14 @@ import cn.techarts.copycat.CopycatException;
  * The protocol frame structure
  */
 public abstract class Frame {
-	protected byte[] rawdata;
+	/**The raw byte data*/
+	protected byte[] data;
+	
+	//Default constructor
+	public Frame() {}
 	
 	public Frame(byte[] raw) {
-		this.rawdata = raw;
+		this.data = raw;
 		if(raw == null || raw.length == 0) {
 			throw new CopycatException("Failed to contruct a null frame.");
 		}
@@ -19,8 +23,8 @@ public abstract class Frame {
 	}
 	
 	public int length() {
-		if(rawdata == null) return 0;
-		return this.rawdata.length;
+		if(data == null) return 0;
+		return this.data.length;
 	}
 	
 	/**
@@ -32,6 +36,15 @@ public abstract class Frame {
 	
 	@Override
 	public String toString() {
-		return Arrays.toString(rawdata);
+		return Arrays.toString(data);
+	}
+	
+	protected byte[] slice(int pos, int length) {
+		if(length > data.length - pos) {
+			return null;
+		}
+		var result = new byte[length];
+		System.arraycopy(data, pos, result, 0, length);
+		return result;
 	}
 }
