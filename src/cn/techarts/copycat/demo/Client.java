@@ -3,7 +3,7 @@ package cn.techarts.copycat.demo;
 import cn.techarts.copycat.Visitor;
 import cn.techarts.copycat.decoder.LengthFieldFrameDecoder;
 
-public class ClientDemo {
+public class Client {
 	
     public static void main(String[] args) throws InterruptedException {
     	var client = new Visitor<NumberFrame>("localhost", 10086);

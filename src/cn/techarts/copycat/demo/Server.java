@@ -6,7 +6,7 @@ import cn.techarts.copycat.Context;
 import cn.techarts.copycat.Booster;
 import cn.techarts.copycat.decoder.LengthFieldFrameDecoder;
 
-public class ServerDemo {
+public class Server {
 	public static void main(String[] args){
         var config = new Context<NumberFrame>();
         config.setPort(10086);
