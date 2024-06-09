@@ -14,19 +14,19 @@ import java.nio.channels.AsynchronousSocketChannel;
 /**
  * A helper simplifies you to build a client application.
  * */
-public class Client<T extends Frame> {
+public class Visitor<T extends Frame> {
 	private Handler handler = null;
 	private Decoder<T> decoder = null;
 	private ByteBuf decoderCache = null;
 	private InetSocketAddress serverAddr = null;
 	private AsynchronousSocketChannel socketChannel;
     
-	public Client(String ip, int port) {
+	public Visitor(String ip, int port) {
 		this.decoderCache = new ByteBuf(1024);
         serverAddr = new InetSocketAddress(ip, port);
     }
 	
-	public Client<T> with(Decoder<T> decoder, Class<T> frameClass){
+	public Visitor<T> with(Decoder<T> decoder, Class<T> frameClass){
 		if(decoder == null) {
 			throw new CopycatException("The decoder is required.");
 		}
@@ -35,7 +35,7 @@ public class Client<T extends Frame> {
 		return this;
 	}
 	
-	public Client<T> with(Handler handler){
+	public Visitor<T> with(Handler handler){
 		if(decoder == null) {
 			throw new CopycatException("The handler is required.");
 		}
@@ -43,7 +43,7 @@ public class Client<T extends Frame> {
 		return this;
 	}
 	
-    public Client<T> start() {
+    public Visitor<T> start() {
     	if(decoder == null || handler == null) {
     		throw new CopycatException("The decoder and handler are required.");
     	}
