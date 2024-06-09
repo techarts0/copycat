@@ -17,7 +17,7 @@ import cn.techarts.copycat.core.Session;
  * The server bootstrap class
  * 
  */
-public class Startup<T extends Frame> {
+public class Booster<T extends Frame> {
 	private Monitor monitor = null;
 	private Context<T> context = null;
 	private ExecutorService executorService;
@@ -25,7 +25,7 @@ public class Startup<T extends Frame> {
     private AsynchronousChannelGroup channelGroup;
     private AsynchronousServerSocketChannel serverSocketChannel;
  
-    public Startup(Context<T> context) throws CopycatException{
+    public Booster(Context<T> context) throws CopycatException{
     	try {
     		this.monitor = new Monitor();
     		this.context = context.checkRequiredProperties();

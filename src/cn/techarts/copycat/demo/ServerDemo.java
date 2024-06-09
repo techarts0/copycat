@@ -3,7 +3,7 @@ package cn.techarts.copycat.demo;
 import java.util.Scanner;
 
 import cn.techarts.copycat.Context;
-import cn.techarts.copycat.Startup;
+import cn.techarts.copycat.Booster;
 import cn.techarts.copycat.decoder.LengthFieldFrameDecoder;
 
 public class ServerDemo {
@@ -14,7 +14,7 @@ public class ServerDemo {
         config.enableVirtualThread();
         config.setDecoder(new LengthFieldFrameDecoder<NumberFrame>(2, 1), NumberFrame.class);
         config.setHandler(new ServerDataHandler(), true);
-    	var startup = new Startup<>(config);
+    	var startup = new Booster<>(config);
     	processCommandLineInstruction();
     	startup.releaseResourcesAndCleanup();
 	}
