@@ -5,6 +5,8 @@ import cn.techarts.copycat.core.Frame;
 import cn.techarts.copycat.util.Utility;
 
 /**
+ * An implementation of
+ * <a href="https://modbus.org/docs/Modbus_Application_Protocol_V1_1b.pdf">MODBUS</a>
  * <B><I>Transparent Transmission:</I></B> Framework does not care the content bytes.<br>
  * Please translate or set the {@value payload} according to your business.
  */

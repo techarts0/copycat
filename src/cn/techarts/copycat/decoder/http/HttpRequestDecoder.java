@@ -1,4 +1,4 @@
-package cn.techarts.copycat.decoder.http1;
+package cn.techarts.copycat.decoder.http;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,9 +6,10 @@ import java.util.List;
 import cn.techarts.copycat.core.ByteBuf;
 import cn.techarts.copycat.core.Decoder;
 import cn.techarts.copycat.util.Utility;
-import cn.techarts.copycat.decoder.http.HttpHeader;
-import cn.techarts.copycat.decoder.http.HttpRequest;
 
+/**Implementation of HTTP 1.0 & 1.1
+ * Please refer to RFC 2616
+ */
 public class HttpRequestDecoder extends Decoder<HttpRequest> {
 	
 	@Override

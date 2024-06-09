@@ -5,9 +5,12 @@ import java.util.List;
 
 import cn.techarts.copycat.core.ByteBuf;
 import cn.techarts.copycat.core.Decoder;
-import cn.techarts.copycat.core.Frame;
 import cn.techarts.copycat.util.Utility;
 
+/**
+ * An implementation of <a href="https://docs.oasis-open.org/mqtt/mqtt/v5.0/mqtt-v5.0.html">MQTT/5.0</a>
+ * 
+ */
 public class MqttPacketDecoder extends Decoder<MqttPacket> {
 	
 	@Override
