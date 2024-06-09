@@ -11,9 +11,7 @@ import cn.techarts.copycat.util.Utility;
  * Please translate or set the {@value payload} according to your business.
  */
 public class ModbusFrame extends Frame {
-	private short tid; 			//Transaction ID
-	private byte slave; 		//Server Identifier
-	private short protocol = 0; //Default is MODBUS
+	private MBAP mbap;			//The TCP fixed header
 	private byte funcode; 		//Function code;
 	private byte error;			//Error Code
 	private byte[] payload;		//The real data
@@ -26,9 +24,11 @@ public class ModbusFrame extends Frame {
 		if(Utility.toShort(tmp) != 0) {
 			throw new CopycatException("Unsupported protocol.");
 		}
+		this.mbap = new MBAP();
 		tmp = new byte[] {data[0], data[1]};
-		this.setTid(Utility.toShort(tmp));
-		this.setSlave(this.data[6]);
+		mbap.setTid(Utility.toShort(tmp))
+			.setIdentifier(this.data[6]);
+		
 		this.setFuncode(this.data[7]);
 		if(isExceptionOccurred()) return;
 		if(this.funcode < 0x05) {
@@ -75,7 +75,7 @@ public class ModbusFrame extends Frame {
 		this.data[3] = 0x00;
 		this.data[4] = 0x00;
 		this.data[5] = 0x00;
-		this.data[6] = slave;
+		//this.data[6] = slave;
 		this.data[7] = funcode;
 		
 		
@@ -87,32 +87,6 @@ public class ModbusFrame extends Frame {
 		return null;
 	}
 	
-	
-
-	public short getTid() {
-		return tid;
-	}
-
-	public void setTid(short tid) {
-		this.tid = tid;
-	}
-
-	public byte getSlave() {
-		return slave;
-	}
-
-	public void setSlave(byte slave) {
-		this.slave = slave;
-	}
-
-	public short getProtocol() {
-		return protocol;
-	}
-
-	public void setProtocol(short protocol) {
-		this.protocol = protocol;
-	}
-
 	public byte getFuncode() {
 		return funcode;
 	}

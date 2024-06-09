@@ -59,6 +59,22 @@ public class Utility {
 		return (short)result;
 	}
 	
+	public static byte[] toBytes(int val) {
+		var result = new byte[4];
+		result[0] = (byte)(val >> 24);
+		result[1] = (byte)(val >> 16);
+		result[2] = (byte)(val >> 8);
+		result[3] = (byte)val;
+		return result;
+	}
+	
+	public static byte[] toBytes(short val) {
+		var result = new byte[2];
+		result[0] = (byte)(val >> 8);
+		result[1] = (byte)val;
+		return result;
+	}
+	
 	/**
 	 * SYNC
 	 */
