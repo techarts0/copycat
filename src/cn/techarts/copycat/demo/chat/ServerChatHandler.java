@@ -10,7 +10,7 @@ public class ServerChatHandler implements Handler {
 
 	@Override
 	public void onConnected(AsynchronousSocketChannel socket) {
-		System.out.println("An incoming from " + socket.hashCode());
+		System.out.println("A user goes online.");
 	}
 
 	@Override
@@ -33,7 +33,7 @@ public class ServerChatHandler implements Handler {
 
 	@Override
 	public void onExceptionCaught(Throwable e, AsynchronousSocketChannel socket) {
-		// TODO Auto-generated method stub
+		Registry.remove(socket);
 		
 	}
 

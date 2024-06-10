@@ -21,10 +21,10 @@ public class ChatClient {
     		System.out.println("-------Login--------");
     		System.out.println("Your id:");
     		myId = Integer.parseInt(scanner.nextLine());
-    		System.out.println("Peer id:");
+    		System.out.println("Friend id:");
     		peerId = Integer.parseInt(scanner.nextLine());
     		if(myId <= 0 || peerId <= 0 || myId == peerId) {
-    			System.out.print("Illegal user id(s), bye!");
+    			System.out.print("Illegal user(s) id, bye!");
     		}else {
     			client.send(new ChatFrame(myId, 0, null).serialize());
     			while(true) {
