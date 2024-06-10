@@ -28,6 +28,13 @@ public abstract class Frame {
 	}
 	
 	/**
+	 * @return The raw data received from peer.
+	 */
+	public byte[] getData() {
+		return this.data;
+	}
+	
+	/**
 	 * You MUST implement the method to convert bytes to your protocol frame structure.
 	 */
 	protected abstract void parse();

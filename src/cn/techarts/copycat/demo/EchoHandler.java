@@ -5,7 +5,7 @@ import java.nio.channels.AsynchronousSocketChannel;
 import cn.techarts.copycat.core.Frame;
 import cn.techarts.copycat.core.Handler;
 
-public class ServerDataHandler implements Handler {
+public class EchoHandler implements Handler {
 
 	@Override
 	public void onConnected(AsynchronousSocketChannel socket) {
@@ -15,7 +15,8 @@ public class ServerDataHandler implements Handler {
 	@Override
 	public<T extends Frame> void onFrameReceived(T frame, AsynchronousSocketChannel socket) {
 		System.out.println(frame.toString());
-		send(new byte[] {0, 1, 3, 3, 4, 7, 8, 9, 4, 11, 12, 13, 14, 15, 0, 2, 0x0a, 0x0d, 0, 0}, socket);
+		//Echo
+		this.send(frame.getData(), socket);
 	}
 
 	@Override

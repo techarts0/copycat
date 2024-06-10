@@ -15,18 +15,21 @@ import cn.techarts.copycat.util.Utility;
  * is the KEY and the socket connection is the VALUE.
  */
 public class Registry {
-	private static Map<String, AsynchronousSocketChannel> clients;
+	private static Map<Object, AsynchronousSocketChannel> clients;
 	
 	public static void init(int capacity) {
 		if(clients != null) return;
 		clients = new ConcurrentHashMap<>(capacity <= 0 ? 128 : capacity);
 	}
 	
-	private static Map<String, AsynchronousSocketChannel> getClients() {
+	private static Map<Object, AsynchronousSocketChannel> getClients() {
 		init(0);
 		return clients;
 	}
 	
+	/**
+	 * The remote IP address(String) is the default key.
+	 */
 	public static void put(AsynchronousSocketChannel client) {
 		try {
 			var address = (InetSocketAddress)client.getRemoteAddress();
@@ -36,30 +39,42 @@ public class Registry {
 		}		
 	}
 	
-	public static AsynchronousSocketChannel get(String ip) {
-		if(ip == null) return null;
-		var client = getClients().get(ip);
+	/**
+	 * The remote IP address(String) is the default key.
+	 */
+	public static void put(Object key, AsynchronousSocketChannel client) {
+		try {
+			if(key == null) return;
+			getClients().put(key, client);
+		}catch(Exception e) {
+			throw new CopycatException(e, "Failed to get the client IP.");
+		}		
+	}
+	
+	public static AsynchronousSocketChannel get(Object key) {
+		if(key == null) return null;
+		var client = getClients().get(key);
 		if(client == null) return null;
 		if(client.isOpen()) return client;
-		clients.remove(ip);
+		clients.remove(key);
 		return null;
 	}
 	
-	public static void remove(String ip) {
-		if(ip == null) return;
-		getClients().remove(ip);
+	public static void remove(Object key) {
+		if(key == null) return;
+		getClients().remove(key);
 	}
 	
 	public static void clear() {
 		getClients().clear();
 	}
 	
-	public static int send(byte[] data, String ip) {
-		return Utility.sendData(data, get(ip));
+	public static int send(byte[] data, Object key) {
+		return Utility.sendData(data, get(key));
 	}
 	
-	public static void close(String ip) {
-		var client = get(ip);
+	public static void close(Object key) {
+		var client = get(key);
 		try {
 			if(client != null) client.close();
 		}catch(IOException e) {

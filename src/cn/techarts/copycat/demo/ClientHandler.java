@@ -5,7 +5,7 @@ import java.nio.channels.AsynchronousSocketChannel;
 import cn.techarts.copycat.core.Frame;
 import cn.techarts.copycat.core.Handler;
 
-public class ClientDataHandler implements Handler {
+public class ClientHandler implements Handler {
 
 	@Override
 	public void onConnected(AsynchronousSocketChannel socket) {

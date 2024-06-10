@@ -2,9 +2,9 @@ package cn.techarts.copycat.demo;
 
 import cn.techarts.copycat.core.Frame;
 
-public class NumberFrame extends Frame {
+public class EchoFrame extends Frame {
 
-	public NumberFrame(byte[] raw) {
+	public EchoFrame(byte[] raw) {
 		super(raw);
 	}
 
