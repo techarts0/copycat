@@ -39,7 +39,12 @@ public interface Handler {
 	 * SYNC
 	 */
 	default int send(byte[] data, AsynchronousSocketChannel socket) {
-    	return Utility.sendData(data, socket);
+    	try {
+    		return Utility.sendData(data, socket);
+    	}catch(CopycatException e) {
+    		this.onExceptionCaught(e, socket);
+    		return -1; //An exception is threw.
+    	}
     }
 	
 	/**

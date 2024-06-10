@@ -28,7 +28,7 @@ public class ClientChatHandler implements Handler {
 	@Override
 	public <T extends Frame> void onFrameReceived(T frame, AsynchronousSocketChannel socket) {
 		var f = (ChatFrame)frame;
-		System.out.println(f.getMessage());
+		System.out.println(">>" +  f.getMessage());
 	}
 
 	@Override

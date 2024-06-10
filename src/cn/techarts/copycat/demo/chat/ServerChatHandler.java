@@ -2,6 +2,7 @@ package cn.techarts.copycat.demo.chat;
 
 import java.nio.channels.AsynchronousSocketChannel;
 
+import cn.techarts.copycat.Registry;
 import cn.techarts.copycat.core.Frame;
 import cn.techarts.copycat.core.Handler;
 
@@ -15,8 +16,19 @@ public class ServerChatHandler implements Handler {
 	@Override
 	public<T extends Frame> void onFrameReceived(T frame, AsynchronousSocketChannel socket) {
 		var t = (ChatFrame)frame;
-		System.out.println(t.getMessage());
-		this.send(new ChatFrame(0, 0, "I got your message."), socket);
+		if(t.isLoginFrame()) { //Sender-ID: Socket
+			Registry.put(t.getSender(), socket);
+			var text = t.getSender() + ", you are online.";
+			this.send(new ChatFrame(0, t.getReceiver(), text), socket);
+		}else {
+			var client = Registry.get(t.getReceiver());
+			if(client != null) {
+				send(t.getData(), client);
+			}else {
+				var text = t.getReceiver() + " is offline.";
+				send(new ChatFrame(0, t.getReceiver(), text), socket);
+			}
+		}
 	}
 
 	@Override

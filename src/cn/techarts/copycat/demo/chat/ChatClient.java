@@ -16,17 +16,27 @@ public class ChatClient {
     
     public static void processCommandLineInstruction(Visitor<ChatFrame> client) {
     	try {
-			var scanner = new Scanner(System.in);
-	        while(true) {
-		    	System.out.print("Chat Client>");
-		    	String text = scanner.nextLine();
-		        if("exit".equals(text)) {
-		        	System.out.print("Goodbye!");
-		        	break;
-		        }else {
-		        	client.send(new ChatFrame(0, 0, text).serialize());
-		        }
-	        }
+    		int myId = 0, peerId = 0;
+    		var scanner = new Scanner(System.in);
+    		System.out.println("-------Login--------");
+    		System.out.println("Your id:");
+    		myId = Integer.parseInt(scanner.nextLine());
+    		System.out.println("Peer id:");
+    		peerId = Integer.parseInt(scanner.nextLine());
+    		if(myId <= 0 || peerId <= 0 || myId == peerId) {
+    			System.out.print("Illegal user id(s), bye!");
+    		}else {
+    			client.send(new ChatFrame(myId, 0, null).serialize());
+    			while(true) {
+    	        	String text = scanner.nextLine();
+    		        if("exit".equals(text)) {
+    		        	System.out.print("Goodbye!");
+    		        	break;
+    		        }else {
+    		        	client.send(new ChatFrame(myId, peerId, text).serialize());
+    		        }
+    	        }
+    		}
 	        scanner.close();
     	}catch(Exception e) {
     		e.printStackTrace();
