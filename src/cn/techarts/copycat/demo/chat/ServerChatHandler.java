@@ -48,4 +48,9 @@ public class ServerChatHandler implements Handler {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public boolean isSingleton() {
+		return true;
+	}
 }

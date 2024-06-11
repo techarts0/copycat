@@ -34,4 +34,9 @@ public class DelimiterFrameDecoder<T extends Frame> extends Decoder<T> {
 		}
 		return result.isEmpty() ? null : result.toArray(Utility.array(frameClass, 0));
 	}
+
+	@Override
+	public boolean isSingleton() {
+		return true;
+	}
 }

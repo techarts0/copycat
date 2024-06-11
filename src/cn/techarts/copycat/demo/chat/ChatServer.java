@@ -11,9 +11,10 @@ public class ChatServer {
         var config = new Context<ChatFrame>();
         config.setPort(9977);
         config.setMaxThreads(0);
+        config.setDirectBuffer(true);
         config.enableVirtualThread();
         config.setDecoder(new LengthFieldFrameDecoder<ChatFrame>(10, 2), ChatFrame.class);
-        config.setHandler(new ServerChatHandler(), true);
+        config.setHandler(new ServerChatHandler());
     	var startup = new Booster<>(config);
     	processCommandLineInstruction();
     	startup.releaseResourcesAndCleanup();

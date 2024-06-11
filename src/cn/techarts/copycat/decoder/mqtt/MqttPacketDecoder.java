@@ -34,4 +34,9 @@ public class MqttPacketDecoder extends Decoder<MqttPacket> {
 		}
 		return result.isEmpty() ? null : result.toArray(Utility.array(frameClass, 0));
 	}
+
+	@Override
+	public boolean isSingleton() {
+		return true;
+	}
 }

@@ -36,4 +36,9 @@ public class EchoHandler implements Handler {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public boolean isSingleton() {
+		return false;
+	}
 }

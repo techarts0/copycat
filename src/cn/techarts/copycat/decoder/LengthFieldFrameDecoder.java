@@ -45,4 +45,9 @@ public class LengthFieldFrameDecoder<T extends  Frame> extends Decoder<T> {
 		}
 	}
 
+	@Override
+	public boolean isSingleton() {
+		return true;
+	}
+
 }

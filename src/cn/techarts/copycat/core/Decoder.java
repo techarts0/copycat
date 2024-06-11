@@ -12,6 +12,8 @@ public abstract class Decoder<T extends Frame> implements Cloneable{
 	
 	protected Class<T> frameClass = null;
 	
+	public abstract boolean isSingleton();
+	
 	public abstract  T[] decode(ByteBuf data);
 	
 	public Class<T> getFrameClass(){

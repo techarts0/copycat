@@ -37,4 +37,10 @@ public class ClientChatHandler implements Handler {
 
 	}
 
+	@Override
+	public boolean isSingleton() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

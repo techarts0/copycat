@@ -37,4 +37,8 @@ public class ClientHandler implements Handler {
 
 	}
 
+	@Override
+	public boolean isSingleton() {
+		return true;
+	}
 }

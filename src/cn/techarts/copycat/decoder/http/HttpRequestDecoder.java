@@ -62,4 +62,9 @@ public class HttpRequestDecoder extends Decoder<HttpRequest> {
 		}
 		return -1; //Moved to the end of HTTP head fields
 	}
+
+	@Override
+	public boolean isSingleton() {
+		return true;
+	}
 }

@@ -25,4 +25,9 @@ public class FixedLengthFrameDecoder<T extends Frame> extends Decoder<T>{
 		}
 		return result;
 	}
+
+	@Override
+	public boolean isSingleton() {
+		return true;
+	}
 }

@@ -10,9 +10,7 @@ import cn.techarts.copycat.core.Handler;
 public class Context<T extends Frame> {
 	private int port;
 	private int maxThreads = 0;
-	private boolean directBuffer = false;
-	private boolean singletonHandler = false;
-	private boolean singletonDecoder = false;
+	private boolean directBuffer = true;
 	
 	private Handler handler;
 	private Decoder<T> decoder;
@@ -54,21 +52,19 @@ public class Context<T extends Frame> {
 		}
 	}
 	public Decoder<T> getDecoder() {
-		if(isSingletonDecoder()) {
+		if(this.decoder.isSingleton()) {
 			return this.decoder;
 		}else {
-			return this.decoder.clone();
+			return this.decoder.clone(); //Deeply Clone?
 		}
 	}
 	public<D extends Decoder<T>> void setDecoder(D decoder, Class<T> frameClass) {
 		this.decoder = decoder;
-		this.singletonDecoder = false;
 		this.decoder.setFrameClass(frameClass);
 	}
 	
 	public<D extends Decoder<T>> void setSingletonDecoder(D decoder, Class<T> frameClass) {
 		this.decoder = decoder;
-		this.singletonDecoder = true;
 		this.decoder.setFrameClass(frameClass);
 	}
 	
@@ -80,16 +76,15 @@ public class Context<T extends Frame> {
 	}
 	
 	public Handler getHandler() {
-		if(this.isSingletonHanlder()) return this.handler;
+		if(this.handler.isSingleton()) return this.handler;
 		try {
 			return handler.getClass().getConstructor().newInstance();
 		}catch(Exception e) {
 			throw new CopycatException(e, "Failed to create a handler.");
 		}
 	}
-	public void setHandler(Handler handler, boolean singleton) {
+	public void setHandler(Handler handler) {
 		this.handler = handler;
-		this.singletonHandler = singleton;
 	}
 	
 	public boolean isKeepAlive() {
@@ -131,14 +126,6 @@ public class Context<T extends Frame> {
 	public void setDirectBuffer(boolean directBuffer) {
 		this.directBuffer = directBuffer;
 	}
-
-	public boolean isSingletonHanlder() {
-		return singletonHandler;
-	}
-
-	public void setSingletonHanlder(boolean singletonHanlder) {
-		this.singletonHandler = singletonHanlder;
-	}
 	
 	/**
 	 * Please ensure the version of JDK you installed is greater than 19(21 and later).
@@ -149,13 +136,5 @@ public class Context<T extends Frame> {
 	
 	public boolean isVirtualThreadEnabled() {
 		return this.virtualThreadEnabled;
-	}
-
-	public boolean isSingletonDecoder() {
-		return singletonDecoder;
-	}
-
-	public void setSingletonDecoder(boolean singletonDecoder) {
-		this.singletonDecoder = singletonDecoder;
-	}
+	}	
 }

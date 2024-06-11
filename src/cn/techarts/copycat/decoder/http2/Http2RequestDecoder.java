@@ -16,4 +16,9 @@ public class Http2RequestDecoder<T extends Frame> extends Decoder<T> {
 		return null;
 	}
 
+	@Override
+	public boolean isSingleton() {
+		return true;
+	}
+
 }

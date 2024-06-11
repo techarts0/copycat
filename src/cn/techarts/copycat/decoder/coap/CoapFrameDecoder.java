@@ -14,4 +14,9 @@ public class CoapFrameDecoder extends Decoder<CoapFrame> {
 		return null;
 	}
 
+	@Override
+	public boolean isSingleton() {
+		return true;
+	}
+
 }

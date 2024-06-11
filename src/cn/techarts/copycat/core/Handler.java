@@ -13,6 +13,9 @@ import cn.techarts.copycat.util.Utility;
  * If the handler works on singleton mode, you MUST guarantee the thread-safety.
  * */
 public interface Handler {
+	
+	public boolean isSingleton();
+	
 	/**
 	 * Just for server side.
 	 */
