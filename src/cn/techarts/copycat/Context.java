@@ -10,7 +10,6 @@ import cn.techarts.copycat.core.Handler;
 public class Context<T extends Frame> {
 	private int port;
 	private int maxThreads = 0;
-	private int decoderCacheSize = 1024;
 	private boolean directBuffer = false;
 	private boolean singletonHandler = false;
 	private boolean singletonDecoder = false;
@@ -92,19 +91,7 @@ public class Context<T extends Frame> {
 		this.handler = handler;
 		this.singletonHandler = singleton;
 	}
-	public int getDecoderCacheSize() {
-		return decoderCacheSize;
-	}
 	
-	/**
-	 * The decoder cache size is 1024 bytes at least.
-	 */
-	public void setDecoderCacheSize(int decoderCacheSize) {
-		if(decoderCacheSize > 1024) {
-			this.decoderCacheSize = decoderCacheSize;
-		}
-	}
-
 	public boolean isKeepAlive() {
 		return keepAlive;
 	}
@@ -129,12 +116,12 @@ public class Context<T extends Frame> {
 		this.sendBuffer = sendBuffer;
 	}
 
-	public int getRedvBuffer() {
+	public int getRecvBuffer() {
 		return recvBuffer;
 	}
 
-	public void setRedvBuffer(int redvBuffer) {
-		this.recvBuffer = redvBuffer;
+	public void setRecvBuffer(int recvBuffer) {
+		this.recvBuffer = recvBuffer;
 	}
 
 	public boolean isDirectBuffer() {

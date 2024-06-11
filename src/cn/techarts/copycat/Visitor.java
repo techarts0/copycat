@@ -2,6 +2,8 @@ package cn.techarts.copycat;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.StandardSocketOptions;
+
 import cn.techarts.copycat.core.ByteBuf;
 import cn.techarts.copycat.core.Decoder;
 import cn.techarts.copycat.core.Frame;
@@ -18,6 +20,8 @@ public class Visitor<T extends Frame> {
 	private Handler handler = null;
 	private Decoder<T> decoder = null;
 	private ByteBuf decoderCache = null;
+	private boolean directBuffer = false;
+	private int sockRecvBufferSize = 1024;
 	private InetSocketAddress serverAddr = null;
 	private AsynchronousSocketChannel socketChannel;
     
@@ -25,6 +29,12 @@ public class Visitor<T extends Frame> {
 		this.decoderCache = new ByteBuf(1024);
         serverAddr = new InetSocketAddress(ip, port);
     }
+	
+	public Visitor<T> with(boolean directBuffer, int SOCK_RECV_BUF){
+		this.directBuffer = directBuffer;
+		this.sockRecvBufferSize = SOCK_RECV_BUF;
+		return this;
+	}
 	
 	public Visitor<T> with(Decoder<T> decoder, Class<T> frameClass){
 		if(decoder == null) {
@@ -53,6 +63,7 @@ public class Visitor<T extends Frame> {
     	
         try {
            socketChannel = AsynchronousSocketChannel.open();
+           this.setSocketReceiveBufferSize();
            socketChannel.connect(this.serverAddr);
            this.prepare2ReceiveDataFromServerAsync();
            return this;
@@ -62,7 +73,7 @@ public class Visitor<T extends Frame> {
     }
     
     private void prepare2ReceiveDataFromServerAsync() {
-		var buffer = Utility.allocateMemory(false);
+		var buffer = Utility.allocate(directBuffer, sockRecvBufferSize << 1);
 		socketChannel.read(buffer, null, new CompletionHandler<Integer, Void>() {
             @Override
             public void completed(Integer length, Void v) {
@@ -85,6 +96,14 @@ public class Visitor<T extends Frame> {
             	handler.onExceptionCaught(e, socketChannel);
             }
         });
+    }
+    
+    private void setSocketReceiveBufferSize() throws IOException{
+    	if(this.sockRecvBufferSize > 0) {
+    		socketChannel.setOption(StandardSocketOptions.SO_RCVBUF, sockRecvBufferSize);
+    	}else {
+    		this.sockRecvBufferSize = socketChannel.getOption(StandardSocketOptions.SO_RCVBUF);
+    	}
     }
     
     /**

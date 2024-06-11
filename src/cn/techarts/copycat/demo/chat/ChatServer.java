@@ -23,7 +23,7 @@ public class ChatServer {
     	try {
 			var scanner = new Scanner(System.in);
 	        while(true) {
-		    	System.out.print("Chat Server>");
+		    	System.out.println("------Chatting Server is Running------");
 		    	String command = scanner.nextLine();
 		        if("exit".equals(command)) {
 		        	System.out.print("Goodbye!");

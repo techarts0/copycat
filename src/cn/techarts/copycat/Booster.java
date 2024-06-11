@@ -36,8 +36,8 @@ public class Booster<T extends Frame> {
             	workerExecutorService = Executors.newFixedThreadPool(context.getMaxThreads());
             }
             channelGroup = AsynchronousChannelGroup.withCachedThreadPool(executorService, 1);
-            this.setServerSocketOptions();
             serverSocketChannel = AsynchronousServerSocketChannel.open(channelGroup);
+            this.setServerSocketOptions();
             serverSocketChannel.bind(new InetSocketAddress(context.getPort()));
             serverSocketChannel.accept(serverSocketChannel, new ConnectionAcceptor());
         } catch (IOException e) {
@@ -79,8 +79,10 @@ public class Booster<T extends Frame> {
     	if(context.getSendBuffer() > 0) { //default: 16384(512K) bytes
     		serverSocketChannel.setOption(StandardSocketOptions.SO_SNDBUF, context.getSendBuffer());
     	}
-    	if(context.getRedvBuffer() > 0) { //default: 1048576(1M) bytes
-    		serverSocketChannel.setOption(StandardSocketOptions.SO_RCVBUF, context.getRedvBuffer());
+    	if(context.getRecvBuffer() > 0) { //default: 1048576(1M) bytes
+    		serverSocketChannel.setOption(StandardSocketOptions.SO_RCVBUF, context.getRecvBuffer());
+    	}else { //The value of RECVBUF will be used in the Session class
+    		context.setRecvBuffer(serverSocketChannel.getOption(StandardSocketOptions.SO_RCVBUF));
     	}
     	if(context.isReuseAddr()) { //default: disabled
     		serverSocketChannel.setOption(StandardSocketOptions.SO_REUSEADDR, context.isReuseAddr());

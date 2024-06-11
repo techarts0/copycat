@@ -98,11 +98,11 @@ public class Utility {
 	}
 	
 	//On JVM heap or physical memory
-	public static ByteBuffer allocateMemory(boolean direct) {
-		if(direct) {
-			return ByteBuffer.allocate(1024);
+	public static ByteBuffer allocate(boolean direct, int capacity) {
+		if(!direct) {
+			return ByteBuffer.allocate(capacity);
 		}else {
-			return ByteBuffer.allocateDirect(1024);
+			return ByteBuffer.allocateDirect(capacity);
 		}
 	}
 	

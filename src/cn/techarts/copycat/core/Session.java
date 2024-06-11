@@ -17,6 +17,7 @@ public class Session<T extends Frame> implements Runnable{
 	private Monitor monitor = null;
 	private Handler handler = null;
 	private Decoder<T> decoder = null;
+	private int recvBufferSize = 1024;
 	private ByteBuf decoderCache = null;
 	private boolean directBuffer = false;
 	private AsynchronousSocketChannel connection;
@@ -27,7 +28,9 @@ public class Session<T extends Frame> implements Runnable{
 		this.handler = context.getHandler();
 		this.decoder = context.getDecoder();
 		this.directBuffer = context.isDirectBuffer();
-		decoderCache = new ByteBuf(context.getDecoderCacheSize());
+		this.recvBufferSize = context.getRecvBuffer();
+		//The capacity of decoder cache is 2 times of socket RECVBUF
+		decoderCache = new ByteBuf(recvBufferSize << 1);
 		try {
 			if(context.isKeepAlive()) {
 				connection.setOption(StandardSocketOptions.SO_KEEPALIVE, true);
@@ -43,8 +46,8 @@ public class Session<T extends Frame> implements Runnable{
 		return this.connection;
 	}
 	
-	private void prepare2ReceiveDataFromPeerAsync() {
-		var buffer = Utility.allocateMemory(directBuffer);
+	private void initialize() {
+		var buffer = Utility.allocate(directBuffer, recvBufferSize);
 		connection.read(buffer, null, new CompletionHandler<Integer, Void>() {
             @Override
             public void completed(Integer length, Void v) {
@@ -73,10 +76,10 @@ public class Session<T extends Frame> implements Runnable{
                 Thread.currentThread().interrupt();
             }
         });
-    }
-
+    }	
+	
 	@Override
 	public void run() {
-		this.prepare2ReceiveDataFromPeerAsync();
+		this.initialize();
 	}
 }
