@@ -1,4 +1,4 @@
-package cn.techarts.copycat.decoder.mqtt;
+package cn.techarts.copycat.std.mqtt;
 
 import java.util.ArrayList;
 import java.util.List;

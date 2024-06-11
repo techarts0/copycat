@@ -1,4 +1,4 @@
-package cn.techarts.copycat.decoder.modbus;
+package cn.techarts.copycat.std.modbus;
 
 public class MBAP {
 	private short tid; 			//Transaction ID

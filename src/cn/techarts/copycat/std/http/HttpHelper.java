@@ -1,4 +1,4 @@
-package cn.techarts.copycat.decoder.http;
+package cn.techarts.copycat.std.http;
 
 import cn.techarts.copycat.core.ByteBuf;
 

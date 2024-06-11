@@ -1,4 +1,4 @@
-package cn.techarts.copycat.decoder.mqtt;
+package cn.techarts.copycat.std.mqtt;
 
 public class MqttException extends RuntimeException {
 

@@ -1,4 +1,4 @@
-package cn.techarts.copycat.decoder.http;
+package cn.techarts.copycat.std.http;
 
 public class HttpHeader {
 	private String name;

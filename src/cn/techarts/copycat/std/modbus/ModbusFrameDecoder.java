@@ -1,4 +1,4 @@
-package cn.techarts.copycat.decoder.modbus;
+package cn.techarts.copycat.std.modbus;
 
 import cn.techarts.copycat.core.ByteBuf;
 import cn.techarts.copycat.decoder.LengthFieldFrameDecoder;

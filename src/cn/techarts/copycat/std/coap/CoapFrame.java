@@ -1,4 +1,4 @@
-package cn.techarts.copycat.decoder.coap;
+package cn.techarts.copycat.std.coap;
 
 import cn.techarts.copycat.core.Frame;
 

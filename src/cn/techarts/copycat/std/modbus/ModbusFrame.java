@@ -1,4 +1,4 @@
-package cn.techarts.copycat.decoder.modbus;
+package cn.techarts.copycat.std.modbus;
 
 import cn.techarts.copycat.CopycatException;
 import cn.techarts.copycat.core.Frame;

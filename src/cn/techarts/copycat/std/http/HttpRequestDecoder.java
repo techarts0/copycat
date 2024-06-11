@@ -1,4 +1,4 @@
-package cn.techarts.copycat.decoder.http;
+package cn.techarts.copycat.std.http;
 
 import java.util.ArrayList;
 import java.util.List;
