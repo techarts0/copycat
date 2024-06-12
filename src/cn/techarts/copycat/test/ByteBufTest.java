@@ -1,6 +1,10 @@
 package cn.techarts.copycat.test;
 
 import org.junit.Test;
+
+import java.nio.ByteBuffer;
+import java.util.Arrays;
+
 import org.junit.Assert;
 
 public class ByteBufTest {
@@ -12,48 +16,24 @@ public class ByteBufTest {
 	}
 	
 	@Test
-	public void testClone() {
-		var p1 = new Person(1, 20, "Wuzhangmeng");
-		var p2 = p1.clone();
-		Assert.assertEquals(p2.getAge(), 20);
-	}
-	
-	class Person implements Cloneable{
-		private int id;
-		private int age;
-		private String name;
+	public void testByteBuffer() {
+		var buf = ByteBuffer.allocate(16);
+		buf.put(new byte[] {0, 1, 2, 3, 4, 5});
+		buf.reset();
+		//buf.flip();
+		//buf.position(6);
+		buf.limit(buf.position());
+		System.out.println("Pos: " + buf.position());
+		System.out.println("Lmt: " + buf.limit());
+		System.out.println("Rmn: " + buf.remaining());
+		System.out.println(Arrays.toString(buf.array()));
+		buf.put((byte)6);
 		
-		public Person(int id, int age, String name) {
-			this.id = id;
-			this.age = age;
-			this.name = name;
-		}
-		public int getId() {
-			return id;
-		}
-		public void setId(int id) {
-			this.id = id;
-		}
-		public String getName() {
-			return name;
-		}
-		public void setName(String name) {
-			this.name = name;
-		}
-		public int getAge() {
-			return age;
-		}
-		public void setAge(int age) {
-			this.age = age;
-		}
-	
-		@Override
-		public Person clone(){
-			try {
-				return (Person)super.clone();
-			}catch(Exception e) {
-				return null;
-			}
-		}
+		System.out.println("Pos: " + buf.position());
+		System.out.println("Lmt: " + buf.limit());
+		System.out.println("Rmn: " + buf.remaining());
+		System.out.println(Arrays.toString(buf.array()));
 	}
+	
+	
 }

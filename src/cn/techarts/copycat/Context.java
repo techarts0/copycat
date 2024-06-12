@@ -15,8 +15,7 @@ public class Context<T extends Frame> {
 	private Handler handler;
 	private Decoder<T> decoder;
 		
-	private int sendBuffer = 0;
-	private int recvBuffer = 0;
+	private int rcvBuffer = 0;
 	private boolean keepAlive = false;
 	private boolean reuseAddr = false;
 
@@ -103,20 +102,12 @@ public class Context<T extends Frame> {
 		this.reuseAddr = reuseAddr;
 	}
 
-	public int getSendBuffer() {
-		return sendBuffer;
+	public int getRcvBuffer() {
+		return rcvBuffer;
 	}
 
-	public void setSendBuffer(int sendBuffer) {
-		this.sendBuffer = sendBuffer;
-	}
-
-	public int getRecvBuffer() {
-		return recvBuffer;
-	}
-
-	public void setRecvBuffer(int recvBuffer) {
-		this.recvBuffer = recvBuffer;
+	public void setRcvBuffer(int rcvBuffer) {
+		this.rcvBuffer = rcvBuffer;
 	}
 
 	public boolean isDirectBuffer() {

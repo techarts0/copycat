@@ -1,12 +1,20 @@
 package cn.techarts.copycat;
 
 public class Monitor {
-	private int incomingInSecond;
+	private int period = 5000;
+	private int incomingInPeriod;
 	private int aliveConnections;
-	private int sentBytesInSecond;
-	private int readBytesInSecond;
+	private int sentBytesInPeriod;
+	private int readBytesInPeriod;
 		
 	private long latestSamplingMillis = System.currentTimeMillis();
+	
+	public Monitor(int period) {
+		this.period = period;
+		if(period <= 0) {
+			this.period = 5000;
+		}
+	}
 	
 	public int aliveConnections() {
 		return aliveConnections;
@@ -21,42 +29,42 @@ public class Monitor {
 		}
 	}
 	
-	public int sentBytesInSecond() {
-		return sentBytesInSecond;
+	public int sentBytesInPeirod() {
+		return sentBytesInPeriod;
 	}
 	
-	public void sentBytesInSecond(int sentBytes) {
+	public void sentBytesInPeriod(int sentBytes) {
 		if(expired()) {
-			this.sentBytesInSecond = 0;
+			this.sentBytesInPeriod = 0;
 		}
-		this.sentBytesInSecond += sentBytes;
+		this.sentBytesInPeriod += sentBytes;
 	}
 	
-	public int readBytesInSecond() {
-		return readBytesInSecond;
+	public int readBytesInPeriod() {
+		return readBytesInPeriod;
 	}
 	
-	public void readBytesInSecond(int readBytes) {
+	public void readBytesInPeriod(int readBytes) {
 		if(expired()) {
-			this.readBytesInSecond = 0;
+			this.readBytesInPeriod = 0;
 		}
-		this.readBytesInSecond += readBytes;
+		this.readBytesInPeriod += readBytes;
 	}
 	
-	public int incomingInSecond() {
-		return incomingInSecond;
+	public int incomingInPeriod() {
+		return incomingInPeriod;
 	}
 	
 	private void addNewIncoming() {
 		if(expired()){
-			incomingInSecond = 0;
+			incomingInPeriod = 0;
 		}
-		this.incomingInSecond += 1;
+		this.incomingInPeriod += 1;
 	}
 	
 	private boolean expired() { //1S
 		var time = System.currentTimeMillis();
-		var result = time - latestSamplingMillis > 1000;
+		var result = time - latestSamplingMillis > period;
 		if(result) {
 			this.latestSamplingMillis = time;
 		}

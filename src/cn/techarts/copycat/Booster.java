@@ -27,7 +27,7 @@ public class Booster<T extends Frame> {
  
     public Booster(Context<T> context) throws CopycatException{
     	try {
-    		this.monitor = new Monitor();
+    		this.monitor = new Monitor(10000);
     		this.context = context.checkRequiredProperties();
             executorService = Executors.newCachedThreadPool();
             if(context.isVirtualThreadEnabled()) {
@@ -76,14 +76,11 @@ public class Booster<T extends Frame> {
     }
     
     private void setServerSocketOptions() throws IOException {
-    	if(context.getSendBuffer() > 0) { //default: 16384(512K) bytes
-    		serverSocketChannel.setOption(StandardSocketOptions.SO_SNDBUF, context.getSendBuffer());
+    	if(context.getRcvBuffer() > 0) {
+    		serverSocketChannel.setOption(StandardSocketOptions.SO_RCVBUF, context.getRcvBuffer());
     	}
-    	if(context.getRecvBuffer() > 0) { //default: 1048576(1M) bytes
-    		serverSocketChannel.setOption(StandardSocketOptions.SO_RCVBUF, context.getRecvBuffer());
-    	}else { //The value of RECVBUF will be used in the Session class
-    		context.setRecvBuffer(serverSocketChannel.getOption(StandardSocketOptions.SO_RCVBUF));
-    	}
+    	this.context.setRcvBuffer(serverSocketChannel.getOption(StandardSocketOptions.SO_RCVBUF));
+    	
     	if(context.isReuseAddr()) { //default: disabled
     		serverSocketChannel.setOption(StandardSocketOptions.SO_REUSEADDR, context.isReuseAddr());
     	}

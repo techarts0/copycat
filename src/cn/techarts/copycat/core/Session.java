@@ -18,7 +18,6 @@ public class Session<T extends Frame> implements Runnable{
 	private Handler handler = null;
 	private Decoder<T> decoder = null;
 	private int recvBufferSize = 1024;
-	private ByteBuf decoderCache = null;
 	private boolean directBuffer = false;
 	private AsynchronousSocketChannel connection;
 	
@@ -28,9 +27,7 @@ public class Session<T extends Frame> implements Runnable{
 		this.handler = context.getHandler();
 		this.decoder = context.getDecoder();
 		this.directBuffer = context.isDirectBuffer();
-		this.recvBufferSize = context.getRecvBuffer();
-		//The capacity of decoder cache is 2 times of socket RECVBUF
-		decoderCache = new ByteBuf(recvBufferSize << 1);
+		this.recvBufferSize = context.getRcvBuffer();
 		try {
 			if(context.isKeepAlive()) {
 				connection.setOption(StandardSocketOptions.SO_KEEPALIVE, true);
@@ -47,7 +44,7 @@ public class Session<T extends Frame> implements Runnable{
 	}
 	
 	private void initialize() {
-		var buffer = Utility.allocate(directBuffer, recvBufferSize);
+		var buffer = Utility.allocate(directBuffer, recvBufferSize << 1);
 		connection.read(buffer, null, new CompletionHandler<Integer, Void>() {
             @Override
             public void completed(Integer length, Void v) {
@@ -56,15 +53,15 @@ public class Session<T extends Frame> implements Runnable{
             		handler.onDisconnected(connection);
             		Thread.currentThread().interrupt();
             	}else {
-            		decoderCache.append(buffer);
-            		monitor.readBytesInSecond(length);
-            		var frames = decoder.decode(decoderCache);
+            		var cache = new ByteBuf(buffer);
+            		monitor.readBytesInPeriod(length);
+            		var frames = decoder.decode(cache);
                 	if(frames != null && frames.length > 0) {
                 		for(var f : frames) {
                 			handler.onFrameReceived(f, connection);
                 		}
                 	}
-                	connection.read(buffer, null, this);
+                	connection.read(cache.recovery(), null, this);
             	}
             }
  
