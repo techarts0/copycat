@@ -31,7 +31,7 @@ public class HttpRequestDecoder extends Decoder<HttpRequest> {
 		int index = data.current(), latest = index;
 		
 		while((index = nextHeader(data, index)) > 0) {
-			var line = data.borrow(latest, index - 1);
+			var line = data.lend(latest, index - 1);
 			latest = index + 1; //Move the start point to next
 			headerLength = line.length + 2;
 			var strLine = Utility.toAsciiString(line);
@@ -45,7 +45,7 @@ public class HttpRequestDecoder extends Decoder<HttpRequest> {
 		if(index == 0) headerLength += 2;
 		data.current(data.current() + headerLength);
 		if(!data.test(contentLength)) return null;
-		return data.consume(contentLength);
+		return data.steal(contentLength);
 	}
 	
 	/**
@@ -54,9 +54,9 @@ public class HttpRequestDecoder extends Decoder<HttpRequest> {
 	 *         = -1, The bytes of headers are not completed.
 	 */
 	private int nextHeader(ByteBuf data, int from) {
-		for(int i = from; i < data.length(); i++) {
-			if(data.borrow(i) == 0X0D && 
-			   data.borrow(i + 1) == 0X0A) {
+		for(int i = from; i < data.remaining(); i++) {
+			if(data.lend(i) == 0X0D && 
+			   data.lend(i + 1) == 0X0A) {
 				return from == i ? 0 : i + 1;
 			}
 		}

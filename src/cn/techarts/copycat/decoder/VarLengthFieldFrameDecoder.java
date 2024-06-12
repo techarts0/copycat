@@ -38,14 +38,14 @@ public class VarLengthFieldFrameDecoder<T extends  Frame> extends Decoder<T> {
 					throw new CopycatException("Illegal remaining length.");
 				}
 				f += 7; //Shift to left 7 bits
-				var b = data.borrow(prefix - 1);
+				var b = data.lend(prefix - 1);
 				remaining += ((b & 127) << f);
 				if((b & 128) == 0) break; //Remaining Length Bytes End
 			}
 			
 			var size = prefix + remaining;
-			if(data.length() < size) break;
-			var fbs = data.consume(size);
+			if(data.remaining() < size) break;
+			var fbs = data.steal(size);
 			result.add(Utility.frame(frameClass, fbs));
 		}
 		if(result.isEmpty()) return null;

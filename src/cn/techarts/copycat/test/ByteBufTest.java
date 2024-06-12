@@ -2,6 +2,8 @@ package cn.techarts.copycat.test;
 
 import org.junit.Test;
 
+import cn.techarts.copycat.util.Utility;
+
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
@@ -17,17 +19,16 @@ public class ByteBufTest {
 	
 	@Test
 	public void testByteBuffer() {
-		var buf = ByteBuffer.allocate(16);
+		var buf = ByteBuffer.allocate(8);
 		buf.put(new byte[] {0, 1, 2, 3, 4, 5});
-		buf.reset();
-		//buf.flip();
-		//buf.position(6);
-		buf.limit(buf.position());
+		buf.flip();
+		
 		System.out.println("Pos: " + buf.position());
 		System.out.println("Lmt: " + buf.limit());
 		System.out.println("Rmn: " + buf.remaining());
 		System.out.println(Arrays.toString(buf.array()));
-		buf.put((byte)6);
+		
+		buf = resize(buf);
 		
 		System.out.println("Pos: " + buf.position());
 		System.out.println("Lmt: " + buf.limit());
@@ -35,5 +36,12 @@ public class ByteBufTest {
 		System.out.println(Arrays.toString(buf.array()));
 	}
 	
+	private ByteBuffer resize(ByteBuffer buffer) {
+		var direct = buffer.isDirect();
+		var capacity = buffer.capacity();
+		var length = capacity << 1; // 2 times
+		var newBuffer = Utility.allocate(direct, length);
+		return newBuffer.put(buffer);
+	}
 	
 }

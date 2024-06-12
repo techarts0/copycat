@@ -3,6 +3,8 @@ package cn.techarts.copycat.core;
 import java.nio.ByteBuffer;
 import java.nio.InvalidMarkException;
 
+import cn.techarts.copycat.util.Utility;
+
 /**
  * It's a wrapper of JDK ByteBuffer but easier to use.<br>
  */
@@ -25,7 +27,7 @@ public final class ByteBuf {
 	 * {@link ByteBuffer.remaining} <br>
 	 * The remaining valid data length excluding consumed bytes.
 	 */
-	public int length() {
+	public int remaining() {
 		return buffer.remaining();
 	}
 	
@@ -39,7 +41,7 @@ public final class ByteBuf {
 	
 	/**
 	 * {@link ByteBuffer.position}<br>
-	 * Move the current pointer to the specific position().<br>
+	 * Move the current pointer to the specific position.<br>
 	 * IMPORTANT!!! It's very dangers to handle this pointer manually.
 	 */
 	public boolean current(int pos) {
@@ -66,9 +68,9 @@ public final class ByteBuf {
 	
 	/**
 	 * {@link ByteBuffer.get}<br>
-	 * The consumed bytes will be discarded (invalid).
+	 * The read bytes will be discarded (invalid).
 	 */
-	public byte[] consume(int length) {
+	public byte[] steal(int length) {
 		if(buffer.remaining() < length) {
 			return null; //Not enough
 		}
@@ -80,22 +82,22 @@ public final class ByteBuf {
 	
 	/**
 	 * {@link ByteBuffer.get}<br>
-	 * Consumes the given bytes and moves the current pointer to next {@value skip}
+	 * Read the given bytes and moves the current pointer to next {@value skip}
 	 */
-	public byte[] consume(int length, int skip) {
-		var result = consume(length);
+	public byte[] steal(int length, int skip) {
+		var result = steal(length);
 		this.skip(skip);
 		this.compactBufferIfNecessary();
 		return result;
 	}
 	
 	/**
-	 * Consumes the given bytes but actually return (length - backspace) bytes.<br>
+	 * Read the given bytes but actually return (length - backspace) bytes.<br>
 	 * but the current pointer does not move backwards(same to) {@link consume(length)}
 	 */ 
-	public byte[] consume2(int length, int backspace) {
-		int remaining = length();
-		if(remaining < length) return null; //Not enough
+	public byte[] steal2(int length, int backspace) {
+		int remaining = remaining();
+		if(remaining < length) return null;
 		var result = new byte[length - backspace];
 		this.buffer.get(result);
 		this.skip(backspace);
@@ -106,7 +108,7 @@ public final class ByteBuf {
 	/**
 	 * Read specific length of bytes but don't move the current pointer
 	 */
-	public byte[] borrow(int pos, int length) {
+	public byte[] lend(int pos, int length) {
 		if(pos + length > buffer.limit()) return null;
 		var result = new byte[length];
 		this.buffer.mark();
@@ -118,7 +120,7 @@ public final class ByteBuf {
 	/**
 	 * Read a byte but don't move the current pointer
 	 */
-	public byte borrow(int pos) {
+	public byte lend(int pos) {
 		this.buffer.mark();
 		this.buffer.position(pos);
 		var result = this.buffer.get();
@@ -127,6 +129,7 @@ public final class ByteBuf {
 	}
 	
 	/**
+	 * {@link ByteBuffer.position}<br>
 	 * Move the current pointer to {@value next}
 	 */
 	private void skip(int next) {
@@ -147,12 +150,37 @@ public final class ByteBuf {
 	}
 	
 	/**
-	 * It's very important!!!
+	 * Please Note: if the ByteBuffer is not flipped, ZERO will be returned.
 	 */
-	public ByteBuffer recovery() {
-		this.buffer.mark(); //Start Point
-		this.buffer.position(buffer.limit());
-		this.buffer.limit(buffer.capacity());
+	private int availableSpace() {
+		return buffer.capacity() - buffer.limit();
+	}
+	
+	/**
+	 * Very important!!!
+	 * You MUST call the method before next reading data from SOCKET.
+	 */
+	public ByteBuffer setup() {
+		//If the free space is less than 1/8 of capacity, resize it.
+		var free = availableSpace();
+		if((free << 3) < buffer.capacity()) {
+			resize(); //
+		}else {
+			this.buffer.mark(); //Start Point
+			this.buffer.position(buffer.limit());
+			this.buffer.limit(buffer.capacity());
+		}
 		return this.buffer;
+	}
+		
+	/**
+	 * Resize the buffer to 2 times of original capacity.
+	 */
+	private void resize() {
+		var direct = buffer.isDirect();
+		var capacity = buffer.capacity();
+		var length = capacity << 1; // 2 times
+		var newBuffer = Utility.allocate(direct, length);
+		this.buffer = newBuffer.put(this.buffer);
 	}
 }

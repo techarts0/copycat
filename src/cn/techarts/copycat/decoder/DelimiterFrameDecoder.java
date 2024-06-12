@@ -19,15 +19,15 @@ public class DelimiterFrameDecoder<T extends Frame> extends Decoder<T> {
 	public T[] decode(ByteBuf data) {
 		List<T> result = new ArrayList<>();
 		int len = delimiters.length, index = 0;
-		for(int i = 0; i < data.length(); i++) {
-			if(data.borrow(i) != delimiters[0]) continue;
+		for(int i = 0; i < data.remaining(); i++) {
+			if(data.lend(i) != delimiters[0]) continue;
 			for(int j = 1; j < len; j++) {
 				i += j;
-				if(data.borrow(i) != delimiters[j]) break;
+				if(data.lend(i) != delimiters[j]) break;
 				if(j == len - 1) { //Completed
 					var size = i + 1 - index - len;
 					index += (i + 1); //Move to start of next
-					var fbs = data.consume(size, len);
+					var fbs = data.steal(size, len);
 					result.add(Utility.frame(frameClass, fbs));
 				}
 			}

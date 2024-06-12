@@ -43,6 +43,9 @@ public class Session<T extends Frame> implements Runnable{
 		return this.connection;
 	}
 	
+	/**
+	 * To ensure having enough capacity, the decode cache is 2 times of SO_RCVBUF as default. 
+	 */
 	private void initialize() {
 		var buffer = Utility.allocate(directBuffer, recvBufferSize << 1);
 		connection.read(buffer, null, new CompletionHandler<Integer, Void>() {
@@ -61,7 +64,7 @@ public class Session<T extends Frame> implements Runnable{
                 			handler.onFrameReceived(f, connection);
                 		}
                 	}
-                	connection.read(cache.recovery(), null, this);
+                	connection.read(cache.setup(), null, this);
             	}
             }
  

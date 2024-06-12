@@ -23,14 +23,14 @@ public class MqttPacketDecoder extends Decoder<MqttPacket> {
 					throw new MqttException("Illegal remaining length.");
 				}
 				f += 7; //Shift to left 7 bits
-				var b = data.borrow(prefix - 1);
+				var b = data.lend(prefix - 1);
 				remaining += ((b & 127) << f);
 				if((b & 128) == 0) break; //Remaining Length Bytes End
 			}
 			
 			var size = prefix + remaining;
-			if(data.length() < size) break;
-			result.add(new MqttPacket(data.consume(size)));
+			if(data.remaining() < size) break;
+			result.add(new MqttPacket(data.steal(size)));
 		}
 		return result.isEmpty() ? null : result.toArray(Utility.array(frameClass, 0));
 	}

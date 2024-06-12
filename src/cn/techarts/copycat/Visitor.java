@@ -88,7 +88,7 @@ public class Visitor<T extends Frame> {
                 			handler.onFrameReceived(f, socketChannel);
                 		}
                 	}
-                	socketChannel.read(decoderCache.recovery(), null, this);
+                	socketChannel.read(decoderCache.setup(), null, this);
             	}
             } 
             @Override

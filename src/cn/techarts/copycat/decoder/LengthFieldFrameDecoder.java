@@ -23,10 +23,10 @@ public class LengthFieldFrameDecoder<T extends  Frame> extends Decoder<T> {
 		List<T> result = new ArrayList<>();
 		while(data.test(prefix)){
 			var pos = data.current() + offset;
-			int len = len(data.borrow(pos, length));
+			int len = len(data.lend(pos, length));
 			var size = prefix + len;
-			if(data.length() < size) break;
-			var fbs = data.consume(size);
+			if(data.remaining() < size) break;
+			var fbs = data.steal(size);
 			result.add(Utility.frame(frameClass, fbs));
 		}
 		if(result.isEmpty()) return null;

@@ -28,7 +28,7 @@ public final class ByteBuf {
 	/**
 	 * The remaining valid data length excluding consumed bytes.
 	 */
-	public int length() {
+	public int remaining() {
 		return this.position - current;
 	}
 	
@@ -61,7 +61,7 @@ public final class ByteBuf {
 	 * The remaining valid bytes length is great than your expectation at least.
 	 */
 	public boolean test(int expectation) {
-		return length() >= expectation;
+		return remaining() >= expectation;
 	}
 	
 	public void append(ByteBuffer bs) {
@@ -83,21 +83,21 @@ public final class ByteBuf {
 	/**
 	 * The consumed bytes will be discarded (invalid).
 	 */
-	public byte[] consume(int length) {
+	public byte[] steal(int length) {
 		int remaining = position - current;
 		if(remaining < length) return null; //Not enough
 		var result = new byte[length];
 		System.arraycopy(data, current, result, 0, length);
 		this.current += length;
-		this.compactBytes();
+		compactBufferIfNecessary();
 		return result;
 	}
 	
 	/**
 	 * Consumes the given bytes and moves the current pointer to next {@value skip}
 	 */
-	public byte[] consume(int length, int skip) {
-		var result = consume(length);
+	public byte[] steal(int length, int skip) {
+		var result = steal(length);
 		this.skip(skip);
 		return result;
 	}
@@ -106,20 +106,20 @@ public final class ByteBuf {
 	 * Consumes the given bytes but actually return (length - backspace) bytes.<br>
 	 * but the current pointer does not move backwards(same to) {@link consume(length)}
 	 */ 
-	public byte[] consume2(int length, int backspace) {
+	public byte[] steal2(int length, int backspace) {
 		int remaining = position - current;
 		if(remaining < length) return null; //Not enough
 		var result = new byte[length - 2];
 		System.arraycopy(data, current, result, 0, length - 2);
 		this.current += length;
-		this.compactBytes();
+		compactBufferIfNecessary();
 		return result;
 	}
 	
 	/**
 	 * Read specific length of bytes but don't move the current pointer
 	 */
-	public byte[] borrow(int pos, int length) {
+	public byte[] lend(int pos, int length) {
 		if(pos + length > position) return null;
 		var result = new byte[length];
 		System.arraycopy(data, pos, result, 0, length);
@@ -129,7 +129,7 @@ public final class ByteBuf {
 	/**
 	 * Read a byte but don't move the current pointer
 	 */
-	public byte borrow(int pos) {
+	public byte lend(int pos) {
 		return pos > position ? 0 : data[pos];
 	}
 	
@@ -140,7 +140,7 @@ public final class ByteBuf {
 		this.current += next;
 	}
 	
-	private void compactBytes() {
+	private void compactBufferIfNecessary() {
 		var free = data.length - position;
 		if((free << 1) < this.current) {
 			int len = position - current;
