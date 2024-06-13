@@ -9,6 +9,9 @@ public class Monitor {
 		
 	private long latestSamplingMillis = System.currentTimeMillis();
 	
+	/**
+	 * Default period is (at least) 5 seconds
+	 */
 	public Monitor(int period) {
 		this.period = period;
 		if(period <= 0) {

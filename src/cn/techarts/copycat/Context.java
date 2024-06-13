@@ -10,6 +10,7 @@ import cn.techarts.copycat.core.Handler;
 public class Context<T extends Frame> {
 	private int port;
 	private int maxThreads = 0;
+	private int samplePeriod = 5000;
 	private boolean directBuffer = true;
 	
 	private Handler handler;
@@ -127,5 +128,17 @@ public class Context<T extends Frame> {
 	
 	public boolean isVirtualThreadEnabled() {
 		return this.virtualThreadEnabled;
+	}
+
+	public int getSamplePeriod() {
+		return samplePeriod;
+	}
+	
+	/**Default period (at least) is 5 seconds*/
+	public void setSamplePeriod(int samplePeriod) {
+		this.samplePeriod = samplePeriod;
+		if(samplePeriod < 5000) {
+			this.samplePeriod = 5000;
+		}
 	}	
 }

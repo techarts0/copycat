@@ -27,9 +27,10 @@ public class Booster<T extends Frame> {
  
     public Booster(Context<T> context) throws CopycatException{
     	try {
-    		this.monitor = new Monitor(10000);
     		this.context = context.checkRequiredProperties();
             executorService = Executors.newCachedThreadPool();
+            this.monitor = new Monitor(context.getSamplePeriod());
+            
             if(context.isVirtualThreadEnabled()) {
             	workerExecutorService = Executors.newVirtualThreadPerTaskExecutor();
             }else {
