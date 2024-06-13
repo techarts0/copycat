@@ -1,7 +1,8 @@
 package cn.techarts.copycat.demo.chat;
 
 import cn.techarts.copycat.core.Frame;
-import cn.techarts.copycat.util.Utility;
+import cn.techarts.copycat.util.BitUtil;
+import cn.techarts.copycat.util.StrUtil;
 
 /**
  * |0x4d 0x4d |  sender | receiver | length  | message |
@@ -31,8 +32,8 @@ public class ChatFrame extends Frame {
 
 	@Override
 	protected void parse() {
-		this.sender = Utility.toInt(new byte[] {data[2], data[3], data[4], data[5]});
-		this.receiver = Utility.toInt(new byte[] {data[6], data[7], data[8], data[9]});
+		this.sender = BitUtil.toInt(new byte[] {data[2], data[3], data[4], data[5]});
+		this.receiver = BitUtil.toInt(new byte[] {data[6], data[7], data[8], data[9]});
 		
 		if(receiver == 0 && data.length == 12) {
 			this.loginFrame = true;
@@ -41,7 +42,7 @@ public class ChatFrame extends Frame {
 		
 		byte[] msg = new byte[data.length - 12];
 		System.arraycopy(data, 12, msg, 0, msg.length);
-		this.message = Utility.toUTF8String(msg);
+		this.message = StrUtil.toGBKString(msg);
 	}
 
 	@Override
@@ -50,13 +51,13 @@ public class ChatFrame extends Frame {
 		this.data = new byte[12 + msgLen];
 		data[0] = 0x4d;
 		data[1] = 0x4d;
-		var sender = Utility.toBytes(this.sender);
+		var sender = BitUtil.toBytes(this.sender);
 		data[2] = sender[0];
 		data[3] = sender[1];
 		data[4] = sender[2];
 		data[5] = sender[3];
 		
-		var recver = Utility.toBytes(this.receiver);
+		var recver = BitUtil.toBytes(this.receiver);
 		data[6] = recver[0];
 		data[7] = recver[1];
 		data[8] = recver[2];
@@ -65,7 +66,7 @@ public class ChatFrame extends Frame {
 		if(receiver == 0 && msgLen == 0) return data;
 		
 		var msg = message.getBytes();
-		var lenBytes = Utility.toBytes((short)msgLen);
+		var lenBytes = BitUtil.toBytes((short)msgLen);
 		data[10] = lenBytes[0];
 		data[11] = lenBytes[1];
 		System.arraycopy(msg, 0, data, 12, msgLen);

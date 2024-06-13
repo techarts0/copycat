@@ -103,20 +103,6 @@ public final class ByteBuf {
 	}
 	
 	/**
-	 * Consumes the given bytes but actually return (length - backspace) bytes.<br>
-	 * but the current pointer does not move backwards(same to) {@link consume(length)}
-	 */ 
-	public byte[] steal2(int length, int backspace) {
-		int remaining = position - current;
-		if(remaining < length) return null; //Not enough
-		var result = new byte[length - 2];
-		System.arraycopy(data, current, result, 0, length - 2);
-		this.current += length;
-		compactBufferIfNecessary();
-		return result;
-	}
-	
-	/**
 	 * Read specific length of bytes but don't move the current pointer
 	 */
 	public byte[] lend(int pos, int length) {

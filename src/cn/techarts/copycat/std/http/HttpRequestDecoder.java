@@ -2,10 +2,10 @@ package cn.techarts.copycat.std.http;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import cn.techarts.copycat.core.ByteBuf;
 import cn.techarts.copycat.core.Decoder;
-import cn.techarts.copycat.util.Utility;
+import cn.techarts.copycat.util.StrUtil;
+
 
 /**Implementation of HTTP 1.0 & 1.1
  * Please refer to RFC 2616
@@ -34,7 +34,7 @@ public class HttpRequestDecoder extends Decoder<HttpRequest> {
 			var line = data.lend(latest, index - 1);
 			latest = index + 1; //Move the start point to next
 			headerLength = line.length + 2;
-			var strLine = Utility.toAsciiString(line);
+			var strLine = StrUtil.toAsciiString(line);
 			strLine = strLine.toLowerCase();
 			headers.add(strLine);
 			if(strLine.startsWith("content-length")) {

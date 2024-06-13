@@ -85,22 +85,12 @@ public final class ByteBuf {
 	 * Read the given bytes and moves the current pointer to next {@value skip}
 	 */
 	public byte[] steal(int length, int skip) {
-		var result = steal(length);
-		this.skip(skip);
-		this.compactBufferIfNecessary();
-		return result;
-	}
-	
-	/**
-	 * Read the given bytes but actually return (length - backspace) bytes.<br>
-	 * but the current pointer does not move backwards(same to) {@link consume(length)}
-	 */ 
-	public byte[] steal2(int length, int backspace) {
-		int remaining = remaining();
-		if(remaining < length) return null;
-		var result = new byte[length - backspace];
+		if(buffer.remaining() < length) {
+			return null; //Not enough
+		}
+		var result = new byte[length];
 		this.buffer.get(result);
-		this.skip(backspace);
+		this.skip(skip);
 		this.compactBufferIfNecessary();
 		return result;
 	}

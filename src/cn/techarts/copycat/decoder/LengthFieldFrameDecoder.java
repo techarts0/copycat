@@ -6,6 +6,7 @@ import java.util.List;
 import cn.techarts.copycat.core.ByteBuf;
 import cn.techarts.copycat.core.Decoder;
 import cn.techarts.copycat.core.Frame;
+import cn.techarts.copycat.util.BitUtil;
 import cn.techarts.copycat.util.Utility;
 
 public class LengthFieldFrameDecoder<T extends  Frame> extends Decoder<T> {
@@ -39,9 +40,9 @@ public class LengthFieldFrameDecoder<T extends  Frame> extends Decoder<T> {
 		if(len == 0) return 0;
 		if(len == 1) return bytes[0];
 		if(len == 2) {
-			return Utility.toShort(bytes);
+			return BitUtil.toShort(bytes);
 		}else {
-			return Utility.toInt(bytes);
+			return BitUtil.toInt(bytes);
 		}
 	}
 
