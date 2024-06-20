@@ -28,12 +28,12 @@ public class Booster<T extends Frame> {
     public Booster(Context<T> context) throws CopycatException{
     	try {
     		this.context = context.checkRequiredProperties();
-            executorService = Executors.newCachedThreadPool();
             this.monitor = new Monitor(context.getSamplePeriod());
-            
             if(context.isVirtualThreadEnabled()) {
+            	executorService = Executors.newVirtualThreadPerTaskExecutor();
             	workerExecutorService = Executors.newVirtualThreadPerTaskExecutor();
             }else {
+            	executorService = Executors.newCachedThreadPool();
             	workerExecutorService = Executors.newFixedThreadPool(context.getMaxThreads());
             }
             channelGroup = AsynchronousChannelGroup.withCachedThreadPool(executorService, 1);

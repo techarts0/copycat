@@ -125,4 +125,16 @@ public class BitUtil {
 		result[1] = (byte)(val >> 8);
 		return result;
 	}
+	
+	public static byte[] slice(byte[] arg, int start, int length) {
+		if(arg == null || length <= 0) return null;
+		int len = length, endIndex = start + len - 1;
+		if(endIndex >= arg.length) {
+			endIndex = arg.length - 1;
+			len = endIndex - start + 1;
+		}
+		var result = new byte[len];
+		System.arraycopy(arg, start, result, 0, len);
+		return result;
+	}
 }
