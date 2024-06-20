@@ -1,4 +1,4 @@
-package cn.techarts.copycat.ext.mars;
+package cn.techarts.copycat.ext.mote;
 
 import cn.techarts.copycat.util.BitUtil;
 
@@ -6,7 +6,7 @@ import cn.techarts.copycat.util.BitUtil;
  * The frame is sent from server to DTU/RTU.
  * 
  */
-public class TimingFrame extends MarsFrame {
+public class TimingFrame extends MoteFrame {
 	
 	public static final byte TYPE = 0X21;
 	

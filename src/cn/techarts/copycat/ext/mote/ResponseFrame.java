@@ -1,6 +1,6 @@
-package cn.techarts.copycat.ext.mars;
+package cn.techarts.copycat.ext.mote;
 
-public class ResponseFrame extends MarsFrame {
+public class ResponseFrame extends MoteFrame {
 	
 	public static final byte TYPE = 0X20;
 	

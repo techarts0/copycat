@@ -1,4 +1,4 @@
-package cn.techarts.copycat.ext.mars;
+package cn.techarts.copycat.ext.mote;
 
 import java.time.Instant;
 
@@ -12,7 +12,7 @@ import cn.techarts.copycat.util.BitUtil;
  *  
  */
 
-public class SensorFrame extends MarsFrame {
+public class SensorFrame extends MoteFrame {
 	
 	public static final byte TYPE = 0X02;
 	

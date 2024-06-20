@@ -1,4 +1,4 @@
-package cn.techarts.copycat.ext.mars;
+package cn.techarts.copycat.ext.mote;
 
 import cn.techarts.copycat.core.Frame;
 import cn.techarts.copycat.util.BitUtil;
@@ -15,7 +15,7 @@ import cn.techarts.copycat.util.BitUtil;
  *  Generally, the device SN is stuffed in the head of data field and ends with a specific ASCII char '\0'.
  * 
  */
-public class MarsFrame extends Frame {
+public class MoteFrame extends Frame {
 	private short prefix = 10086;	//Fixed 2 bytes[0x27, 0x66]
 	private byte version;			//Protocol Version
 	private byte type = 0;			//Frame Type(Refer to MarsType)

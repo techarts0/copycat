@@ -1,4 +1,4 @@
-package cn.techarts.copycat.ext.mars;
+package cn.techarts.copycat.ext.mote;
 
 public enum Status {
 	SUCCESSFUL(0X00),

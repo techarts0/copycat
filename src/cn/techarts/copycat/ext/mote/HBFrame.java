@@ -1,8 +1,8 @@
-package cn.techarts.copycat.ext.mars;
+package cn.techarts.copycat.ext.mote;
 
 import cn.techarts.copycat.util.BitUtil;
 
-public class HBFrame extends MarsFrame {
+public class HBFrame extends MoteFrame {
 	
 	public static final byte TYPE = 0X03;
 	

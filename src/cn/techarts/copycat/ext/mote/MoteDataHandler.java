@@ -1,11 +1,11 @@
-package cn.techarts.copycat.ext.mars;
+package cn.techarts.copycat.ext.mote;
 
 import java.nio.channels.AsynchronousSocketChannel;
 
 import cn.techarts.copycat.core.Frame;
 import cn.techarts.copycat.core.Handler;
 
-public class MarsDataHandler implements Handler {
+public class MoteDataHandler implements Handler {
 	
 	
 	@Override

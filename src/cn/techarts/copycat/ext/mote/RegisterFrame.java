@@ -1,9 +1,9 @@
-package cn.techarts.copycat.ext.mars;
+package cn.techarts.copycat.ext.mote;
 
 import cn.techarts.copycat.CopycatException;
 import cn.techarts.copycat.util.BitUtil;
 
-public class RegisterFrame extends MarsFrame {
+public class RegisterFrame extends MoteFrame {
 	
 	public static final byte TYPE = 0X01;
 	
