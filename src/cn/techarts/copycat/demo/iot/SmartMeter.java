@@ -15,12 +15,14 @@ public class SmartMeter {
 	    	var sn = "Meter-001";
 			client.with(decoder, MoteFrame.class).with(new MeterHandler()).start();
 	    	
+			System.out.println("---I am smart meter 001---");
+			
 	    	client.send(new RegisterFrame(sn, 123456).serialize());
 	    	
 	    	while(true) {
-	    		Thread.sleep(1000);
-	    		client.send(new DataFrame(sn, new byte[] {1, 2, 3, 4, 5, 6}).serialize());
 	    		Thread.sleep(2000);
+	    		client.send(new DataFrame(sn, new byte[] {1, 2, 3, 4, 5, 6}).serialize());
+	    		Thread.sleep(3000);
 	    		client.send(new HBFrame(sn).serialize());
 	    	}       
 	    }
