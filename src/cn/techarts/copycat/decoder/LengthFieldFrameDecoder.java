@@ -11,7 +11,7 @@ import cn.techarts.copycat.util.Utility;
 
 public class LengthFieldFrameDecoder<T extends  Frame> extends Decoder<T> {
 	
-	private int offset = 0, length = 2; 
+	protected int offset = 0, length = 2; 
 	
 	public LengthFieldFrameDecoder(int offset, int length) {
 		this.offset = offset;
@@ -34,7 +34,7 @@ public class LengthFieldFrameDecoder<T extends  Frame> extends Decoder<T> {
 		return result.toArray(Utility.array(frameClass, 0));
 	}
 	
-	private static int len(byte[] bytes) {
+	protected static int len(byte[] bytes) {
 		if(bytes == null) return 0;
 		int len = bytes.length;
 		if(len == 0) return 0;

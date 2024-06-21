@@ -9,13 +9,13 @@ import cn.techarts.copycat.CopycatException;
  */
 public abstract class Frame {
 	/**The raw byte data*/
-	protected byte[] data;
+	protected byte[] rawdata;
 	
 	//Default constructor
 	public Frame() {}
 	
 	public Frame(byte[] raw) {
-		this.data = raw;
+		this.rawdata = raw;
 		if(raw == null || raw.length == 0) {
 			throw new CopycatException("Failed to contruct a null frame.");
 		}
@@ -23,15 +23,15 @@ public abstract class Frame {
 	}
 	
 	public int length() {
-		if(data == null) return 0;
-		return this.data.length;
+		if(rawdata == null) return 0;
+		return this.rawdata.length;
 	}
 	
 	/**
 	 * @return The raw data received from peer.
 	 */
 	public byte[] getData() {
-		return this.data;
+		return this.rawdata;
 	}
 	
 	/**
@@ -43,15 +43,15 @@ public abstract class Frame {
 	
 	@Override
 	public String toString() {
-		return Arrays.toString(data);
+		return Arrays.toString(rawdata);
 	}
 	
 	protected byte[] slice(int pos, int length) {
-		if(length > data.length - pos) {
+		if(length > rawdata.length - pos) {
 			return null;
 		}
 		var result = new byte[length];
-		System.arraycopy(data, pos, result, 0, length);
+		System.arraycopy(rawdata, pos, result, 0, length);
 		return result;
 	}
 }

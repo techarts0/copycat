@@ -10,20 +10,27 @@ public class TimingFrame extends MoteFrame {
 	
 	public static final byte TYPE = 0X21;
 	
-	private int timestamp;	//UTC Time-Stamp
+	private long timestamp;	//UTC Time-Stamp
+	
+	
+	public TimingFrame(byte[] raw) {
+		super(raw);
+	}
 	
 	@Override
 	protected void parse() {
 		super.parse();
-		var tmp = new byte[] {payload[0], payload[1], payload[2], payload[3]};
-		setTimestamp(BitUtil.toInt(tmp));
+		this.timestamp = BitUtil.toInt(payload);
 	}
 
-	public int getTimestamp() {
+	@Override
+	public byte[] serialize() {
+		this.timestamp = this.now();
+		return serialize0(BitUtil.toBytes(timestamp), TYPE);
+	}
+	
+	
+	public long getTimestamp() {
 		return timestamp;
-	}
-
-	public void setTimestamp(int timestamp) {
-		this.timestamp = timestamp;
 	}
 }

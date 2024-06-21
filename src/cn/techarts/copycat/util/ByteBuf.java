@@ -5,7 +5,7 @@ import java.nio.ByteBuffer;
 /**
  * The performance of the implementation is not very good 
  * because it copies bytes from direct memory to heap.
- * So it's a backup and we don't use it in the production.
+ * So it's just a backup and we don't use it in the production.
  */
 public final class ByteBuf {
 	private byte[] data = new byte[1024];

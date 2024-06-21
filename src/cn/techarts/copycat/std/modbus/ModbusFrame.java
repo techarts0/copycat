@@ -20,16 +20,16 @@ public class ModbusFrame extends Frame {
 	
 	@Override
 	protected void parse() {
-		var tmp = new byte[] {data[2], data[3]};
+		var tmp = new byte[] {rawdata[2], rawdata[3]};
 		if(BitUtil.toShort(tmp) != 0) {
 			throw new CopycatException("Unsupported protocol.");
 		}
 		this.mbap = new MBAP();
-		tmp = new byte[] {data[0], data[1]};
+		tmp = new byte[] {rawdata[0], rawdata[1]};
 		mbap.setTid(BitUtil.toShort(tmp))
-			.setIdentifier(this.data[6]);
+			.setIdentifier(this.rawdata[6]);
 		
-		this.setFuncode(this.data[7]);
+		this.setFuncode(this.rawdata[7]);
 		if(isExceptionOccurred()) return;
 		if(this.funcode < 0x05) {
 			this.parseFunction1to4();
@@ -40,22 +40,22 @@ public class ModbusFrame extends Frame {
 	
 	protected boolean isExceptionOccurred() {
 		if(funcode <= 0X80) return false;
-		this.setError(this.data[8]);
+		this.setError(this.rawdata[8]);
 		return true; //An exception is occurred
 	}
 	
 	//Function Code(01, 02, 03, 04)
 	private void parseFunction1to4() {
-		var len = data[8];
+		var len = rawdata[8];
 		this.payload = new byte[len];
-		System.arraycopy(data, 9, payload, 0, len);
+		System.arraycopy(rawdata, 9, payload, 0, len);
 	}
 			
 	//Function Code(05, 06, 15, 16)
 	private void parseFunctionGt4() {
-		var tmp = new byte[] {data[8], data[9]};
+		var tmp = new byte[] {rawdata[8], rawdata[9]};
 		this.setRegister(BitUtil.toShort(tmp));
-		payload = new byte[] {data[10], data[11]};
+		payload = new byte[] {rawdata[10], rawdata[11]};
 	}
 	
 	
@@ -68,15 +68,15 @@ public class ModbusFrame extends Frame {
 	public byte[] serialize() {
 		int tmp = this.payload.length;
 		int len = getFrameLength(tmp);
-		this.data = new byte[len];
+		this.rawdata = new byte[len];
 		//this.data[0] = 
 		//this.data[1] =
-		this.data[2] = 0x00;
-		this.data[3] = 0x00;
-		this.data[4] = 0x00;
-		this.data[5] = 0x00;
+		this.rawdata[2] = 0x00;
+		this.rawdata[3] = 0x00;
+		this.rawdata[4] = 0x00;
+		this.rawdata[5] = 0x00;
 		//this.data[6] = slave;
-		this.data[7] = funcode;
+		this.rawdata[7] = funcode;
 		
 		
 		if(funcode < 0X0F) {

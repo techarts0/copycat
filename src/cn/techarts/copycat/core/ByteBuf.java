@@ -6,6 +6,8 @@ import java.nio.InvalidMarkException;
 import cn.techarts.copycat.util.Utility;
 
 /**
+ * ZERO-COPY :)<br>
+ * 
  * It's a wrapper of JDK ByteBuffer but easier to use.<br>
  */
 public final class ByteBuf {

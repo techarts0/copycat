@@ -28,15 +28,15 @@ public class MqttPacket extends Frame {
 	private int prefixLength() {
 		int prefix = 1;
 		while(true) {
-			var b = data[prefix++];
+			var b = rawdata[prefix++];
 			if((b & 128) == 0) break; 
 		}
 		return prefix;
 	}
 	
 	private void parseFixedHead() {
-		this.setFlag((byte)(data[0] & 0X0F));
-		this.setType((byte)(data[0] & 0XF0));
+		this.setFlag((byte)(rawdata[0] & 0X0F));
+		this.setType((byte)(rawdata[0] & 0XF0));
 	}
 
 	public byte getFlag() {

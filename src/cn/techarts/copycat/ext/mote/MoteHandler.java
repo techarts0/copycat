@@ -5,7 +5,7 @@ import java.nio.channels.AsynchronousSocketChannel;
 import cn.techarts.copycat.core.Frame;
 import cn.techarts.copycat.core.Handler;
 
-public class MarsHandler implements Handler {
+public class MoteHandler implements Handler {
 
 	@Override
 	public boolean isSingleton() {

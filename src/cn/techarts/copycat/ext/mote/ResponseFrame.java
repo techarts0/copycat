@@ -6,13 +6,25 @@ public class ResponseFrame extends MoteFrame {
 	
 	private byte status;
 	
+	public ResponseFrame(byte[] raw) {
+		super(raw);
+	}
+	
+	public ResponseFrame(String sn, byte status) {
+		this.setSn(sn);
+		this.status = status;
+	}
+	
 	protected void parse() {
 		super.parse();
 		setStatus(payload[0]);
 	}
 	
 	public byte[] serialize() {
-		return serialize0(new byte[] {status});
+		var data = new byte[sn.length + 1];
+		System.arraycopy(sn, 0, data, 0, sn.length);
+		data[sn.length] = status;
+		return serialize0(data, TYPE);
 	}
 
 	public byte getStatus() {

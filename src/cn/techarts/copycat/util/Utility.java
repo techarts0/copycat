@@ -6,6 +6,9 @@ import java.nio.channels.AsynchronousSocketChannel;
 import cn.techarts.copycat.CopycatException;
 import cn.techarts.copycat.core.Frame;
 
+/**
+ * An internal utilities.
+ */
 public class Utility {
 	
 	@SuppressWarnings("unchecked")

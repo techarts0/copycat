@@ -11,10 +11,32 @@ public class RegisterFrame extends MoteFrame {
 	private byte tst;		//Time-Stamp Type
 	private byte protocol;	//TT Protocol type
 	
+	public RegisterFrame(byte[] data) {
+		super(data);
+	}
+	
+	/**
+	 * Protocol: MODBUS
+	 * TS-Type: 1, DTU Time-Stamp
+	 */
+	public RegisterFrame(String sn, int token) {
+		this.setSn(sn);
+		this.setTst((byte)1);
+		this.setToken(token);
+		this.setProtocol((byte)0);
+	}	
+	
+	public RegisterFrame(String sn, int token, byte tst, byte protocol) {
+		this.setSn(sn);
+		this.setTst(tst);
+		this.setToken(token);
+		this.setProtocol(protocol);
+	}
+	
 	@Override
 	protected void parse() {
 		super.parse();
-		var idx = super.indexOfFirst0(payload);
+		var idx = indexOfFirst0(payload);
 		if(idx == -1) {
 			throw new CopycatException("Illegal device SN.");
 		}
@@ -26,7 +48,14 @@ public class RegisterFrame extends MoteFrame {
 	}
 	
 	public byte[] serialize() {
-		return null; //TODO
+		var len = sn.length + 6;
+		var data = new byte[len];
+		System.arraycopy(sn, 0, data, 0, sn.length);
+		var tkn = BitUtil.toBytes(token);
+		System.arraycopy(tkn, 0, data, sn.length, 4);
+		data[len - 2] = tst;
+		data[len - 1] = protocol;
+		return this.serialize0(data, TYPE);
 	}
 	
 	public int getToken() {

@@ -6,6 +6,15 @@ public class HBFrame extends MoteFrame {
 	
 	public static final byte TYPE = 0X03;
 	
+	public HBFrame(byte[] raw) {
+		super(raw);
+	}
+	
+	public HBFrame(String sn) {
+		this.setSn(sn);
+		this.setType(TYPE);
+	}
+	
 	@Override
 	protected void parse() {
 		super.parse();
@@ -15,8 +24,7 @@ public class HBFrame extends MoteFrame {
 
 	@Override
 	public byte[] serialize() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.serialize0(getSn(), TYPE);
 	}
 
 }

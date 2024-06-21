@@ -30,6 +30,18 @@ public class StrUtil {
 		}
 	}
 	
+	public static byte[] toASCII(String data) {
+		if(data == null) return null;
+		if(data.isEmpty()) return null;
+		return data.getBytes(StandardCharsets.US_ASCII);
+	}
+	
+	public static byte[] toUTF8(String data) {
+		if(data == null) return null;
+		if(data.isEmpty()) return null;
+		return data.getBytes(StandardCharsets.UTF_8);
+	}
+	
 	public static List<String> split(String src, char separator){
 		var result = new ArrayList<String>(256);
 		if(src == null || src.trim().length() == 0) return result; 

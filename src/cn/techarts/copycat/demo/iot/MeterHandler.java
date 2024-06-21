@@ -1,11 +1,18 @@
-package cn.techarts.copycat.ext.mote;
+package cn.techarts.copycat.demo.iot;
 
 import java.nio.channels.AsynchronousSocketChannel;
 
+import cn.techarts.copycat.Registry;
 import cn.techarts.copycat.core.Frame;
 import cn.techarts.copycat.core.Handler;
+import cn.techarts.copycat.ext.mote.DataFrame;
+import cn.techarts.copycat.ext.mote.HBFrame;
+import cn.techarts.copycat.ext.mote.MoteFrame;
+import cn.techarts.copycat.ext.mote.RegisterFrame;
+import cn.techarts.copycat.ext.mote.ResponseFrame;
+import cn.techarts.copycat.ext.mote.TimingFrame;
 
-public class MoteDataHandler implements Handler {
+public class MeterHandler implements Handler {
 	
 	
 	@Override
@@ -33,8 +40,11 @@ public class MoteDataHandler implements Handler {
 
 	@Override
 	public <T extends Frame> void onFrameReceived(T frame, AsynchronousSocketChannel socket) {
-		// TODO Auto-generated method stub
-
+		if(frame instanceof HBFrame) {
+			System.out.println(">> Received heart-beating from server");
+		}else if(frame instanceof TimingFrame) {
+			System.out.println("Received UTC time-stamp from server.");
+		}
 	}
 
 	@Override
