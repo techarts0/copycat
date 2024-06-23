@@ -63,18 +63,6 @@ public class Context<T extends Frame> {
 		this.decoder.setFrameClass(frameClass);
 	}
 	
-	public<D extends Decoder<T>> void setSingletonDecoder(D decoder, Class<T> frameClass) {
-		this.decoder = decoder;
-		this.decoder.setFrameClass(frameClass);
-	}
-	
-	public<D extends Decoder<T>> void setDecoder(D decoder) {
-		this.decoder = decoder;
-		if(this.decoder.getFrameClass() == null) {
-			throw new CopycatException("The frame class is required!");
-		}
-	}
-	
 	public Handler getHandler() {
 		if(this.handler.isSingleton()) return this.handler;
 		try {

@@ -14,7 +14,7 @@ import java.nio.channels.CompletionHandler;
 import java.nio.channels.AsynchronousSocketChannel;
 
 /**
- * A helper simplifies you to build a client application.
+ * A helper simplifies to build a client application.
  * */
 public class Visitor<T extends Frame> {
 	private Handler handler = null;

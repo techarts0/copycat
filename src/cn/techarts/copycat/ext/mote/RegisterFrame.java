@@ -1,14 +1,20 @@
 package cn.techarts.copycat.ext.mote;
 
-import cn.techarts.copycat.CopycatException;
+import java.nio.charset.StandardCharsets;
+
 import cn.techarts.copycat.util.BitUtil;
+
+/**
+ * The layout of data field:<br>
+ * |  SN     | Delimiter |  token   | Delimiter  |  TT Protocol |
+ * |  any    |  1(NUL)   |   any    |  1(NUL)    |  1 byte      |
+ */
 
 public class RegisterFrame extends MoteFrame {
 	
 	public static final byte TYPE = 0X01;
 	
-	private int token;		//Device Token
-	private byte tst;		//Time-Stamp Type
+	private byte[] token;	//Device Token
 	private byte protocol;	//TT Protocol type
 	
 	public RegisterFrame(byte[] data) {
@@ -19,16 +25,20 @@ public class RegisterFrame extends MoteFrame {
 	 * Protocol: MODBUS
 	 * TS-Type: 1, DTU Time-Stamp
 	 */
-	public RegisterFrame(String sn, int token) {
-		this.setSn(sn);
-		this.setTst((byte)1);
+	public RegisterFrame(String sn, String token) {
+		this.setSn(sn, NUL);
 		this.setToken(token);
-		this.setProtocol((byte)0);
+		this.setProtocol((byte)0); //MODBUS
 	}	
 	
-	public RegisterFrame(String sn, int token, byte tst, byte protocol) {
-		this.setSn(sn);
-		this.setTst(tst);
+	public RegisterFrame(String sn, String token, byte protocol) {
+		this.setSn(sn, NUL);
+		this.setToken(token);
+		this.setProtocol(protocol);
+	}
+	
+	public RegisterFrame(String sn, byte[] token, byte protocol) {
+		this.setSn(sn, NUL);
 		this.setToken(token);
 		this.setProtocol(protocol);
 	}
@@ -36,43 +46,45 @@ public class RegisterFrame extends MoteFrame {
 	@Override
 	protected void parse() {
 		super.parse();
-		var idx = indexOfFirst0(payload);
+		var idx = indexOfDelimiter(payload);
 		if(idx == -1) {
-			throw new CopycatException("Illegal device SN.");
+			throw MoteException.invalidSN();
 		}
 		setSn(BitUtil.slice(payload, 0, idx));
-		var tmp = BitUtil.slice(payload, idx + 1, 4);
-		setToken(BitUtil.toInt(tmp));
-		setTst(payload[idx + 5]);
-		setProtocol(payload[idx + 6]);
+		var idx2 = this.indexOfNul(payload, idx + 1);
+		var len = idx2 - idx - 1;
+		setToken(BitUtil.slice(payload, idx + 1, len));
+		setProtocol(payload[idx + 1]); // 1 byte only
 	}
 	
 	public byte[] serialize() {
-		var len = sn.length + 6;
-		var data = new byte[len];
+		var vlen = sn.length + token.length;
+		var data = new byte[vlen + 1]; //
 		System.arraycopy(sn, 0, data, 0, sn.length);
-		var tkn = BitUtil.toBytes(token);
-		System.arraycopy(tkn, 0, data, sn.length, 4);
-		data[len - 2] = tst;
-		data[len - 1] = protocol;
+		System.arraycopy(token, 0, data, sn.length, token.length);
+		data[vlen] = protocol;
 		return this.serialize0(data, TYPE);
 	}
 	
-	public int getToken() {
-		return token;
+	public byte[] getToken() {
+		return this.token;
+	}
+	
+	public String getTokenString() {
+		if(this.token == null) return null;
+		if(this.token.length == 0) return null;
+		return new String(token, StandardCharsets.US_ASCII);
 	}
 
-	public void setToken(int token) {
+	public void setToken(String token) {
+		if(token == null || token.isEmpty()) return;
+		var tmp = new StringBuilder(token).append(NUL);
+		this.token = tmp.toString().getBytes(StandardCharsets.US_ASCII);
+	}	
+	
+	public void setToken(byte[] token) {
 		this.token = token;
-	}
-
-	public byte getTst() {
-		return tst;
-	}
-
-	public void setTst(byte tst) {
-		this.tst = tst;
-	}
+	}	
 
 	public byte getProtocol() {
 		return protocol;

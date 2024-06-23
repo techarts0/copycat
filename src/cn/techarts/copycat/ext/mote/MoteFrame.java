@@ -16,12 +16,16 @@ import cn.techarts.copycat.util.StrUtil;
  * | Prefix  | Version | Type  |  Length  | Data |
  * | 2 bytes | 1 byte  | 1 byte|  2 bytes | <-N  |
  * 
- *  Generally, the device SN is stuffed in the head of data field and ends with a specific ASCII char '\0'.<br>
- *  All upstream packets contain a device SN and down-stream packets without it.
+ *  Generally, the device SN is stuffed in the head of data field and ends with 
+ *  a specific ASCII char NUL or ESC. All upstream packets contain a device SN 
+ *  and down-stream packets without it.
  * 
  */
 public class MoteFrame extends Frame {
+	public static final char NUL = 0X00;
+	public static final char ESC = 0X1B;
 	public static final byte VERSION = 0x01;	//Protocol Version
+	
 	private short prefix = 10086;				//Fixed 2 bytes[0x27, 0x66]
 	private byte type = 0;						//Frame Type(Refer to MarsType)
 	protected byte[] sn;						//Device Serial Number
@@ -95,14 +99,33 @@ public class MoteFrame extends Frame {
 		}
 	}
 	
-	/**0X00: NUL*/
-	protected int indexOfFirst0(byte[] bytes) {
+	/**0X00: NUL or 0X1B: ESC
+	 * 
+	 * NUL: There is a time-stamp(8 bytes) followed.<br>
+	 * ESC: There is not a time-stamp(8 bytes) followed.<br>
+	 * The convention is only effective for DataFrame.
+	 */
+	protected int indexOfDelimiter(byte[] bytes) {
 		if(bytes == null) return -1;
 		int length = bytes.length;
 		if(length == 0) return -1;
 		
 		for(int i = 0; i < length; i++) {
 			if(bytes[i] == 0X00) return i;
+			if(bytes[i] == 0X1B) return i;
+		}
+		return -1;
+	}
+	
+	protected int indexOfNul(byte[] bytes, int start) {
+		if(bytes == null) return -1;
+		int length = bytes.length;
+		if(length == 0) return -1;
+		if(start >= length) return -1;
+		
+		for(int i = start; i < length; i++) {
+			if(bytes[i] == 0X00) return i;
+			if(bytes[i] == 0X1B) return i;
 		}
 		return -1;
 	}
@@ -118,9 +141,9 @@ public class MoteFrame extends Frame {
 	/**
 	 * With the end delimiter char '0'
 	 * */
-	public void setSn(String sn) {
+	public void setSn(String sn, char endChar) {
 		if(sn == null || sn.isEmpty()) return;
-		var tmp = new StringBuilder(sn).append((char)0);
+		var tmp = new StringBuilder(sn).append(endChar);
 		this.sn = tmp.toString().getBytes(StandardCharsets.US_ASCII);
 	}
 	

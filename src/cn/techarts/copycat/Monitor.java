@@ -2,10 +2,10 @@ package cn.techarts.copycat;
 
 public class Monitor {
 	private int period = 5000;
-	private int incomingInPeriod;
 	private int aliveConnections;
-	private int sentBytesInPeriod;
-	private int readBytesInPeriod;
+	private volatile int incomingInPeriod;
+	private volatile int sentBytesInPeriod;
+	private volatile int readBytesInPeriod;
 		
 	private long latestSamplingMillis = System.currentTimeMillis();
 	

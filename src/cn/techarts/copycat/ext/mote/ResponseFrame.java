@@ -11,7 +11,7 @@ public class ResponseFrame extends MoteFrame {
 	}
 	
 	public ResponseFrame(String sn, byte status) {
-		this.setSn(sn);
+		this.setSn(sn, NUL);
 		this.status = status;
 	}
 	
@@ -33,6 +33,5 @@ public class ResponseFrame extends MoteFrame {
 
 	public void setStatus(byte status) {
 		this.status = status;
-	}
-	
+	}	
 }

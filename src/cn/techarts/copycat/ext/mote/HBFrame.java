@@ -11,7 +11,7 @@ public class HBFrame extends MoteFrame {
 	}
 	
 	public HBFrame(String sn) {
-		this.setSn(sn);
+		this.setSn(sn, NUL);
 		this.setType(TYPE);
 	}
 	

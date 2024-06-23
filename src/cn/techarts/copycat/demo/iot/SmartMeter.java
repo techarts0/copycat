@@ -7,7 +7,6 @@ import cn.techarts.copycat.ext.mote.MoteDecoder;
 import cn.techarts.copycat.ext.mote.MoteFrame;
 import cn.techarts.copycat.ext.mote.RegisterFrame;
 
-//TODO
 public class SmartMeter {
 	 public static void main(String[] args) throws InterruptedException {
 	    	var client = new Visitor<MoteFrame>("localhost", 55530);
@@ -17,11 +16,15 @@ public class SmartMeter {
 	    	
 			System.out.println("---I am smart meter 001---");
 			
-	    	client.send(new RegisterFrame(sn, 123456).serialize());
+			boolean dtuts = true;
+	    	
+			client.send(new RegisterFrame(sn, "123456").serialize());
+	    	
+	    	var data = new byte[] {1, 2, 3, 4, 5};
 	    	
 	    	while(true) {
 	    		Thread.sleep(2000);
-	    		client.send(new DataFrame(sn, new byte[] {1, 2, 3, 4, 5, 6}).serialize());
+	    		client.send(new DataFrame(sn, data, dtuts).serialize());
 	    		Thread.sleep(3000);
 	    		client.send(new HBFrame(sn).serialize());
 	    	}       

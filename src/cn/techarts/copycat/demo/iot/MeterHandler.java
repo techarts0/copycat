@@ -2,14 +2,9 @@ package cn.techarts.copycat.demo.iot;
 
 import java.nio.channels.AsynchronousSocketChannel;
 
-import cn.techarts.copycat.Registry;
 import cn.techarts.copycat.core.Frame;
 import cn.techarts.copycat.core.Handler;
-import cn.techarts.copycat.ext.mote.DataFrame;
 import cn.techarts.copycat.ext.mote.HBFrame;
-import cn.techarts.copycat.ext.mote.MoteFrame;
-import cn.techarts.copycat.ext.mote.RegisterFrame;
-import cn.techarts.copycat.ext.mote.ResponseFrame;
 import cn.techarts.copycat.ext.mote.TimingFrame;
 
 public class MeterHandler implements Handler {

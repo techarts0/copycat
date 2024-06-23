@@ -7,7 +7,6 @@ import cn.techarts.copycat.Context;
 import cn.techarts.copycat.ext.mote.MoteDecoder;
 import cn.techarts.copycat.ext.mote.MoteFrame;
 
-//TODO
 public class SmartMeterServer {
 	public static void main(String[] args){
         var config = new Context<MoteFrame>();

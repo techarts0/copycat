@@ -12,7 +12,7 @@ public class Server {
         config.setPort(10086);
         config.setMaxThreads(0);
         config.enableVirtualThread();
-        config.setDecoder(new LengthFieldFrameDecoder<EchoFrame>(2, 1), EchoFrame.class);
+        config.setDecoder(new LengthFieldFrameDecoder<>(2, 1), EchoFrame.class);
         config.setHandler(new EchoHandler());
     	var startup = new Booster<>(config);
     	processCommandLineInstruction();
