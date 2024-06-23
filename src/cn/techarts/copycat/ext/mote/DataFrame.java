@@ -51,7 +51,7 @@ public class DataFrame extends MoteFrame {
 	}
 
 	@Override
-	public byte[] serialize() {
+	public byte[] encode() {
 		var dtuts = this.timestamp == 0;
 		var start = sn.length + (dtuts ? 8 : 0);
 		var data = new byte[start + payload.length];

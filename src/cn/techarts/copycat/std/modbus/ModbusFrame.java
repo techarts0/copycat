@@ -65,7 +65,7 @@ public class ModbusFrame extends Frame {
 	
 	
 	@Override
-	public byte[] serialize() {
+	public byte[] encode() {
 		int tmp = this.payload.length;
 		int len = getFrameLength(tmp);
 		this.rawdata = new byte[len];

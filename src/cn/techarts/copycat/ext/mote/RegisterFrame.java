@@ -57,7 +57,7 @@ public class RegisterFrame extends MoteFrame {
 		setProtocol(payload[idx + 1]); // 1 byte only
 	}
 	
-	public byte[] serialize() {
+	public byte[] encode() {
 		var vlen = sn.length + token.length;
 		var data = new byte[vlen + 1]; //
 		System.arraycopy(sn, 0, data, 0, sn.length);

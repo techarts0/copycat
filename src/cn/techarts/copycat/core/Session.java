@@ -39,6 +39,9 @@ public class Session<T extends Frame> implements Runnable{
 		this.handler.onConnected(connection); 	//Just calls once during a session
 	}
 	
+	/**
+	 * Returns the raw socket object.
+	 */
 	public AsynchronousSocketChannel getConnection() {
 		return this.connection;
 	}

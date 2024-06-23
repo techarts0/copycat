@@ -49,7 +49,7 @@ public class MoteFrame extends Frame {
 	}
 	
 	@Override
-	public byte[] serialize() {
+	public byte[] encode() {
 		// TODO Auto-generated method stub
 		return null;
 	}

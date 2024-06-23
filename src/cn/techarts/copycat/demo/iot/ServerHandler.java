@@ -42,15 +42,15 @@ public class ServerHandler implements Handler {
 			var f = (RegisterFrame)frame;
 			Registry.put(f.getDsn(), socket);
 			System.out.println("Meter " + f.getDsn() + " registered sucessfully.");
-			this.send(new ResponseFrame(f.getDsn(), (byte)0).serialize(), socket);
+			this.send(new ResponseFrame(f.getDsn(), (byte)0).encode(), socket);
 		}else if(frame instanceof HBFrame) {
 			var f = (HBFrame)frame;
 			System.out.println("Received heart-beating from meter" + f.getDsn());
-			this.send(new HBFrame(f.getDsn()).serialize(), socket);
+			this.send(new HBFrame(f.getDsn()).encode(), socket);
 		}else if(frame instanceof DataFrame) {
 			var f = (DataFrame)frame;
 			System.out.println(">> Received data from meter " + f.getDsn());
-			this.send(new ResponseFrame(f.getDsn(), (byte)0).serialize(), socket);
+			this.send(new ResponseFrame(f.getDsn(), (byte)0).encode(), socket);
 		}else if(frame instanceof ResponseFrame) {
 			var f = (ResponseFrame)frame;
 			System.out.println("Received response meter " + f.getDsn());

@@ -23,7 +23,7 @@ public class HBFrame extends MoteFrame {
 	}
 
 	@Override
-	public byte[] serialize() {
+	public byte[] encode() {
 		return this.serialize0(getSn(), TYPE);
 	}
 

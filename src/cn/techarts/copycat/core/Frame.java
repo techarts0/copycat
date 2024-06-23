@@ -39,7 +39,10 @@ public abstract class Frame {
 	 */
 	protected abstract void parse();
 	
-	public abstract byte[] serialize();
+	/**
+	 * Serialize the properties (as a byte array) to send to peer.
+	 */
+	public abstract byte[] encode();
 	
 	@Override
 	public String toString() {

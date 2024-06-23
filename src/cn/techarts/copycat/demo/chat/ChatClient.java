@@ -26,14 +26,14 @@ public class ChatClient {
     		if(myId <= 0 || peerId <= 0 || myId == peerId) {
     			System.out.print("Illegal user(s) id, bye!");
     		}else {
-    			client.send(new ChatFrame(myId, 0, null).serialize());
+    			client.send(new ChatFrame(myId, 0, null).encode());
     			while(true) {
     	        	String text = scanner.nextLine();
     		        if("exit".equals(text)) {
     		        	System.out.print("Goodbye!");
     		        	break;
     		        }else {
-    		        	client.send(new ChatFrame(myId, peerId, text).serialize());
+    		        	client.send(new ChatFrame(myId, peerId, text).encode());
     		        }
     	        }
     		}

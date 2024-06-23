@@ -46,7 +46,7 @@ public class ChatFrame extends Frame {
 	}
 
 	@Override
-	public byte[] serialize() {
+	public byte[] encode() {
 		var msgLen = message == null ? 0 : message.length();
 		this.rawdata = new byte[12 + msgLen];
 		rawdata[0] = 0x4d;

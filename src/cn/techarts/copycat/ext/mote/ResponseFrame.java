@@ -20,7 +20,7 @@ public class ResponseFrame extends MoteFrame {
 		setStatus(payload[0]);
 	}
 	
-	public byte[] serialize() {
+	public byte[] encode() {
 		var data = new byte[sn.length + 1];
 		System.arraycopy(sn, 0, data, 0, sn.length);
 		data[sn.length] = status;

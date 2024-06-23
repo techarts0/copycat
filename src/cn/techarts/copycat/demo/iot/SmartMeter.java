@@ -18,15 +18,15 @@ public class SmartMeter {
 			
 			boolean dtuts = true;
 	    	
-			client.send(new RegisterFrame(sn, "123456").serialize());
+			client.send(new RegisterFrame(sn, "123456").encode());
 	    	
 	    	var data = new byte[] {1, 2, 3, 4, 5};
 	    	
 	    	while(true) {
 	    		Thread.sleep(2000);
-	    		client.send(new DataFrame(sn, data, dtuts).serialize());
+	    		client.send(new DataFrame(sn, data, dtuts).encode());
 	    		Thread.sleep(3000);
-	    		client.send(new HBFrame(sn).serialize());
+	    		client.send(new HBFrame(sn).encode());
 	    	}       
 	    }
 }

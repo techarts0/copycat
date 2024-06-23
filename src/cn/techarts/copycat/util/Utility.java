@@ -53,7 +53,7 @@ public class Utility {
 	 */
 	public static<T extends Frame>  int sendData(T data, AsynchronousSocketChannel socket) {
 		if(data == null) return 0;
-		return sendData(data.serialize(), socket);
+		return sendData(data.encode(), socket);
 	}
 	
 	//On JVM heap or physical memory

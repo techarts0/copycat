@@ -61,7 +61,7 @@ public interface Handler {
      */
     default<T extends Frame> int send(T data, AsynchronousSocketChannel socket) {
     	if(data == null) return 0;
-    	return send(data.serialize(), socket);
+    	return send(data.encode(), socket);
     }
 	
     /**
