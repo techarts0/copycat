@@ -14,4 +14,8 @@ public class MoteException extends RuntimeException {
 	public static MoteException invalidSN() {
 		return new MoteException("Illegal frame without device SN.");
 	}
+	
+	public static MoteException itIsNotMote() {
+		return new MoteException("Unrecognized protocol.");
+	}
 }

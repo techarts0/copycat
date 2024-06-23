@@ -15,6 +15,12 @@ public class MoteDecoder extends LengthFieldFrameDecoder<MoteFrame> {
 		var prefix = offset + length;
 		var result = new ArrayList<MoteFrame>();
 		while(data.test(prefix)){
+			
+			var f = data.lend(data.current(), 2);
+			if(f[0] != 0X27 || f[1] != 0X66) {
+				throw MoteException.itIsNotMote();
+			}
+			
 			var pos = data.current() + offset;
 			var type = data.lend(pos - 1);// **
 			int len = len(data.lend(pos, length));

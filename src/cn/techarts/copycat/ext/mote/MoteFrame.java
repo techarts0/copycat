@@ -13,8 +13,8 @@ import cn.techarts.copycat.util.StrUtil;
  * Trust me, it full fills your requirement in most scenarios.
  * <p>Frame Structure:</p>
  * 
- * | Prefix  | Version | Type  |  Length  | Data |
- * | 2 bytes | 1 byte  | 1 byte|  2 bytes | <-N  |
+ * |  Prefix   | Version | Type  |  Length  | Data |
+ * | 0X27 0X66 | 1 byte  | 1 byte|  2 bytes | <-N  |
  * 
  *  Generally, the device SN is stuffed in the head of data field and ends with 
  *  a specific ASCII char NUL or ESC. All upstream packets contain a device SN 
@@ -26,7 +26,6 @@ public class MoteFrame extends Frame {
 	public static final char ESC = 0X1B;
 	public static final byte VERSION = 0x01;	//Protocol Version
 	
-	private short prefix = 10086;				//Fixed 2 bytes[0x27, 0x66]
 	private byte type = 0;						//Frame Type(Refer to MarsType)
 	protected byte[] sn;						//Device Serial Number
 	protected short length;						//The Remaining Bytes Length
@@ -59,7 +58,7 @@ public class MoteFrame extends Frame {
 	 * Head + Data
 	 */
 	protected byte[] serialize0(byte[] data, byte type) {
-		this.length = (short)(data == null ? 0 : data.length);
+		length = (short)(data == null ? 0 : data.length);
 		var result = new byte[6 + length];
 		result[0] = 0x27;
 		result[1] = 0x66;
@@ -70,14 +69,6 @@ public class MoteFrame extends Frame {
 		result[5] = tmp[1];
 		System.arraycopy(data, 0, result, 6, length);
 		return result;
-	}
-
-	public short getPrefix() {
-		return prefix;
-	}
-
-	public void setPrefix(short prefix) {
-		this.prefix = prefix;
 	}
 	
 	public byte getType() {
