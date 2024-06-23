@@ -17,7 +17,7 @@ public abstract class Frame {
 	public Frame(byte[] raw) {
 		this.rawdata = raw;
 		if(raw == null || raw.length == 0) {
-			throw new CopycatException("Failed to contruct a null frame.");
+			throw new CopycatException("Raw data is null.");
 		}
 		this.parse();
 	}
@@ -30,7 +30,7 @@ public abstract class Frame {
 	/**
 	 * @return The raw data received from peer.
 	 */
-	public byte[] getData() {
+	public byte[] getRawData() {
 		return this.rawdata;
 	}
 	

@@ -17,26 +17,32 @@ public interface Handler {
 	public boolean isSingleton();
 	
 	/**
-	 * Just for server side.
+	 * Fire the event when a new client connection is coming.
 	 */
 	public void onConnected(AsynchronousSocketChannel socket);
 	
+	/**
+	 * The event will be fired when a connection is closed.
+	 */
 	public void onDisconnected(AsynchronousSocketChannel socket);
 	
 	/**
-	 * If something goes wrong...
+	 * Fire the event if something goes wrong...
 	 */
 	public void onExceptionCaught(Throwable e, AsynchronousSocketChannel socket);
 	
 	/**
-	 * Do your business here
+	 * Fire the event when a frame is received.<br> 
+	 * Normally, you should handle the business here.
 	 */
 	public<T extends Frame> void onFrameReceived(T frame, AsynchronousSocketChannel socket);
 	
 	/**
-	 * Do something after writing
+	 * Fire the event when data sent successfully.
+	 * @param length The sent data length in bytes.
+	 * @param socket The peer socket object.
 	 */
-	public void onFrameSentSuccessfully(int length, AsynchronousSocketChannel socket);
+	public void onFrameTransmitted(int length, AsynchronousSocketChannel socket);
 	
 	/**
 	 * SYNC
@@ -69,7 +75,7 @@ public interface Handler {
     		socket.write(buf, null, new CompletionHandler<Integer, Void>(){
 				@Override
 				public void completed(Integer result, Void v) {
-					onFrameSentSuccessfully(result, socket);
+					onFrameTransmitted(result, socket);
 				}
 				@Override
 				public void failed(Throwable exc, Void v) {

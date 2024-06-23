@@ -32,7 +32,7 @@ public class ClientHandler implements Handler {
 	}
 
 	@Override
-	public void onFrameSentSuccessfully(int length, AsynchronousSocketChannel socket) {
+	public void onFrameTransmitted(int length, AsynchronousSocketChannel socket) {
 		// TODO Auto-generated method stub
 
 	}

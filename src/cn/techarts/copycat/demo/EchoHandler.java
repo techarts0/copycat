@@ -16,7 +16,7 @@ public class EchoHandler implements Handler {
 	public<T extends Frame> void onFrameReceived(T frame, AsynchronousSocketChannel socket) {
 		System.out.println(frame.toString());
 		//Echo
-		this.send(frame.getData(), socket);
+		this.send(frame.getRawData(), socket);
 	}
 
 	@Override
@@ -32,7 +32,7 @@ public class EchoHandler implements Handler {
 	}
 
 	@Override
-	public void onFrameSentSuccessfully(int length, AsynchronousSocketChannel socket) {
+	public void onFrameTransmitted(int length, AsynchronousSocketChannel socket) {
 		// TODO Auto-generated method stub
 		
 	}

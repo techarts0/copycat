@@ -23,7 +23,7 @@ public class ServerChatHandler implements Handler {
 		}else {
 			var client = Registry.get(t.getReceiver());
 			if(client != null) {
-				send(t.getData(), client);
+				send(t.getRawData(), client);
 			}else {
 				var text = t.getReceiver() + " is offline.";
 				send(new ChatFrame(0, t.getReceiver(), text), socket);
@@ -44,7 +44,7 @@ public class ServerChatHandler implements Handler {
 	}
 
 	@Override
-	public void onFrameSentSuccessfully(int length, AsynchronousSocketChannel socket) {
+	public void onFrameTransmitted(int length, AsynchronousSocketChannel socket) {
 		// TODO Auto-generated method stub
 		
 	}

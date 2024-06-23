@@ -1,7 +1,7 @@
 package cn.techarts.copycat.ext.mote;
 
 public enum Status {
-	SUCCESSFUL(0X00),
+	OK(0X00),
 	FAILED(0X01),
 	RESEND(0X02);
 	
