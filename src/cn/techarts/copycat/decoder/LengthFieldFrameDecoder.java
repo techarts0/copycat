@@ -27,11 +27,11 @@ public class LengthFieldFrameDecoder<T extends  Frame> extends Decoder<T> {
 			int len = len(data.lend(pos, length));
 			var size = prefix + len;
 			if(data.remaining() < size) break;
-			var fbs = data.steal(size);
+			var fbs = data.steal(size); //A frame
 			result.add(Utility.frame(frameClass, fbs));
 		}
-		if(result.isEmpty()) return null;
-		return result.toArray(Utility.array(frameClass, 0));
+		if(result.isEmpty()) return null; //Need more
+		return result.toArray(Utility.array(frameClass));
 	}
 	
 	protected static int len(byte[] bytes) {
@@ -50,5 +50,4 @@ public class LengthFieldFrameDecoder<T extends  Frame> extends Decoder<T> {
 	public boolean isSingleton() {
 		return true;
 	}
-
 }

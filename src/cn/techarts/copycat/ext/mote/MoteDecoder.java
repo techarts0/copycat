@@ -28,28 +28,31 @@ public class MoteDecoder extends LengthFieldFrameDecoder<MoteFrame> {
 			if(data.remaining() < size) break;
 			var fbs = data.steal(size);
 			
-			var clz = toClass(type); // **
-			result.add(Utility.frame(clz, fbs));
+			var clazz = toFrameClass(type); // **
+			result.add(Utility.frame(clazz, fbs));
 		}
 		if(result.isEmpty()) return null;
 		return result.toArray(Utility.array(frameClass, 0));
 	}
 	
-	private Class<? extends MoteFrame> toClass(byte type){
+	private Class<? extends MoteFrame> toFrameClass(byte type){
 		switch(type) {
 		case HBFrame.TYPE:
 			return HBFrame.class;
 		case DataFrame.TYPE:
 			return DataFrame.class;
-		case TimingFrame.TYPE:
-			return TimingFrame.class;
 		case RegisterFrame.TYPE:
 			return RegisterFrame.class;
 		case ResponseFrame.TYPE:
 			return ResponseFrame.class;
+		case TimingFrame.TYPE:
+			return TimingFrame.class;
 		default:
-			return null;
+			if(type > 33 && type < 128) {
+				return ControlFrame.class;
+			}else {
+				throw MoteException.invalidType(type);
+			}
 		}
 	}
-
 }

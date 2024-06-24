@@ -1,5 +1,7 @@
 package cn.techarts.copycat.demo.iot;
 
+import java.util.Scanner;
+
 import cn.techarts.copycat.Visitor;
 import cn.techarts.copycat.ext.mote.DataFrame;
 import cn.techarts.copycat.ext.mote.HBFrame;
@@ -11,13 +13,15 @@ public class SmartMeter {
 	 public static void main(String[] args) throws InterruptedException {
 	    	var client = new Visitor<MoteFrame>("localhost", 55530);
 			var decoder = new MoteDecoder();
-	    	var sn = "Meter-001";
-			client.with(decoder, MoteFrame.class).with(new MeterHandler()).start();
 	    	
-			System.out.println("---I am smart meter 001---");
-			
+	    	String sn = null; //Device SN
+			try(var scanner = new Scanner(System.in)){
+				System.out.print("Device SN: ");
+				sn = scanner.nextLine();
+			}
 			boolean dtuts = true;
 	    	
+			client.with(decoder, MoteFrame.class).with(new MeterHandler()).start();
 			client.send(new RegisterFrame(sn, "123456").encode());
 	    	
 	    	var data = new byte[] {1, 2, 3, 4, 5};

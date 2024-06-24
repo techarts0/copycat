@@ -18,4 +18,8 @@ public class MoteException extends RuntimeException {
 	public static MoteException itIsNotMote() {
 		return new MoteException("Unrecognized protocol.");
 	}
+	
+	public static MoteException invalidType(byte type) {
+		return new MoteException("Unsupported frame type: " + type);
+	}
 }

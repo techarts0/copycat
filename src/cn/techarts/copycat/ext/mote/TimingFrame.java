@@ -25,7 +25,7 @@ public class TimingFrame extends MoteFrame {
 
 	@Override
 	public byte[] encode() {
-		this.timestamp = this.now();
+		this.timestamp = this.seconds();
 		return serialize0(BitUtil.toBytes(timestamp), TYPE);
 	}
 	

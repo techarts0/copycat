@@ -54,6 +54,8 @@ public class ServerHandler implements Handler {
 		}else if(frame instanceof ResponseFrame) {
 			var f = (ResponseFrame)frame;
 			System.out.println("Received response meter " + f.getDsn());
+		}else {
+			System.out.println("The frame type is unsupported.");
 		}
 	}
 

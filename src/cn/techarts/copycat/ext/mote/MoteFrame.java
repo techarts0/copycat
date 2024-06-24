@@ -150,7 +150,14 @@ public class MoteFrame extends Frame {
 	/**
 	 * A time-zone insensitive UTC time-stamp
 	 */
-	public long now() {
+	public long milliseconds() {
+		return System.currentTimeMillis();
+	}
+	
+	/**
+	 * A time-zone insensitive UTC time-stamp
+	 */
+	public long seconds() {
 		return Instant.now().getEpochSecond();
 	}
 }

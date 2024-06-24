@@ -24,7 +24,7 @@ public class DataFrame extends MoteFrame {
 	public DataFrame(String sn, byte[] data, boolean dtuts) {
 		this.setPayload(data);
 		this.setSn(sn, dtuts ? NUL : ESC);
-		this.timestamp = dtuts ? now() : 0;
+		this.timestamp = dtuts ? milliseconds() : 0;
 	}
 	
 	protected void parse() {
@@ -43,7 +43,7 @@ public class DataFrame extends MoteFrame {
 					              payload[idx + 5], payload[idx + 6],
 					              payload[idx + 7], payload[idx + 8]};
 		}
-		this.setTimestamp(dtuts ? BitUtil.toLong(tsbs) : this.now());
+		this.setTimestamp(dtuts ? BitUtil.toLong(tsbs) : milliseconds());
 		
 		int offset = dtuts ? 9 : 1, len = payload.length - idx - offset;
 		

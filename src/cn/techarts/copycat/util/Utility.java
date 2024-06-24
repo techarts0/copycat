@@ -11,9 +11,20 @@ import cn.techarts.copycat.core.Frame;
  */
 public class Utility {
 	
+	/**
+	 * @return An array with specific type and length
+	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T[] array(Class<T> type, int length) {
 		return (T[])Array.newInstance(type, length);
+	}
+	
+	/**
+	 * @return An array and length is 0
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T[] array(Class<T> type) {
+		return (T[])Array.newInstance(type, 0);
 	}
 	
 	/**
@@ -30,7 +41,7 @@ public class Utility {
 				return constructor != null ? constructor.newInstance(data) : null;
 			}
 		}catch(Exception e) {
-			throw new CopycatException(e, "Failed to create data frame object.");
+			throw new CopycatException(e, "Failed to create frame object.");
 		}
 	}
 	
@@ -42,7 +53,7 @@ public class Utility {
 		if(socket == null || !socket.isOpen()) return -1;
 		try {
     		var buf = ByteBuffer.wrap(data);
-        	return socket.write(buf).get();
+        	return socket.write(buf).get(); //Blocking here
         } catch (Exception e) {
         	throw new CopycatException(e, "Failed to send data.");
         }
