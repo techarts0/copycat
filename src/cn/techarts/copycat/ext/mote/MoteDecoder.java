@@ -43,8 +43,8 @@ public class MoteDecoder extends LengthFieldFrameDecoder<MoteFrame> {
 			return DataFrame.class;
 		case RegisterFrame.TYPE:
 			return RegisterFrame.class;
-		case ResponseFrame.TYPE:
-			return ResponseFrame.class;
+		case StatusFrame.TYPE:
+			return StatusFrame.class;
 		case TimingFrame.TYPE:
 			return TimingFrame.class;
 		default:

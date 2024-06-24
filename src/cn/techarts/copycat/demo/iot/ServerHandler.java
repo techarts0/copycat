@@ -8,7 +8,7 @@ import cn.techarts.copycat.core.Handler;
 import cn.techarts.copycat.ext.mote.DataFrame;
 import cn.techarts.copycat.ext.mote.HBFrame;
 import cn.techarts.copycat.ext.mote.RegisterFrame;
-import cn.techarts.copycat.ext.mote.ResponseFrame;
+import cn.techarts.copycat.ext.mote.StatusFrame;
 
 public class ServerHandler implements Handler {
 	
@@ -19,30 +19,30 @@ public class ServerHandler implements Handler {
 	}
 
 	@Override
-	public void onConnected(AsynchronousSocketChannel socket) {
+	public void onOpen(AsynchronousSocketChannel socket) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void onDisconnected(AsynchronousSocketChannel socket) {
+	public void onClose(AsynchronousSocketChannel socket) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void onExceptionCaught(Throwable e, AsynchronousSocketChannel socket) {
+	public void onError(Throwable e, AsynchronousSocketChannel socket) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public <T extends Frame> void onFrameReceived(T frame, AsynchronousSocketChannel socket) {
+	public <T extends Frame> void onMessage(T frame, AsynchronousSocketChannel socket) {
 		if(frame instanceof RegisterFrame) {
 			var f = (RegisterFrame)frame;
 			Registry.put(f.getDsn(), socket);
 			System.out.println("Meter " + f.getDsn() + " registered sucessfully.");
-			this.send(new ResponseFrame(f.getDsn(), (byte)0).encode(), socket);
+			this.send(new StatusFrame(f.getDsn(), (byte)0).encode(), socket);
 		}else if(frame instanceof HBFrame) {
 			var f = (HBFrame)frame;
 			System.out.println("Received heart-beating from meter" + f.getDsn());
@@ -50,9 +50,9 @@ public class ServerHandler implements Handler {
 		}else if(frame instanceof DataFrame) {
 			var f = (DataFrame)frame;
 			System.out.println(">> Received data from meter " + f.getDsn());
-			this.send(new ResponseFrame(f.getDsn(), (byte)0).encode(), socket);
-		}else if(frame instanceof ResponseFrame) {
-			var f = (ResponseFrame)frame;
+			this.send(new StatusFrame(f.getDsn(), (byte)0).encode(), socket);
+		}else if(frame instanceof StatusFrame) {
+			var f = (StatusFrame)frame;
 			System.out.println("Received response meter " + f.getDsn());
 		}else {
 			System.out.println("The frame type is unsupported.");
@@ -60,7 +60,7 @@ public class ServerHandler implements Handler {
 	}
 
 	@Override
-	public void onFrameTransmitted(int length, AsynchronousSocketChannel socket) {
+	public void onSend(int length, AsynchronousSocketChannel socket) {
 		// TODO Auto-generated method stub
 
 	}

@@ -78,14 +78,14 @@ public class Visitor<T extends Frame> {
             @Override
             public void completed(Integer length, Void v) {
             	if(length == -1) {
-            		handler.onDisconnected(socketChannel);
+            		handler.onClose(socketChannel);
             	}else {
             		var decoderCache = new ByteBuf(buffer);
             		//decoderCache.append(buffer);
             		var frames = decoder.decode(decoderCache);
                 	if(frames != null && frames.length > 0) {
                 		for(var f : frames) {
-                			handler.onFrameReceived(f, socketChannel);
+                			handler.onMessage(f, socketChannel);
                 		}
                 	}
                 	socketChannel.read(decoderCache.setup(), null, this);
@@ -93,8 +93,8 @@ public class Visitor<T extends Frame> {
             } 
             @Override
             public void failed(Throwable e, Void v) {
-            	handler.onDisconnected(socketChannel);
-            	handler.onExceptionCaught(e, socketChannel);
+            	handler.onClose(socketChannel);
+            	handler.onError(e, socketChannel);
             }
         });
     }
@@ -127,7 +127,7 @@ public class Visitor<T extends Frame> {
     	try {
     	if(socketChannel.isOpen()) {
     		socketChannel.close();
-    		handler.onDisconnected(socketChannel);
+    		handler.onClose(socketChannel);
     	}
     	}catch(IOException e) {
     		throw new CopycatException(e, "Failed to close the connection.");

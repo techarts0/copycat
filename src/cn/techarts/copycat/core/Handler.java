@@ -19,30 +19,30 @@ public interface Handler {
 	/**
 	 * Fire the event when a new client connection is coming.
 	 */
-	public void onConnected(AsynchronousSocketChannel socket);
+	public void onOpen(AsynchronousSocketChannel socket);
 	
 	/**
 	 * The event will be fired when a connection is closed.
 	 */
-	public void onDisconnected(AsynchronousSocketChannel socket);
+	public void onClose(AsynchronousSocketChannel socket);
 	
 	/**
 	 * Fire the event if something goes wrong...
 	 */
-	public void onExceptionCaught(Throwable e, AsynchronousSocketChannel socket);
+	public void onError(Throwable e, AsynchronousSocketChannel socket);
 	
 	/**
-	 * Fire the event when a frame is received.<br> 
+	 * Fire the event when the message (a frame) is received.<br> 
 	 * Normally, you should handle the business here.
 	 */
-	public<T extends Frame> void onFrameReceived(T frame, AsynchronousSocketChannel socket);
+	public<T extends Frame> void onMessage(T frame, AsynchronousSocketChannel socket);
 	
 	/**
 	 * Fire the event when data sent successfully.
 	 * @param length The sent data length in bytes.
 	 * @param socket The peer socket object.
 	 */
-	public void onFrameTransmitted(int length, AsynchronousSocketChannel socket);
+	public void onSend(int length, AsynchronousSocketChannel socket);
 	
 	/**
 	 * SYNC
@@ -51,7 +51,7 @@ public interface Handler {
     	try {
     		return Utility.sendData(data, socket);
     	}catch(CopycatException e) {
-    		this.onExceptionCaught(e, socket);
+    		this.onError(e, socket);
     		return -1; //An exception is threw.
     	}
     }
@@ -75,11 +75,11 @@ public interface Handler {
     		socket.write(buf, null, new CompletionHandler<Integer, Void>(){
 				@Override
 				public void completed(Integer result, Void v) {
-					onFrameTransmitted(result, socket);
+					onSend(result, socket);
 				}
 				@Override
 				public void failed(Throwable exc, Void v) {
-					onExceptionCaught(exc, socket);
+					onError(exc, socket);
 				}
     		});
         } catch (Exception e) {

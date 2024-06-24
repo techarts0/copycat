@@ -8,31 +8,31 @@ import cn.techarts.copycat.core.Handler;
 public class ClientChatHandler implements Handler {
 
 	@Override
-	public void onConnected(AsynchronousSocketChannel socket) {
+	public void onOpen(AsynchronousSocketChannel socket) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void onDisconnected(AsynchronousSocketChannel socket) {
+	public void onClose(AsynchronousSocketChannel socket) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void onExceptionCaught(Throwable e, AsynchronousSocketChannel socket) {
+	public void onError(Throwable e, AsynchronousSocketChannel socket) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public <T extends Frame> void onFrameReceived(T frame, AsynchronousSocketChannel socket) {
+	public <T extends Frame> void onMessage(T frame, AsynchronousSocketChannel socket) {
 		var f = (ChatFrame)frame;
 		System.out.println(">>" +  f.getMessage());
 	}
 
 	@Override
-	public void onFrameTransmitted(int length, AsynchronousSocketChannel socket) {
+	public void onSend(int length, AsynchronousSocketChannel socket) {
 		// TODO Auto-generated method stub
 
 	}

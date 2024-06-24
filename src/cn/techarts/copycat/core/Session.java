@@ -36,7 +36,7 @@ public class Session<T extends Frame> implements Runnable{
 			throw new CopycatException(e, "Failed to set socket keepalive.");
 		}
 		this.monitor.activeConnection(false);	//Active and in second connections
-		this.handler.onConnected(connection); 	//Just calls once during a session
+		this.handler.onOpen(connection); 	//Just calls once during a session
 	}
 	
 	/**
@@ -56,7 +56,7 @@ public class Session<T extends Frame> implements Runnable{
             public void completed(Integer length, Void v) {
             	if(length == -1) {
             		monitor.activeConnection(true);
-            		handler.onDisconnected(connection);
+            		handler.onClose(connection);
             		Thread.currentThread().interrupt();
             	}else {
             		var cache = new ByteBuf(buffer);
@@ -64,7 +64,7 @@ public class Session<T extends Frame> implements Runnable{
             		var frames = decoder.decode(cache);
                 	if(frames != null && frames.length > 0) {
                 		for(var f : frames) {
-                			handler.onFrameReceived(f, connection);
+                			handler.onMessage(f, connection);
                 		}
                 	}
                 	connection.read(cache.setup(), null, this);
@@ -74,8 +74,8 @@ public class Session<T extends Frame> implements Runnable{
             @Override
             public void failed(Throwable e, Void v) {
             	monitor.activeConnection(true);
-                handler.onDisconnected(connection);
-            	handler.onExceptionCaught(e, connection);
+                handler.onClose(connection);
+            	handler.onError(e, connection);
                 Thread.currentThread().interrupt();
             }
         });

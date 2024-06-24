@@ -1,16 +1,16 @@
 package cn.techarts.copycat.ext.mote;
 
-public class ResponseFrame extends MoteFrame {
+public class StatusFrame extends MoteFrame {
 	
 	public static final byte TYPE = 0X20;
 	
 	private byte status;
 	
-	public ResponseFrame(byte[] raw) {
+	public StatusFrame(byte[] raw) {
 		super(raw);
 	}
 	
-	public ResponseFrame(String sn, byte status) {
+	public StatusFrame(String sn, byte status) {
 		this.setSn(sn, NUL);
 		this.status = status;
 	}
