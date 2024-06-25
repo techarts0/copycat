@@ -13,8 +13,8 @@ import cn.techarts.copycat.util.Utility;
  * The protocol is similar to MQTT. If the current byte is great than 
  * 127(The Most Significant Bit is 1) means what having next byte.
  * 
- * | Fixed Header | First Length Byte | Optional Length Byte | Optional Length Byte | ....
- * |     offset   |       1 byte      |        1 byte        |    1   byte          |
+ * | Fixed Header | First Length Byte | Optional Length Byte | Optional Length Byte | Optional Length Byte  |
+ * |     offset   |       1 byte      |        1 byte        |    1   byte          | 1 byte(MSB is 0)      |
  * 
  */
 public class VarLengthFieldFrameDecoder<T extends  Frame> extends Decoder<T> {

@@ -1,6 +1,6 @@
 package cn.techarts.copycat.std.http;
 
-public class HttpHeader {
+public final class HttpHeader {
 	private String name;
 	private String value;
 	

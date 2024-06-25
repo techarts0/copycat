@@ -7,6 +7,7 @@ import cn.techarts.copycat.ext.mote.DataFrame;
 import cn.techarts.copycat.ext.mote.HBFrame;
 import cn.techarts.copycat.ext.mote.MoteDecoder;
 import cn.techarts.copycat.ext.mote.MoteFrame;
+import cn.techarts.copycat.ext.mote.Precision;
 import cn.techarts.copycat.ext.mote.RegisterFrame;
 
 public class SmartMeter {
@@ -19,16 +20,15 @@ public class SmartMeter {
 				System.out.print("Device SN: ");
 				sn = scanner.nextLine();
 			}
-			boolean dtuts = true;
-	    	
-			client.with(decoder, MoteFrame.class).with(new MeterHandler()).start();
+			
+	    	client.with(decoder, MoteFrame.class).with(new MeterHandler()).start();
 			client.send(new RegisterFrame(sn, "123456").encode());
 	    	
 	    	var data = new byte[] {1, 2, 3, 4, 5};
 	    	
 	    	while(true) {
 	    		Thread.sleep(2000);
-	    		client.send(new DataFrame(sn, data, dtuts).encode());
+	    		client.send(new DataFrame(sn, data, Precision.NUL).encode());
 	    		Thread.sleep(3000);
 	    		client.send(new HBFrame(sn).encode());
 	    	}       

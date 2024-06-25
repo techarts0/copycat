@@ -22,8 +22,10 @@ import cn.techarts.copycat.util.StrUtil;
  * 
  */
 public class MoteFrame extends Frame {
-	public static final char NUL = 0X00;
-	public static final char ESC = 0X1B;
+	public static final char NUL = 0X00;	// NUL
+	public static final char TM4 = 0X04; 	// End Of Transmit
+	public static final char TS8 = 0X08; 	// Back-Space
+	
 	public static final byte VERSION = 0x01;	//Protocol Version
 	
 	private byte type = 0;						//Frame Type(Refer to MarsType)
@@ -103,7 +105,8 @@ public class MoteFrame extends Frame {
 		
 		for(int i = 0; i < length; i++) {
 			if(bytes[i] == 0X00) return i;
-			if(bytes[i] == 0X1B) return i;
+			if(bytes[i] == 0X04) return i;
+			if(bytes[i] == 0X08) return i;
 		}
 		return -1;
 	}
@@ -139,9 +142,9 @@ public class MoteFrame extends Frame {
 	}
 	
 	/**
-	 * Returns the device SN with a string encoded as ASCII char.
+	 * Returns the Device-SN with a string encoded as ASCII char.
 	 */
-	public String getDsn() {
+	public String getDevSN() {
 		if(sn == null) return null;
 		if(sn.length == 0) return null;
 		return StrUtil.toAsciiString(sn);

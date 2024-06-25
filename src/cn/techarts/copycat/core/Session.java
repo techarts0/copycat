@@ -36,7 +36,7 @@ public class Session<T extends Frame> implements Runnable{
 			throw new CopycatException(e, "Failed to set socket keepalive.");
 		}
 		this.monitor.activeConnection(false);	//Active and in second connections
-		this.handler.onOpen(connection); 	//Just calls once during a session
+		this.handler.onOpen(this.connection); 	//Just calls once during a session
 	}
 	
 	/**

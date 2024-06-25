@@ -50,11 +50,12 @@ public abstract class Frame {
 	}
 	
 	protected byte[] slice(int pos, int length) {
-		if(length > rawdata.length - pos) {
-			return null;
-		}
-		var result = new byte[length];
-		System.arraycopy(rawdata, pos, result, 0, length);
+		if(pos < 0 || length <= 0) return null;
+		int len = length; 
+		int remaining = rawdata.length - pos; 
+		if(len > remaining) len = remaining;
+		var result = new byte[len];
+		System.arraycopy(rawdata, pos, result, 0, len);
 		return result;
 	}
 }

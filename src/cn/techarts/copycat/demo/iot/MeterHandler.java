@@ -6,6 +6,7 @@ import cn.techarts.copycat.core.Frame;
 import cn.techarts.copycat.core.Handler;
 import cn.techarts.copycat.ext.mote.ControlFrame;
 import cn.techarts.copycat.ext.mote.HBFrame;
+import cn.techarts.copycat.ext.mote.StatusFrame;
 import cn.techarts.copycat.ext.mote.TimingFrame;
 
 public class MeterHandler implements Handler {
@@ -42,6 +43,8 @@ public class MeterHandler implements Handler {
 			System.out.println("Received UTC time-stamp from server.");
 		}else if(frame instanceof ControlFrame) {
 			System.out.println("Received an control instruction from server.");
+		}else if(frame instanceof StatusFrame) {
+			System.out.println("Received an response from server.");
 		}else {
 			System.out.println("The frame type is unsupported.");
 		}

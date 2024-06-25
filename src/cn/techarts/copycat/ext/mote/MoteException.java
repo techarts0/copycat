@@ -22,4 +22,8 @@ public class MoteException extends RuntimeException {
 	public static MoteException invalidType(byte type) {
 		return new MoteException("Unsupported frame type: " + type);
 	}
+	
+	public static MoteException invalidPrecision(byte p) {
+		return new MoteException("Unsupported time precision: " + p);
+	}
 }
