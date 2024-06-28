@@ -1,6 +1,8 @@
 package cn.techarts.copycat.util;
 
-public class BitUtil {
+import java.util.Arrays;
+
+public class BitHelper {
 	public static int toInt(byte[] bytes) {
 		if(bytes == null) return 0;
 		if(bytes.length != 4) return 0;
@@ -135,6 +137,38 @@ public class BitUtil {
 		}
 		var result = new byte[len];
 		System.arraycopy(arg, start, result, 0, len);
+		return result;
+	}
+	
+	/**
+	 * Convert a remaining length number to variable bytes.<br>
+	 * Please refer to MQTT remaining length definition.
+	 */
+	public static byte[] toRemainingBytes(int length) {
+		var index = 1; 
+		var result = new byte[4];
+        do{
+            int bit8 = length & 127;
+            if((length >>= 7) > 0) {
+            	bit8 |= 0X80;
+            }
+            result[index++ - 1] = (byte) bit8;
+        }while (length > 0);
+        return Arrays.copyOf(result, index - 1);
+    }
+	
+	/**
+	 * Convert to remaining length from the given bytes.<br>
+	 * Please refer to MQTT remaining length definition.
+	 */
+	public static int toRemainingLength(byte[] bs) {
+		int f = -7, result = 0, i = 0;
+		while(true) {
+			f += 7; //Shift to left 7 bits
+			var b = bs[i++];
+			result += ((b & 127) << f);
+			if((b & 128) == 0) break;
+		}
 		return result;
 	}
 }

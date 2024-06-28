@@ -1,8 +1,8 @@
 package cn.techarts.copycat.demo.chat;
 
 import cn.techarts.copycat.core.Frame;
-import cn.techarts.copycat.util.BitUtil;
-import cn.techarts.copycat.util.StrUtil;
+import cn.techarts.copycat.util.BitHelper;
+import cn.techarts.copycat.util.StrHelper;
 
 /**
  * |0x4d 0x4d |  sender | receiver | length  | message |
@@ -32,8 +32,8 @@ public class ChatFrame extends Frame {
 
 	@Override
 	protected void parse() {
-		this.sender = BitUtil.toInt(new byte[] {rawdata[2], rawdata[3], rawdata[4], rawdata[5]});
-		this.receiver = BitUtil.toInt(new byte[] {rawdata[6], rawdata[7], rawdata[8], rawdata[9]});
+		this.sender = BitHelper.toInt(new byte[] {rawdata[2], rawdata[3], rawdata[4], rawdata[5]});
+		this.receiver = BitHelper.toInt(new byte[] {rawdata[6], rawdata[7], rawdata[8], rawdata[9]});
 		
 		if(receiver == 0 && rawdata.length == 12) {
 			this.loginFrame = true;
@@ -42,7 +42,7 @@ public class ChatFrame extends Frame {
 		
 		byte[] msg = new byte[rawdata.length - 12];
 		System.arraycopy(rawdata, 12, msg, 0, msg.length);
-		this.message = StrUtil.toGBKString(msg);
+		this.message = StrHelper.toGBKString(msg);
 	}
 
 	@Override
@@ -51,13 +51,13 @@ public class ChatFrame extends Frame {
 		this.rawdata = new byte[12 + msgLen];
 		rawdata[0] = 0x4d;
 		rawdata[1] = 0x4d;
-		var sender = BitUtil.toBytes(this.sender);
+		var sender = BitHelper.toBytes(this.sender);
 		rawdata[2] = sender[0];
 		rawdata[3] = sender[1];
 		rawdata[4] = sender[2];
 		rawdata[5] = sender[3];
 		
-		var recver = BitUtil.toBytes(this.receiver);
+		var recver = BitHelper.toBytes(this.receiver);
 		rawdata[6] = recver[0];
 		rawdata[7] = recver[1];
 		rawdata[8] = recver[2];
@@ -66,7 +66,7 @@ public class ChatFrame extends Frame {
 		if(receiver == 0 && msgLen == 0) return rawdata;
 		
 		var msg = message.getBytes();
-		var lenBytes = BitUtil.toBytes((short)msgLen);
+		var lenBytes = BitHelper.toBytes((short)msgLen);
 		rawdata[10] = lenBytes[0];
 		rawdata[11] = lenBytes[1];
 		System.arraycopy(msg, 0, rawdata, 12, msgLen);

@@ -5,7 +5,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StrUtil {
+public class StrHelper {
 	public static String toAsciiString(byte[] data) {
 		if(data == null || data.length == 0) return null;
 		return new String(data, StandardCharsets.US_ASCII);

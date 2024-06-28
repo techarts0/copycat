@@ -144,7 +144,7 @@ public final class ByteBuf {
 	/**
 	 * Please Note: if the ByteBuffer is not flipped, ZERO will be returned.
 	 */
-	private int availableSpace() {
+	private int free() {
 		return buffer.capacity() - buffer.limit();
 	}
 	
@@ -153,9 +153,13 @@ public final class ByteBuf {
 	 * You MUST call the method before next reading data from SOCKET.
 	 */
 	public ByteBuffer setup() {
+		//If the buffered bytes are consumed, clear it.
+		if(buffer.position() + 1 == buffer.limit()) {
+			return buffer.clear();
+		}
+		
 		//If the free space is less than 1/8 of capacity, resize it.
-		var free = availableSpace();
-		if((free << 3) < buffer.capacity()) {
+		if((free() << 3) < buffer.capacity()) {
 			resize(); //
 		}else {
 			this.buffer.mark(); //Start Point

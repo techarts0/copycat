@@ -16,7 +16,7 @@ public class MoteException extends RuntimeException {
 	}
 	
 	public static MoteException itIsNotMote() {
-		return new MoteException("Unrecognized protocol.");
+		return new MoteException("Unrecognized protocol or version.");
 	}
 	
 	public static MoteException invalidType(byte type) {
@@ -25,5 +25,9 @@ public class MoteException extends RuntimeException {
 	
 	public static MoteException invalidPrecision(byte p) {
 		return new MoteException("Unsupported time precision: " + p);
+	}
+	
+	public static MoteException invalidRemaining() {
+		return new MoteException("The remaining length is invalid.");
 	}
 }

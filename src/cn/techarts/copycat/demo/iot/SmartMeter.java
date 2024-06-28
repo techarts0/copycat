@@ -20,14 +20,11 @@ public class SmartMeter {
 				System.out.print("Device SN: ");
 				sn = scanner.nextLine();
 			}
-			
+			var data = new byte[] {1, 2, 3, 4, 5};
 	    	client.with(decoder, MoteFrame.class).with(new MeterHandler()).start();
 			client.send(new RegisterFrame(sn, "123456").encode());
 	    	
-	    	var data = new byte[] {1, 2, 3, 4, 5};
-	    	
 	    	while(true) {
-	    		Thread.sleep(2000);
 	    		client.send(new DataFrame(sn, data, Precision.NUL).encode());
 	    		Thread.sleep(3000);
 	    		client.send(new HBFrame(sn).encode());

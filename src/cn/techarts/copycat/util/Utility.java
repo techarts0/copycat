@@ -7,7 +7,7 @@ import cn.techarts.copycat.CopycatException;
 import cn.techarts.copycat.core.Frame;
 
 /**
- * An internal utilities.
+ * An internal utility class that contains series helper methods.
  */
 public class Utility {
 	

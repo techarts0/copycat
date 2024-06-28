@@ -2,7 +2,7 @@ package cn.techarts.copycat.std.modbus;
 
 import cn.techarts.copycat.CopycatException;
 import cn.techarts.copycat.core.Frame;
-import cn.techarts.copycat.util.BitUtil;
+import cn.techarts.copycat.util.BitHelper;
 
 /**
  * An implementation of
@@ -21,12 +21,12 @@ public class ModbusFrame extends Frame {
 	@Override
 	protected void parse() {
 		var tmp = new byte[] {rawdata[2], rawdata[3]};
-		if(BitUtil.toShort(tmp) != 0) {
+		if(BitHelper.toShort(tmp) != 0) {
 			throw new CopycatException("Unsupported protocol.");
 		}
 		this.mbap = new MBAP();
 		tmp = new byte[] {rawdata[0], rawdata[1]};
-		mbap.setTid(BitUtil.toShort(tmp))
+		mbap.setTid(BitHelper.toShort(tmp))
 			.setIdentifier(this.rawdata[6]);
 		
 		this.setFuncode(this.rawdata[7]);
@@ -54,7 +54,7 @@ public class ModbusFrame extends Frame {
 	//Function Code(05, 06, 15, 16)
 	private void parseFunctionGt4() {
 		var tmp = new byte[] {rawdata[8], rawdata[9]};
-		this.setRegister(BitUtil.toShort(tmp));
+		this.setRegister(BitHelper.toShort(tmp));
 		payload = new byte[] {rawdata[10], rawdata[11]};
 	}
 	

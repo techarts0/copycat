@@ -1,13 +1,13 @@
 package cn.techarts.copycat.ext.mote;
 
-import cn.techarts.copycat.util.BitUtil;
+import cn.techarts.copycat.util.BitHelper;
 
 public class HBFrame extends MoteFrame {
 	
-	public static final byte TYPE = 0X03;
+	public static final byte TYPE = 0X04;
 	
-	public HBFrame(byte[] raw) {
-		super(raw);
+	public HBFrame(byte[] raw, int remaining) {
+		super(raw, remaining);
 	}
 	
 	public HBFrame(String sn) {
@@ -19,7 +19,7 @@ public class HBFrame extends MoteFrame {
 	protected void parse() {
 		super.parse();
 		var idx = payload.length - 1;
-		setSn(BitUtil.slice(payload, 0, idx));
+		setSn(BitHelper.slice(payload, 0, idx));
 	}
 
 	@Override

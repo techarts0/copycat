@@ -6,8 +6,8 @@ package cn.techarts.copycat.ext.mote;
  */
 public class ControlFrame extends MoteFrame {
 	
-	public ControlFrame(byte[] raw) {
-		super(raw);
+	public ControlFrame(byte[] raw, int remaining) {
+		super(raw, remaining);
 	}
 	
 	public ControlFrame(byte[] control, byte type) {

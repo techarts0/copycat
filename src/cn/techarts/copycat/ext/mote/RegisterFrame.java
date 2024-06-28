@@ -2,7 +2,7 @@ package cn.techarts.copycat.ext.mote;
 
 import java.nio.charset.StandardCharsets;
 
-import cn.techarts.copycat.util.BitUtil;
+import cn.techarts.copycat.util.BitHelper;
 
 /**
  * The layout of data field:<br>
@@ -17,8 +17,8 @@ public class RegisterFrame extends MoteFrame {
 	private byte[] token;	//Device Token
 	private byte protocol;	//TT Protocol type
 	
-	public RegisterFrame(byte[] data) {
-		super(data);
+	public RegisterFrame(byte[] data, int remaining) {
+		super(data, remaining);
 	}
 	
 	/**
@@ -50,10 +50,10 @@ public class RegisterFrame extends MoteFrame {
 		if(idx == -1) {
 			throw MoteException.invalidSN();
 		}
-		setSn(BitUtil.slice(payload, 0, idx));
+		setSn(BitHelper.slice(payload, 0, idx));
 		var idx2 = this.indexOfNul(payload, idx + 1);
 		var len = idx2 - idx - 1;
-		setToken(BitUtil.slice(payload, idx + 1, len));
+		setToken(BitHelper.slice(payload, idx + 1, len));
 		setProtocol(payload[idx + 1]); // 1 byte only
 	}
 	

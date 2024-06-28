@@ -1,6 +1,6 @@
 package cn.techarts.copycat.ext.mote;
 
-import cn.techarts.copycat.util.BitUtil;
+import cn.techarts.copycat.util.BitHelper;
 
 /**
  * Upstream. Layout of data field:
@@ -16,8 +16,8 @@ public class DataFrame extends MoteFrame {
 	
 	private byte[] timestamp; 		//UTC time-stamp in second
 	
-	public DataFrame(byte[] raw) {
-		super(raw);
+	public DataFrame(byte[] raw, int remaining) {
+		super(raw, remaining);
 	}
 	
 	public DataFrame(String sn, byte[] data, Precision p) {
@@ -29,9 +29,9 @@ public class DataFrame extends MoteFrame {
 	private byte[] generateTimeStamp(Precision p) {
 		if(p == Precision.NUL) return null;
 		if(p == Precision.SEC) {
-			return BitUtil.toBytes(seconds());
+			return BitHelper.toBytes(seconds());
 		}else {
-			return BitUtil.toBytes(milliseconds());
+			return BitHelper.toBytes(milliseconds());
 		}
 	}
 	
@@ -41,7 +41,7 @@ public class DataFrame extends MoteFrame {
 		if(idx == -1) {
 			throw MoteException.invalidSN();
 		}
-		this.setSn(BitUtil.slice(payload, 0, idx));
+		this.setSn(BitHelper.slice(payload, 0, idx));
 		
 		byte[] tsBytes = null; // Next n bytes of TIMESTAMP
 		byte tsLength = payload[idx]; //Time-Stamp-Length
@@ -62,7 +62,7 @@ public class DataFrame extends MoteFrame {
 		
 		int offset = tsLength + 1, len = payload.length - idx - offset;
 		
-		this.payload = BitUtil.slice(this.payload, idx + offset, len);
+		this.payload = BitHelper.slice(this.payload, idx + offset, len);
 	}
 
 	@Override
@@ -82,9 +82,9 @@ public class DataFrame extends MoteFrame {
 		if(timestamp == null) return 0;
 		if(timestamp.length == 0) return 0;
 		if(timestamp.length == 4) {
-			return BitUtil.toInt(timestamp);
+			return BitHelper.toInt(timestamp);
 		}else {
-			return BitUtil.toLong(timestamp);
+			return BitHelper.toLong(timestamp);
 		}
 	}
 

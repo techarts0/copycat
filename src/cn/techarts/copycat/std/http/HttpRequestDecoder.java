@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import cn.techarts.copycat.core.ByteBuf;
 import cn.techarts.copycat.core.Decoder;
-import cn.techarts.copycat.util.StrUtil;
+import cn.techarts.copycat.util.StrHelper;
 
 
 /**Implementation of HTTP 1.0 & 1.1
@@ -34,7 +34,7 @@ public class HttpRequestDecoder extends Decoder<HttpRequest> {
 			var line = data.lend(latest, index - 1);
 			latest = index + 1; //Move the start point to next
 			headerLength = line.length + 2;
-			var strLine = StrUtil.toAsciiString(line);
+			var strLine = StrHelper.toAsciiString(line);
 			strLine = strLine.toLowerCase();
 			headers.add(strLine);
 			if(strLine.startsWith("content-length")) {

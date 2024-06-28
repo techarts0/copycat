@@ -4,8 +4,8 @@ import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 
 import cn.techarts.copycat.core.Frame;
-import cn.techarts.copycat.util.BitUtil;
-import cn.techarts.copycat.util.StrUtil;
+import cn.techarts.copycat.util.BitHelper;
+import cn.techarts.copycat.util.StrHelper;
 
 /**
  * A customized protocol for general IoT application.<br>
@@ -13,8 +13,8 @@ import cn.techarts.copycat.util.StrUtil;
  * Trust me, it full fills your requirement in most scenarios.
  * <p>Frame Structure:</p>
  * 
- * |  Prefix   | Version | Type  |  Length  | Data |
- * | 0X27 0X66 | 1 byte  | 1 byte|  2 bytes | <-N  |
+ * |   Flag  | Type   |  Remaining Length  | Data |
+ * | 1 byte  | 1 byte |     1 - 4 bytes    | <-N  |
  * 
  *  Generally, the device SN is stuffed in the head of data field and ends with 
  *  a specific ASCII char NUL or ESC. All upstream packets contain a device SN 
@@ -23,31 +23,32 @@ import cn.techarts.copycat.util.StrUtil;
  */
 public class MoteFrame extends Frame {
 	public static final char NUL = 0X00;	// NUL
-	public static final char TM4 = 0X04; 	// End Of Transmit
+	public static final char TS4 = 0X04; 	// End Of Transmit
 	public static final char TS8 = 0X08; 	// Back-Space
 	
-	public static final byte VERSION = 0x01;	//Protocol Version
+	public static final byte FLAG = (byte)0XF9;	//Protocol Version
 	
 	private byte type = 0;						//Frame Type(Refer to MarsType)
 	protected byte[] sn;						//Device Serial Number
-	protected short length;						//The Remaining Bytes Length
+	protected int length;						//The Remaining Bytes Length
 	protected byte[] payload;					//REAL PAYLOAD
 	
 	public MoteFrame() {}
 	
-	public MoteFrame(byte[] raw) {
-		super(raw);
+	public MoteFrame(byte[] raw, int remaining) {
+		this.rawdata = raw;
+		this.length = remaining;
+		this.parse();
 	}
 	
 	@Override
 	protected void parse() {
-		if(rawdata[2] != VERSION) {
-			throw new RuntimeException("Illegal protocol version.");
+		if(rawdata[0] != FLAG) {
+			throw MoteException.itIsNotMote();
 		}
-		this.setType(rawdata[3]);
-		var tmp = new byte[] {rawdata[4], rawdata[5]};
-		this.length = BitUtil.toShort(tmp);
-		this.payload = BitUtil.slice(rawdata, 6, length);
+		this.setType(rawdata[1]);
+		var idx = rawdata.length - length;
+		this.payload = BitHelper.slice(rawdata, idx, length);
 	}
 	
 	@Override
@@ -60,16 +61,14 @@ public class MoteFrame extends Frame {
 	 * Head + Data
 	 */
 	protected byte[] serialize0(byte[] data, byte type) {
-		length = (short)(data == null ? 0 : data.length);
-		var result = new byte[6 + length];
-		result[0] = 0x27;
-		result[1] = 0x66;
-		result[2] = VERSION;
-		result[3] = type;
-		var tmp = BitUtil.toBytes(length);
-		result[4] = tmp[0];
-		result[5] = tmp[1];
-		System.arraycopy(data, 0, result, 6, length);
+		length = data == null ? 0 : data.length;
+		var tmp = BitHelper.toRemainingBytes(length);
+		var varLen = tmp.length;
+		var result = new byte[2 + varLen + length];
+		result[0] = FLAG;
+		result[1] = type;
+		System.arraycopy(tmp, 0, result, 2, varLen);
+		System.arraycopy(data, 0, result, 2 + varLen, length);
 		return result;
 	}
 	
@@ -147,7 +146,7 @@ public class MoteFrame extends Frame {
 	public String getDevSN() {
 		if(sn == null) return null;
 		if(sn.length == 0) return null;
-		return StrUtil.toAsciiString(sn);
+		return StrHelper.toAsciiString(sn);
 	}
 	
 	/**

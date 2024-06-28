@@ -1,11 +1,11 @@
 package cn.techarts.copycat.ext.mote;
 
 public enum Precision {
-	NUL((char)0),
-	SEC((char)4),
-	MS((char)8);
+	NUL((char)0X00),
+	SEC((char)0X04),
+	MS((char)0X088);
 	
-	private char size = 0;
+	private char size = 0X00;
 	
 	Precision(char size){
 		this.setSize(size);

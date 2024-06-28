@@ -1,6 +1,6 @@
 package cn.techarts.copycat.ext.mote;
 
-import cn.techarts.copycat.util.BitUtil;
+import cn.techarts.copycat.util.BitHelper;
 
 /**
  * The frame is sent from server to DTU/RTU.
@@ -13,20 +13,20 @@ public class TimingFrame extends MoteFrame {
 	private long timestamp;	//UTC Time-Stamp
 	
 	
-	public TimingFrame(byte[] raw) {
-		super(raw);
+	public TimingFrame(byte[] raw, int remaining) {
+		super(raw, remaining);
 	}
 	
 	@Override
 	protected void parse() {
 		super.parse();
-		this.timestamp = BitUtil.toInt(payload);
+		this.timestamp = BitHelper.toInt(payload);
 	}
 
 	@Override
 	public byte[] encode() {
 		this.timestamp = this.seconds();
-		return serialize0(BitUtil.toBytes(timestamp), TYPE);
+		return serialize0(BitHelper.toBytes(timestamp), TYPE);
 	}
 	
 	

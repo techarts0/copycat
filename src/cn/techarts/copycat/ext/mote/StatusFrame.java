@@ -6,8 +6,8 @@ public class StatusFrame extends MoteFrame {
 	
 	private byte status;
 	
-	public StatusFrame(byte[] raw) {
-		super(raw);
+	public StatusFrame(byte[] raw, int remaining) {
+		super(raw, remaining);
 	}
 	
 	public StatusFrame(String sn, byte status) {
