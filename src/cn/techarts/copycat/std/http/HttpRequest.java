@@ -23,7 +23,11 @@ public class HttpRequest extends Frame {
 		this.headers = new ArrayList<>();
 		parseRequestLine(headers.get(0)); //GET /index.html HTTP/1.1
 		for(int i = 1; i < headers.size(); i++) {
-			this.headers.add( new HttpHeader(headers.get(i)));
+			var hdr = new HttpHeader(headers.get(i));
+			this.headers.add(hdr);
+			
+				
+			
 		}
 		//Parse Body
 	}

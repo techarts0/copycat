@@ -11,9 +11,9 @@ public final class HttpHeader {
 	
 	public HttpHeader(String header) {
 		if(header == null) return;
-		var hkv = header.split(":");
-		this.name = hkv[0];
-		this.value = hkv[1];
+		var pair = header.split(":");
+		this.name = pair[0].trim();
+		this.value = pair[1].trim();
 	}
 	
 	public String getName() {
@@ -35,5 +35,10 @@ public final class HttpHeader {
 		}catch(Exception e) {
 			return 0;
 		}
+	}
+	
+	public boolean isContentType() {
+		if(name == null) return false;
+		return "content-type".equals(name.trim().toLowerCase());
 	}
 }
