@@ -15,9 +15,13 @@ Copycat整体架构如下：<br>
 
 #### 安装教程
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+1.  从源代码编译
+ 在本地新建一个Maven项目(Eclipse或IDEA都可以)，然后下载源代码并拷贝到src目录中。除了junit之外，Copycat没有任何依赖，因此pom.xml可以用您的IDE生成的。
+ 请注意：JDK版本必须21或以上，否则不支持Virtual Thead，无法通过编译。当然您也可以注释掉相关的几行代码。
+2.  直接引用JAR
+ 当然，直接下载编译好的copycat.jar更简单，加入到您的项目的classpath中。目前没有提交到maven中央仓库中，所以您无法直接在pom.xml中引用。
+3.  其它注意的问题
+ 没有了。
 
 #### 使用说明
 
