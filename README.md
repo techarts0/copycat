@@ -9,7 +9,7 @@ Copycat具有设计良好的架构，采用了Java平台若干新技术（异步
 #### 软件架构
 Copycat整体架构如下：<br>
 ![输入图片说明](arch.png)
-Copycat对物联网应用的支持如下：<br>
+<br>Copycat对物联网应用的支持如下：<br>
 ![输入图片说明](iot.png)
 
 
