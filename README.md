@@ -15,19 +15,19 @@ Copycat整体架构如下：<br>
 
 #### 安装教程
 
-1.  从源代码编译
+1.  从源代码编译<br>
  在本地新建一个Maven项目(Eclipse或IDEA都可以)，然后下载源代码并拷贝到src目录中。除了junit之外，Copycat没有任何依赖，因此pom.xml可以用您的IDE生成的。
  请注意：JDK版本必须21或以上，否则不支持Virtual Thead，无法通过编译。当然您也可以注释掉相关的几行代码。
-2.  直接引用JAR
+2.  直接引用JAR<br>
  当然，直接下载编译好的copycat.jar更简单，加入到您的项目的classpath中。目前没有提交到maven中央仓库中，所以您无法直接在pom.xml中引用。
-3.  其它注意的问题
- 没有了。
 
 #### 使用说明
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+1.  如何使用Copycat<br>
+ 太简单了也没什么好说的，请看源代码中cn.techarts.copycat.demo下的小例子。五分钟还没学会怎用，您找我，赔您一分钱。
+2.  注意事项<br>
+ Context是服务器端的配置信息。如果您是在低版本JDK中使用，请务必注意，不能启用虚拟线程，即不用调用方法enableVirtualThread。
+ 
 
 #### 参与贡献
 
