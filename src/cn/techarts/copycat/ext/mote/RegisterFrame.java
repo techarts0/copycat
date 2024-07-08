@@ -5,7 +5,7 @@ import java.nio.charset.StandardCharsets;
 import cn.techarts.copycat.util.BitHelper;
 
 /**
- * The layout of data field:<br>
+ * The layout of data field:<p>
  * |  SN     | Delimiter |  token   | Delimiter  |  TT Protocol |
  * |  any    |  1(NUL)   |   any    |  1(NUL)    |  1 byte      |
  */
@@ -92,10 +92,6 @@ public class RegisterFrame extends MoteFrame {
 
 	public void setProtocol(byte protocol) {
 		this.protocol = protocol;
-	}
-
-	public byte[] getSn() {
-		return sn;
 	}
 
 	public void setSn(byte[] sn) {

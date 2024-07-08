@@ -9,15 +9,19 @@ import cn.techarts.copycat.util.StrHelper;
 
 /**
  * A customized protocol for general IoT application.<br>
- * If you don't want to design your own protocol, mars is your best choice.<br> 
- * Trust me, it full fills your requirement in most scenarios.
+ * If you don't want to design your own protocol, mote is your best choice.<br> 
+ * Trust me, it fullfills your requirement in most scenarios.
  * <p>Frame Structure:</p>
  * 
- * |   Flag  | Type   |  Remaining Length  | Data |
- * | 1 byte  | 1 byte |     1 - 4 bytes    | <-N  |
- * 
- *  Generally, the device SN is stuffed in the head of data field and ends with 
- *  a specific ASCII char NUL or ESC. All upstream packets contain a device SN 
+ * |   Flag  | Type   |  Remaining Length  | Data  |
+ * | 1 byte  | 1 byte |     1 - 4 bytes    | <- N  |
+ *
+ * <p>Flag:</p>
+ * | 1 | 1 | 1 | 1 | 1 | 0 | 0 | 1 |
+ * |  Protocol Prefix  |  Version  |   
+ * <p>
+ *  Generally, the device SN is stuffed in the head of data field and ended with 
+ *  a specific ASCII char NUL(or 0X04, 0X08). All upstream packets contain a device SN 
  *  and down-stream packets without it.
  * 
  */
@@ -123,10 +127,6 @@ public class MoteFrame extends Frame {
 		return -1;
 	}
 
-	public byte[] getSn() {
-		return sn;
-	}
-
 	public void setSn(byte[] sn) {
 		this.sn = sn;
 	}
@@ -143,7 +143,7 @@ public class MoteFrame extends Frame {
 	/**
 	 * Returns the Device-SN with a string encoded as ASCII char.
 	 */
-	public String getDevSN() {
+	public String getSn() {
 		if(sn == null) return null;
 		if(sn.length == 0) return null;
 		return StrHelper.toAsciiString(sn);

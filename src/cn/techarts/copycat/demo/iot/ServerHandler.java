@@ -40,20 +40,20 @@ public class ServerHandler implements Handler {
 	public <T extends Frame> void onMessage(T frame, AsynchronousSocketChannel socket) {
 		if(frame instanceof RegisterFrame) {
 			var f = (RegisterFrame)frame;
-			Registry.put(f.getDevSN(), socket);
-			System.out.println(f.getDevSN() + " registered sucessfully.");
-			this.send(new StatusFrame(f.getDevSN(), (byte)0).encode(), socket);
+			Registry.put(f.getSn(), socket);
+			System.out.println(f.getSn() + " registered sucessfully.");
+			this.send(new StatusFrame(f.getSn(), (byte)0).encode(), socket);
 		}else if(frame instanceof HBFrame) {
 			var f = (HBFrame)frame;
-			System.out.println("Received heart-beating from " + f.getDevSN());
-			this.send(new HBFrame(f.getDevSN()).encode(), socket);
+			System.out.println("Received heart-beating from " + f.getSn());
+			this.send(new HBFrame(f.getSn()).encode(), socket);
 		}else if(frame instanceof DataFrame) {
 			var f = (DataFrame)frame;
-			System.out.println(">> Received data from " + f.getDevSN());
-			this.send(new StatusFrame(f.getDevSN(), (byte)0).encode(), socket);
+			System.out.println(">> Received data from " + f.getSn());
+			this.send(new StatusFrame(f.getSn(), (byte)0).encode(), socket);
 		}else if(frame instanceof StatusFrame) {
 			var f = (StatusFrame)frame;
-			System.out.println("Received response " + f.getDevSN());
+			System.out.println("Received response " + f.getSn());
 		}else {
 			System.out.println("The frame type is unsupported.");
 		}
