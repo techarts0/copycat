@@ -1,5 +1,8 @@
 package cn.techarts.copycat.ext.mote;
 
+/**
+ * Response
+ */
 public class StatusFrame extends MoteFrame {
 	
 	public static final byte TYPE = 0X20;
