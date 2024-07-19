@@ -22,4 +22,8 @@ public class CopycatException extends RuntimeException{
 	public CopycatException(Throwable e, String cause) {
 		super(cause, e);
 	}
+	
+	public static CopycatException NullBuffer() {
+		return new CopycatException("Buffer is null.");
+	}
 }

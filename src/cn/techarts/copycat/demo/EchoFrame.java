@@ -1,5 +1,7 @@
 package cn.techarts.copycat.demo;
 
+import java.nio.ByteBuffer;
+
 import cn.techarts.copycat.core.Frame;
 
 public class EchoFrame extends Frame {
@@ -15,7 +17,7 @@ public class EchoFrame extends Frame {
 	}
 
 	@Override
-	public byte[] encode() {
+	public ByteBuffer encode() {
 		// TODO Auto-generated method stub
 		return null;
 	}

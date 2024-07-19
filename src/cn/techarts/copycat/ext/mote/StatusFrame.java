@@ -1,5 +1,7 @@
 package cn.techarts.copycat.ext.mote;
 
+import java.nio.ByteBuffer;
+
 /**
  * Response
  */
@@ -23,11 +25,10 @@ public class StatusFrame extends MoteFrame {
 		setStatus(payload[0]);
 	}
 	
-	public byte[] encode() {
-		var data = new byte[sn.length + 1];
-		System.arraycopy(sn, 0, data, 0, sn.length);
-		data[sn.length] = status;
-		return serialize0(data, TYPE);
+	public ByteBuffer encode() {
+		var buffer = this.serialize0(TYPE, sn.length + 1);
+		buffer.append(sn).appendByte(status);
+		return buffer.toByteBuffer();
 	}
 
 	public byte getStatus() {

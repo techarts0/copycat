@@ -1,5 +1,7 @@
 package cn.techarts.copycat.std.iec104;
 
+import java.nio.ByteBuffer;
+
 import cn.techarts.copycat.core.Frame;
 
 //TODO
@@ -12,7 +14,7 @@ public class Iec104Frame extends Frame {
 	}
 
 	@Override
-	public byte[] encode() {
+	public ByteBuffer encode() {
 		// TODO Auto-generated method stub
 		return null;
 	}

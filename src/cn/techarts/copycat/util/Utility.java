@@ -1,8 +1,9 @@
 package cn.techarts.copycat.util;
 
-import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
+import java.lang.reflect.Array;
 import java.nio.channels.AsynchronousSocketChannel;
+
 import cn.techarts.copycat.CopycatException;
 import cn.techarts.copycat.core.Frame;
 
@@ -48,12 +49,11 @@ public class Utility {
 	/**
 	 * SYNC
 	 */
-	public static int sendData(byte[] data, AsynchronousSocketChannel socket) {
-		if(data == null || data.length == 0) return 0;
+	public static int sendData(ByteBuffer data, AsynchronousSocketChannel socket) {
 		if(socket == null || !socket.isOpen()) return -1;
+		if(data == null || data.remaining() == 0) return 0;
 		try {
-    		var buf = ByteBuffer.wrap(data);
-        	return socket.write(buf).get(); //Blocking here
+    		return socket.write(data).get(); //Blocking here
         } catch (Exception e) {
         	throw new CopycatException(e, "Failed to send data.");
         }

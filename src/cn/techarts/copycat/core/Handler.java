@@ -14,7 +14,12 @@ import cn.techarts.copycat.util.Utility;
  * */
 public interface Handler {
 	
-	public boolean isSingleton();
+	/**
+	 * To ensure the thread-safety, the handler defaults to non-singleton mode.
+	 */
+	public default boolean isSingleton() {
+		return false;
+	}
 	
 	/**
 	 * Fire the event when a new client connection is coming.
@@ -47,7 +52,7 @@ public interface Handler {
 	/**
 	 * SYNC
 	 */
-	default int send(byte[] data, AsynchronousSocketChannel socket) {
+	default int send(ByteBuffer data, AsynchronousSocketChannel socket) {
     	try {
     		return Utility.sendData(data, socket);
     	}catch(CopycatException e) {
@@ -83,7 +88,7 @@ public interface Handler {
 				}
     		});
         } catch (Exception e) {
-            throw new CopycatException(e, "Failed to write data");
+            throw new CopycatException(e, "Failed to send data.");
         }
     }
 }

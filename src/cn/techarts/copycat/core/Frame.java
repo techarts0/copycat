@@ -1,5 +1,6 @@
 package cn.techarts.copycat.core;
 
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 import cn.techarts.copycat.CopycatException;
@@ -42,7 +43,7 @@ public abstract class Frame {
 	/**
 	 * Serialize the properties (as a byte array) to send to peer.
 	 */
-	public abstract byte[] encode();
+	public abstract ByteBuffer encode();
 	
 	@Override
 	public String toString() {

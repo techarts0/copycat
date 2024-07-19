@@ -1,5 +1,7 @@
 package cn.techarts.copycat.ext.mote;
 
+import java.nio.ByteBuffer;
+
 /**
  * Downstream frame: The instructions send to device from the server.<br>
  * For example, you want to set the temperature, valve position, etc.
@@ -21,7 +23,7 @@ public class ControlFrame extends MoteFrame {
 	}
 
 	@Override
-	public byte[] encode() {
+	public ByteBuffer encode() {
 		return serialize0(payload, getType());
 	}
 	

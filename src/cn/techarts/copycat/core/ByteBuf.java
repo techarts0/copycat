@@ -2,7 +2,10 @@ package cn.techarts.copycat.core;
 
 import java.nio.ByteBuffer;
 import java.nio.InvalidMarkException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
+import cn.techarts.copycat.CopycatException;
 import cn.techarts.copycat.util.Utility;
 
 /**
@@ -14,7 +17,14 @@ public final class ByteBuf {
 	
 	private ByteBuffer buffer = null;
 	
+	public ByteBuf(int capacity) {
+		this.buffer = ByteBuffer.allocateDirect(capacity);
+	}
+	
 	public ByteBuf(ByteBuffer buffer) {
+		if(buffer == null) {
+			throw CopycatException.NullBuffer();
+		}
 		var pos = buffer.position();
 		try {
 			buffer.reset();
@@ -178,5 +188,79 @@ public final class ByteBuf {
 		var length = capacity << 1; // 2 times
 		var newBuffer = Utility.allocate(direct, length);
 		this.buffer = newBuffer.put(this.buffer);
+	}
+	
+	//------------------------------------------------------
+	
+	public ByteBuf append(byte[] data) {
+		if(data == null) return this;
+		if(data.length == 0) return this;
+		buffer.put(data);
+		return this;
+	}
+	
+	/**
+	 * Append bytes where condition is true
+	 */
+	public ByteBuf appendOn(byte[] data, boolean condition) {
+		if(!condition) return this;
+		if(data == null) return this;
+		if(data.length == 0) return this;
+		buffer.put(data);
+		return this;
+	}
+	
+	public ByteBuf appendByte(byte data) {
+		buffer.put(data);
+		return this;
+	}
+	
+	public ByteBuf appendShort(short data) {
+		buffer.putShort(data);
+		return this;
+	}
+	
+	public ByteBuf appendInt(int data) {
+		buffer.putInt(data);
+		return this;
+	}
+	
+	public ByteBuf appendLong(long data) {
+		buffer.putLong(data);
+		return this;
+	}
+	
+	public ByteBuf appendFloat(float data) {
+		buffer.putFloat(data);
+		return this;
+	}
+	
+	public ByteBuf appendDouble(double data) {
+		buffer.putDouble(data);
+		return this;
+	}
+	
+	public ByteBuf appendChar(char data) {
+		buffer.putChar(data);
+		return this;
+	}
+	
+	public ByteBuf append(String data, Charset charset) {
+		if(data == null) return this;
+		if(data.length() == 0) return this;
+		buffer.put(data.getBytes(charset));
+		return this;
+	}
+	
+	public ByteBuf appendUTF8(String data) {
+		return append(data, StandardCharsets.UTF_8);
+	}
+	
+	public ByteBuf appendASCII(String data) {
+		return append(data, StandardCharsets.US_ASCII);
+	}
+	
+	public ByteBuffer toByteBuffer() {
+		return this.buffer.flip();
 	}
 }

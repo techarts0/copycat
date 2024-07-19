@@ -1,5 +1,7 @@
 package cn.techarts.copycat.std.modbus;
 
+import java.nio.ByteBuffer;
+
 import cn.techarts.copycat.CopycatException;
 import cn.techarts.copycat.core.Frame;
 import cn.techarts.copycat.util.BitHelper;
@@ -65,7 +67,7 @@ public class ModbusFrame extends Frame {
 	
 	
 	@Override
-	public byte[] encode() {
+	public ByteBuffer encode() {
 		int tmp = this.payload.length;
 		int len = getFrameLength(tmp);
 		this.rawdata = new byte[len];

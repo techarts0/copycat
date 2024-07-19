@@ -1,5 +1,7 @@
 package cn.techarts.copycat.ext.mote;
 
+import java.nio.ByteBuffer;
+
 import cn.techarts.copycat.util.BitHelper;
 
 public class HBFrame extends MoteFrame {
@@ -23,7 +25,7 @@ public class HBFrame extends MoteFrame {
 	}
 
 	@Override
-	public byte[] encode() {
+	public ByteBuffer encode() {
 		return this.serialize0(this.sn, TYPE);
 	}
 

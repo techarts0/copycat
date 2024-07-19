@@ -1,5 +1,7 @@
 package cn.techarts.copycat.std.mqtt;
 
+import java.nio.ByteBuffer;
+
 import cn.techarts.copycat.core.Frame;
 
 public class MqttPacket extends Frame {
@@ -20,7 +22,7 @@ public class MqttPacket extends Frame {
 	}
 
 	@Override
-	public byte[] encode() {
+	public ByteBuffer encode() {
 		// TODO Auto-generated method stub
 		return null;
 	}

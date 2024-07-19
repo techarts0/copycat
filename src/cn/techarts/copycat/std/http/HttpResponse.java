@@ -1,5 +1,7 @@
 package cn.techarts.copycat.std.http;
 
+import java.nio.ByteBuffer;
+
 import cn.techarts.copycat.core.Frame;
 
 public class HttpResponse extends Frame {
@@ -11,7 +13,7 @@ public class HttpResponse extends Frame {
 	}
 
 	@Override
-	public byte[] encode() {
+	public ByteBuffer encode() {
 		// TODO Auto-generated method stub
 		return null;
 	}

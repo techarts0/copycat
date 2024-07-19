@@ -37,7 +37,7 @@ public class Booster<T extends Frame> {
             	workerExecutorService = Executors.newFixedThreadPool(context.getMaxThreads());
             }
             channelGroup = AsynchronousChannelGroup.withCachedThreadPool(executorService, 1);
-            serverSocketChannel = AsynchronousServerSocketChannel.open(channelGroup);
+            serverSocketChannel = openServerSocket(context.isTlsEnabled(), channelGroup);
             this.setServerSocketOptions();
             serverSocketChannel.bind(new InetSocketAddress(context.getPort()));
             serverSocketChannel.accept(serverSocketChannel, new ConnectionAcceptor());
@@ -87,6 +87,14 @@ public class Booster<T extends Frame> {
     	}
     	if(context.isKeepAlive()) { //default: disabled
     		serverSocketChannel.setOption(StandardSocketOptions.SO_KEEPALIVE, context.isKeepAlive());
+    	}
+    }
+    
+    private AsynchronousServerSocketChannel openServerSocket(boolean tlsEnabled, AsynchronousChannelGroup group) throws IOException {
+    	if(!tlsEnabled) {
+    		return AsynchronousServerSocketChannel.open(group);
+    	}else { //TODO Needs an implementation of SSL/TLS
+    		return AsynchronousServerSocketChannel.open(group);
     	}
     }
     

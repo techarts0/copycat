@@ -11,6 +11,7 @@ import cn.techarts.copycat.core.Handler;
 import cn.techarts.copycat.util.Utility;
 
 import java.nio.channels.CompletionHandler;
+import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 
 /**
@@ -115,7 +116,7 @@ public class Visitor<T extends Frame> {
     }
     
     /**SYNC*/
-    public int send(byte[] data) {
+    public int send(ByteBuffer data) {
     	return handler.send(data, socketChannel);
     }
     

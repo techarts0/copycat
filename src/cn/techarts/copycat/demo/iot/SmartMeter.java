@@ -9,6 +9,7 @@ import cn.techarts.copycat.ext.mote.MoteDecoder;
 import cn.techarts.copycat.ext.mote.MoteFrame;
 import cn.techarts.copycat.ext.mote.Precision;
 import cn.techarts.copycat.ext.mote.RegisterFrame;
+import cn.techarts.copycat.util.BitHelper;
 
 public class SmartMeter {
 	 public static void main(String[] args) throws InterruptedException {
@@ -20,11 +21,13 @@ public class SmartMeter {
 				System.out.print("Device SN: ");
 				sn = scanner.nextLine();
 			}
-			var data = new byte[] {1, 2, 3, 4, 5};
-	    	client.with(decoder, MoteFrame.class).with(new MeterHandler()).start();
+			client.with(decoder, MoteFrame.class).with(new MeterHandler()).start();
 			client.send(new RegisterFrame(sn, "123456").encode());
 	    	
+			var degree = 0;
+			
 	    	while(true) {
+	    		var data = BitHelper.toBytes(degree++);
 	    		client.send(new DataFrame(sn, data, Precision.NUL).encode());
 	    		Thread.sleep(3000);
 	    		client.send(new HBFrame(sn).encode());

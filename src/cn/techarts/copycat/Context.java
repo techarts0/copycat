@@ -19,7 +19,7 @@ public class Context<T extends Frame> {
 	private int rcvBuffer = 0;
 	private boolean keepAlive = false;
 	private boolean reuseAddr = false;
-
+	private boolean tlsEnabled = false;
 	private boolean virtualThreadEnabled = false;	
 	
 	public Context<T> checkRequiredProperties() {
@@ -128,5 +128,13 @@ public class Context<T extends Frame> {
 		if(samplePeriod < 5000) {
 			this.samplePeriod = 5000;
 		}
-	}	
+	}
+
+	public boolean isTlsEnabled() {
+		return tlsEnabled;
+	}
+
+	public void setTlsEnabled(boolean tlsEnabled) {
+		this.tlsEnabled = tlsEnabled;
+	}
 }

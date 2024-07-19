@@ -6,8 +6,6 @@ import java.nio.channels.AsynchronousSocketChannel;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import cn.techarts.copycat.util.Utility;
-
 /**
  * It' a useful helper for some special scenarios. For example, 
  * If you want to send instructions to a client actively in an IoT application.
@@ -67,10 +65,6 @@ public class Registry {
 	
 	public static void clear() {
 		getClients().clear();
-	}
-	
-	public static int send(byte[] data, Object key) {
-		return Utility.sendData(data, get(key));
 	}
 	
 	public static void close(Object key) {
