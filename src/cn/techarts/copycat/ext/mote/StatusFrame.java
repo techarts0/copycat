@@ -2,6 +2,8 @@ package cn.techarts.copycat.ext.mote;
 
 import java.nio.ByteBuffer;
 
+import cn.techarts.copycat.util.BitHelper;
+
 /**
  * Response
  */
@@ -22,7 +24,11 @@ public class StatusFrame extends MoteFrame {
 	
 	protected void parse() {
 		super.parse();
-		setStatus(payload[0]);
+		var idx = indexOfDelimiter(payload);
+		if(idx != -1) {
+			setSn(BitHelper.slice(payload, 0, idx));
+		}
+		setStatus(payload[idx + 1]);
 	}
 	
 	public ByteBuffer encode() {
