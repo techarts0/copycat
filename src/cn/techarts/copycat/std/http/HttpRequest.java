@@ -34,7 +34,7 @@ public class HttpRequest extends Frame {
 	}
 
 	@Override
-	protected void parse() {
+	protected void decode() {
 		// TODO Auto-generated method stub
 
 	}

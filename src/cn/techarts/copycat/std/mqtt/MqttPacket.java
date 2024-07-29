@@ -16,7 +16,7 @@ public class MqttPacket extends Frame {
 	}
 
 	@Override
-	public void parse() {
+	public void decode() {
 		
 		
 	}

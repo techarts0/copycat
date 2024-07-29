@@ -7,6 +7,7 @@ import java.nio.ByteBuffer;
  * because it copies bytes from direct memory to heap.
  * So it's just a backup and we don't use it in the production.
  */
+@Deprecated
 public final class ByteBuf {
 	private byte[] data = new byte[1024];
 	private int position = 0, current = 0;

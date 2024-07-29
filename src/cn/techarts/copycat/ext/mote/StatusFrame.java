@@ -22,8 +22,8 @@ public class StatusFrame extends MoteFrame {
 		this.status = status;
 	}
 	
-	protected void parse() {
-		super.parse();
+	protected void decode() {
+		super.decode();
 		var idx = indexOfDelimiter(payload);
 		if(idx != -1) {
 			setSn(BitHelper.slice(payload, 0, idx));

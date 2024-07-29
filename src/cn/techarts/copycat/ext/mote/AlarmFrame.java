@@ -17,8 +17,8 @@ public class AlarmFrame extends MoteFrame {
 	}
 	
 	@Override
-	protected void parse() {
-		super.parse();
+	protected void decode() {
+		super.decode();
 		var idx = indexOfNul(payload, 0);
 		if(idx == -1) {
 			throw MoteException.invalidSN();

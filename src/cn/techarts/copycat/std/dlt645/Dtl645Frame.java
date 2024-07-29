@@ -8,7 +8,7 @@ import cn.techarts.copycat.core.Frame;
 public class Dtl645Frame extends Frame {
 
 	@Override
-	protected void parse() {
+	protected void decode() {
 		// TODO Auto-generated method stub
 
 	}

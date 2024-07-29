@@ -18,8 +18,8 @@ public class ControlFrame extends MoteFrame {
 	}
 	
 	@Override
-	protected void parse() {
-		super.parse();
+	protected void decode() {
+		super.decode();
 	}
 
 	@Override

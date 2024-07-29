@@ -37,8 +37,8 @@ public class DataFrame extends MoteFrame {
 		}
 	}
 	
-	protected void parse() {
-		super.parse();
+	protected void decode() {
+		super.decode();
 		var idx = indexOfDelimiter(payload);
 		if(idx == -1) {
 			throw MoteException.invalidSN();

@@ -42,7 +42,7 @@ public class Booster<T extends Frame> implements AutoCloseable{
             serverSocketChannel.bind(new InetSocketAddress(context.getPort()));
             serverSocketChannel.accept(serverSocketChannel, new ConnectionAcceptor());
         } catch (IOException e) {
-            throw new Panic(e);
+            throw new Panic(e, "Failed to start the server.");
         }
     }
     
@@ -71,7 +71,7 @@ public class Booster<T extends Frame> implements AutoCloseable{
 	    	this.channelGroup.shutdown();
 	    	this.executorService.shutdown();
 	    	this.workerExecutorService.shutdown();
-    	}catch(Exception e) {
+	  }catch(Exception e) {
     		throw new Panic(e, "Failed to release resource while shutdown.");
     	}
     }
@@ -102,6 +102,7 @@ public class Booster<T extends Frame> implements AutoCloseable{
     	return this.monitor;
     }
     
+    @Override
     public void close() {
     	releaseResourcesAndCleanup();
     }

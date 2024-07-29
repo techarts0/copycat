@@ -44,11 +44,11 @@ public class MoteFrame extends Frame {
 	public MoteFrame(byte[] raw, int remaining) {
 		this.rawdata = raw;
 		this.length = remaining;
-		this.parse();
+		this.decode();
 	}
 	
 	@Override
-	protected void parse() {
+	protected void decode() {
 		if(rawdata[0] != FLAG) {
 			throw MoteException.itIsNotMote();
 		}

@@ -20,8 +20,8 @@ public class TimingFrame extends MoteFrame {
 	}
 	
 	@Override
-	protected void parse() {
-		super.parse();
+	protected void decode() {
+		super.decode();
 		this.timestamp = BitHelper.toInt(payload);
 	}
 

@@ -21,7 +21,7 @@ public class ModbusFrame extends Frame {
 	private short numbers;		//The register numbers read or write
 	
 	@Override
-	protected void parse() {
+	protected void decode() {
 		var tmp = new byte[] {rawdata[2], rawdata[3]};
 		if(BitHelper.toShort(tmp) != 0) {
 			throw new Panic("Unsupported protocol.");

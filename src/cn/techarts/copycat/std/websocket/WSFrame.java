@@ -7,7 +7,7 @@ import cn.techarts.copycat.core.Frame;
 public class WSFrame extends Frame {
 
 	@Override
-	protected void parse() {
+	protected void decode() {
 		// TODO Auto-generated method stub
 
 	}

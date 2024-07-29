@@ -18,8 +18,8 @@ public class HBFrame extends MoteFrame {
 	}
 	
 	@Override
-	protected void parse() {
-		super.parse();
+	protected void decode() {
+		super.decode();
 		var idx = payload.length - 1;
 		setSn(BitHelper.slice(payload, 0, idx));
 	}

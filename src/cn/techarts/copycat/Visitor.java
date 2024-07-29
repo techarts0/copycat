@@ -20,14 +20,12 @@ import java.nio.channels.AsynchronousSocketChannel;
 public class Visitor<T extends Frame> {
 	private Handler handler = null;
 	private Decoder<T> decoder = null;
-	//private ByteBuf decoderCache = null;
 	private boolean directBuffer = false;
 	private int sockRecvBufferSize = 1024;
 	private InetSocketAddress serverAddr = null;
 	private AsynchronousSocketChannel socketChannel;
     
 	public Visitor(String ip, int port) {
-		//this.decoderCache = new ByteBuf(1024);
         serverAddr = new InetSocketAddress(ip, port);
     }
 	
@@ -82,7 +80,6 @@ public class Visitor<T extends Frame> {
             		handler.onClose(socketChannel);
             	}else {
             		var decoderCache = new ByteBuf(buffer);
-            		//decoderCache.append(buffer);
             		var frames = decoder.decode(decoderCache);
                 	if(frames != null && frames.length > 0) {
                 		for(var f : frames) {

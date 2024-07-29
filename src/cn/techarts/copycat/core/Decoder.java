@@ -14,6 +14,10 @@ public abstract class Decoder<T extends Frame> implements Cloneable{
 	
 	public abstract boolean isSingleton();
 	
+	/**
+	 * Recognize the boundary of frame in the byte stream.<p>
+	 * Please note that it's not same to the {@link Frame.decode}.
+	 */
 	public abstract  T[] decode(ByteBuf data);
 	
 	public Class<T> getFrameClass(){

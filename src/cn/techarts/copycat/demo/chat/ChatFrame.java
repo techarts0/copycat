@@ -34,7 +34,7 @@ public class ChatFrame extends Frame {
 	}
 
 	@Override
-	protected void parse() {
+	protected void decode() {
 		this.sender = BitHelper.toInt(new byte[] {rawdata[2], rawdata[3], rawdata[4], rawdata[5]});
 		this.receiver = BitHelper.toInt(new byte[] {rawdata[6], rawdata[7], rawdata[8], rawdata[9]});
 		

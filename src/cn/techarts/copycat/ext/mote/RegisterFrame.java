@@ -45,8 +45,8 @@ public class RegisterFrame extends MoteFrame {
 	}
 	
 	@Override
-	protected void parse() {
-		super.parse();
+	protected void decode() {
+		super.decode();
 		var idx = indexOfDelimiter(payload);
 		if(idx == -1) {
 			throw MoteException.invalidSN();
