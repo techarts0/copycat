@@ -23,7 +23,7 @@ public final class ByteBuf {
 	
 	public ByteBuf(ByteBuffer buffer) {
 		if(buffer == null) {
-			throw CopycatException.NullBuffer();
+			throw CopycatException.nullBuffer();
 		}
 		var pos = buffer.position();
 		try {

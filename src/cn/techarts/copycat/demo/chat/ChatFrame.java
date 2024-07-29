@@ -8,8 +8,8 @@ import cn.techarts.copycat.util.BitHelper;
 import cn.techarts.copycat.util.StrHelper;
 
 /**
- * |0x4d 0x4d |  sender | receiver | length  | message |
- * | 2 bytes  | 4 bytes |  4 bytes | 2 bytes | N bytes |
+ * |0x4d 0x4d |  sender | receiver |  TYPE  |  length  | message |
+ * | 2 bytes  | 4 bytes |  4 bytes | 1 byte |  2 bytes | N bytes |
  * 
  * If receiver is 0 and remaining length equals 0, it's a login frame.
  * 
