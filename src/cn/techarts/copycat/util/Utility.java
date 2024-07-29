@@ -4,7 +4,7 @@ import java.nio.ByteBuffer;
 import java.lang.reflect.Array;
 import java.nio.channels.AsynchronousSocketChannel;
 
-import cn.techarts.copycat.CopycatException;
+import cn.techarts.copycat.Panic;
 import cn.techarts.copycat.core.Frame;
 
 /**
@@ -42,7 +42,7 @@ public class Utility {
 				return constructor != null ? constructor.newInstance(data) : null;
 			}
 		}catch(Exception e) {
-			throw new CopycatException(e, "Failed to create frame object.");
+			throw new Panic(e, "Failed to create frame object.");
 		}
 	}
 	
@@ -55,7 +55,7 @@ public class Utility {
 		try {
     		return socket.write(data).get(); //Blocking here
         } catch (Exception e) {
-        	throw new CopycatException(e, "Failed to send data.");
+        	throw new Panic(e, "Failed to send data.");
         }
 	}
 	

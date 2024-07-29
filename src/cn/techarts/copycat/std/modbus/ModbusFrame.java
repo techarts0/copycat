@@ -2,7 +2,7 @@ package cn.techarts.copycat.std.modbus;
 
 import java.nio.ByteBuffer;
 
-import cn.techarts.copycat.CopycatException;
+import cn.techarts.copycat.Panic;
 import cn.techarts.copycat.core.Frame;
 import cn.techarts.copycat.util.BitHelper;
 
@@ -24,7 +24,7 @@ public class ModbusFrame extends Frame {
 	protected void parse() {
 		var tmp = new byte[] {rawdata[2], rawdata[3]};
 		if(BitHelper.toShort(tmp) != 0) {
-			throw new CopycatException("Unsupported protocol.");
+			throw new Panic("Unsupported protocol.");
 		}
 		this.mbap = new MBAP();
 		tmp = new byte[] {rawdata[0], rawdata[1]};

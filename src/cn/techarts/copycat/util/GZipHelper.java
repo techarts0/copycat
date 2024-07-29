@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-import cn.techarts.copycat.CopycatException;
+import cn.techarts.copycat.Panic;
 
 public class GZipHelper {
 	public byte[] zip(byte[] source) {
@@ -19,7 +19,7 @@ public class GZipHelper {
 			gzip.close();
 			return out.toByteArray();
 		}catch(IOException e) {
-			throw new CopycatException(e, "Failed to compress data.");
+			throw new Panic(e, "Failed to compress data.");
 		}
 	}
 	
@@ -33,7 +33,7 @@ public class GZipHelper {
         	result = ungzip.readAllBytes();
         	ungzip.close();
         } catch (IOException e) {
-    		throw new CopycatException(e, "Failed to decompress data.");
+    		throw new Panic(e, "Failed to decompress data.");
         }
         return result;
  	}

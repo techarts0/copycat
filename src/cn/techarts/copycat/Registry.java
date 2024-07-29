@@ -33,7 +33,7 @@ public class Registry {
 			var address = (InetSocketAddress)client.getRemoteAddress();
 			getClients().put(address.getAddress().getHostAddress(), client);
 		}catch(Exception e) {
-			throw new CopycatException(e, "Failed to get the client IP.");
+			throw new Panic(e, "Failed to get the client IP.");
 		}		
 	}
 	
@@ -45,7 +45,7 @@ public class Registry {
 			if(key == null) return;
 			getClients().put(key, client);
 		}catch(Exception e) {
-			throw new CopycatException(e, "Failed to get the client IP.");
+			throw new Panic(e, "Failed to get the client IP.");
 		}		
 	}
 	
@@ -72,7 +72,7 @@ public class Registry {
 		try {
 			if(client != null) client.close();
 		}catch(IOException e) {
-			throw new CopycatException(e, "Failed to close the client.");
+			throw new Panic(e, "Failed to close the client.");
 		}
 	}
 }

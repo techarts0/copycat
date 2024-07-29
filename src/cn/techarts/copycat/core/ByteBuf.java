@@ -5,7 +5,7 @@ import java.nio.InvalidMarkException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-import cn.techarts.copycat.CopycatException;
+import cn.techarts.copycat.Panic;
 import cn.techarts.copycat.util.Utility;
 
 /**
@@ -23,7 +23,7 @@ public final class ByteBuf {
 	
 	public ByteBuf(ByteBuffer buffer) {
 		if(buffer == null) {
-			throw CopycatException.nullBuffer();
+			throw Panic.nullBuffer();
 		}
 		var pos = buffer.position();
 		try {

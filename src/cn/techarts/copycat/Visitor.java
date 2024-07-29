@@ -39,7 +39,7 @@ public class Visitor<T extends Frame> {
 	
 	public Visitor<T> with(Decoder<T> decoder, Class<T> frameClass){
 		if(decoder == null) {
-			throw new CopycatException("The decoder is required.");
+			throw new Panic("The decoder is required.");
 		}
 		this.decoder = decoder;
 		this.decoder.setFrameClass(frameClass);
@@ -48,7 +48,7 @@ public class Visitor<T extends Frame> {
 	
 	public Visitor<T> with(Handler handler){
 		if(decoder == null) {
-			throw new CopycatException("The handler is required.");
+			throw new Panic("The handler is required.");
 		}
 		this.handler = handler;
 		return this;
@@ -56,10 +56,10 @@ public class Visitor<T extends Frame> {
 	
     public Visitor<T> start() {
     	if(decoder == null || handler == null) {
-    		throw new CopycatException("The decoder and handler are required.");
+    		throw new Panic("The decoder and handler are required.");
     	}
     	if(decoder.getFrameClass() == null) {
-    		throw new CopycatException("The frame class in decoder is required.");
+    		throw new Panic("The frame class in decoder is required.");
     	}
     	
         try {
@@ -69,7 +69,7 @@ public class Visitor<T extends Frame> {
            this.prepare2ReceiveDataFromServerAsync();
            return this;
         } catch (IOException e) {
-            throw new CopycatException(e, "Failed to connect server.");
+            throw new Panic(e, "Failed to connect server.");
         }
     }
     
@@ -131,7 +131,7 @@ public class Visitor<T extends Frame> {
     		handler.onClose(socketChannel);
     	}
     	}catch(IOException e) {
-    		throw new CopycatException(e, "Failed to close the connection.");
+    		throw new Panic(e, "Failed to close the connection.");
     	}    	
     }
 }

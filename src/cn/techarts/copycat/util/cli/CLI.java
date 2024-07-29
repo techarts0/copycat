@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
-import cn.techarts.copycat.CopycatException;
+import cn.techarts.copycat.Panic;
 
 public class CLI {
 	private Object action;
@@ -13,7 +13,7 @@ public class CLI {
 	
 	public CLI(Object action) {
 		if(action == null) {
-			throw CopycatException.nullAction();
+			throw Panic.nullAction();
 		}
 		this.action = action;
 		this.mapping = new HashMap<>(32);

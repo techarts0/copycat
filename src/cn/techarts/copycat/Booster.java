@@ -25,7 +25,7 @@ public class Booster<T extends Frame> implements AutoCloseable{
     private AsynchronousChannelGroup channelGroup;
     private AsynchronousServerSocketChannel serverSocketChannel;
  
-    public Booster(Context<T> context) throws CopycatException{
+    public Booster(Context<T> context) throws Panic{
     	try {
     		this.context = context.checkRequiredProperties();
             this.monitor = new Monitor(context.getSamplePeriod());
@@ -42,7 +42,7 @@ public class Booster<T extends Frame> implements AutoCloseable{
             serverSocketChannel.bind(new InetSocketAddress(context.getPort()));
             serverSocketChannel.accept(serverSocketChannel, new ConnectionAcceptor());
         } catch (IOException e) {
-            throw new CopycatException(e);
+            throw new Panic(e);
         }
     }
     
@@ -60,11 +60,11 @@ public class Booster<T extends Frame> implements AutoCloseable{
 
 		@Override
 		public void failed(Throwable e, AsynchronousServerSocketChannel server) {
-			throw new CopycatException(e, "The server failed to accept connection.");
+			throw new Panic(e, "The server failed to accept connection.");
 		}
     }
     
-    public void releaseResourcesAndCleanup() throws CopycatException {
+    public void releaseResourcesAndCleanup() throws Panic {
     	try {
 	    	if(channelGroup == null) return;
 	    	if(channelGroup.isShutdown()) return;
@@ -72,7 +72,7 @@ public class Booster<T extends Frame> implements AutoCloseable{
 	    	this.executorService.shutdown();
 	    	this.workerExecutorService.shutdown();
     	}catch(Exception e) {
-    		throw new CopycatException(e, "Failed to release resource while shutdown.");
+    		throw new Panic(e, "Failed to release resource while shutdown.");
     	}
     }
     

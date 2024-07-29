@@ -3,7 +3,7 @@ package cn.techarts.copycat.core;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
-import cn.techarts.copycat.CopycatException;
+import cn.techarts.copycat.Panic;
 
 /**
  * The protocol frame structure
@@ -18,7 +18,7 @@ public abstract class Frame {
 	public Frame(byte[] raw) {
 		this.rawdata = raw;
 		if(raw == null || raw.length == 0) {
-			throw new CopycatException("Raw data is null.");
+			throw new Panic("Raw data is null.");
 		}
 		this.parse();
 	}

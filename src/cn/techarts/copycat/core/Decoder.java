@@ -1,6 +1,6 @@
 package cn.techarts.copycat.core;
 
-import cn.techarts.copycat.CopycatException;
+import cn.techarts.copycat.Panic;
 
 /**
  * The decoder runs on SINGLETON mode.
@@ -31,7 +31,7 @@ public abstract class Decoder<T extends Frame> implements Cloneable{
 		try {
 			return (Decoder<T>)super.clone();
 		}catch(CloneNotSupportedException e) {
-			throw new CopycatException("Failed to create decoder.");
+			throw new Panic("Failed to create decoder.");
 		}
 	}
 }

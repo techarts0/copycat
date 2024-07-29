@@ -6,7 +6,7 @@ import java.nio.channels.CompletionHandler;
 import java.nio.channels.AsynchronousSocketChannel;
 
 import cn.techarts.copycat.Context;
-import cn.techarts.copycat.CopycatException;
+import cn.techarts.copycat.Panic;
 import cn.techarts.copycat.Monitor;
 import cn.techarts.copycat.util.Utility;
 
@@ -33,7 +33,7 @@ public class Session<T extends Frame> implements Runnable{
 				connection.setOption(StandardSocketOptions.SO_KEEPALIVE, true);
 			}
 		}catch(IOException e) {
-			throw new CopycatException(e, "Failed to set socket keepalive.");
+			throw new Panic(e, "Failed to set socket keepalive.");
 		}
 		this.monitor.activeConnection(false);	//Active and in second connections
 		this.handler.onOpen(this.connection); 	//Just calls once during a session

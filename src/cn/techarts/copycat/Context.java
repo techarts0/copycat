@@ -24,13 +24,13 @@ public class Context<T extends Frame> {
 	
 	public Context<T> checkRequiredProperties() {
 		if(handler == null) {
-			throw new CopycatException("The handler is required.");
+			throw new Panic("The handler is required.");
 		}
 		if(decoder == null) {
-			throw new CopycatException("The decoder is required!");
+			throw new Panic("The decoder is required!");
 		}
 		if(port <= 0) {
-			throw new CopycatException("Port number must be great than 0.");
+			throw new Panic("Port number must be great than 0.");
 		}
 		return this;
 	}
@@ -38,18 +38,20 @@ public class Context<T extends Frame> {
 	public int getPort() {
 		return port;
 	}
-	public void setPort(int port) {
+	public Context<T> setPort(int port) {
 		this.port = port;
+		return this;
 	}
 	public int getMaxThreads() {
 		return maxThreads;
 	}
-	public void setMaxThreads(int maxThreads) {
+	public Context<T> setMaxThreads(int maxThreads) {
 		if(maxThreads > 0) {
 			this.maxThreads = maxThreads;
 		}else {
 			this.maxThreads = Runtime.getRuntime().availableProcessors();
 		}
+		return this;
 	}
 	public Decoder<T> getDecoder() {
 		if(this.decoder.isSingleton()) {
@@ -68,50 +70,56 @@ public class Context<T extends Frame> {
 		try {
 			return handler.getClass().getConstructor().newInstance();
 		}catch(Exception e) {
-			throw new CopycatException(e, "Failed to create a handler.");
+			throw new Panic(e, "Failed to create a handler.");
 		}
 	}
-	public void setHandler(Handler handler) {
+	public Context<T> setHandler(Handler handler) {
 		this.handler = handler;
+		return this;
 	}
 	
 	public boolean isKeepAlive() {
 		return keepAlive;
 	}
 
-	public void setKeepAlive(boolean keepAlive) {
+	public Context<T> setKeepAlive(boolean keepAlive) {
 		this.keepAlive = keepAlive;
+		return this;
 	}
 
 	public boolean isReuseAddr() {
 		return reuseAddr;
 	}
 
-	public void setReuseAddr(boolean reuseAddr) {
+	public Context<T> setReuseAddr(boolean reuseAddr) {
 		this.reuseAddr = reuseAddr;
+		return this;
 	}
 
 	public int getRcvBuffer() {
 		return rcvBuffer;
 	}
 
-	public void setRcvBuffer(int rcvBuffer) {
+	public Context<T> setRcvBuffer(int rcvBuffer) {
 		this.rcvBuffer = rcvBuffer;
+		return this;
 	}
 
 	public boolean isDirectBuffer() {
 		return directBuffer;
 	}
 
-	public void setDirectBuffer(boolean directBuffer) {
+	public Context<T> setDirectBuffer(boolean directBuffer) {
 		this.directBuffer = directBuffer;
+		return this;
 	}
 	
 	/**
 	 * Please ensure the version of JDK you installed is greater than 19(21 and later).
 	 */
-	public void enableVirtualThread() {
+	public Context<T> enableVirtualThread() {
 		this.virtualThreadEnabled = true;
+		return this;
 	}
 	
 	public boolean isVirtualThreadEnabled() {
@@ -123,18 +131,20 @@ public class Context<T extends Frame> {
 	}
 	
 	/**Default period (at least) is 5 seconds*/
-	public void setSamplePeriod(int samplePeriod) {
+	public Context<T> setSamplePeriod(int samplePeriod) {
 		this.samplePeriod = samplePeriod;
 		if(samplePeriod < 5000) {
 			this.samplePeriod = 5000;
 		}
+		return this;
 	}
 
 	public boolean isTlsEnabled() {
 		return tlsEnabled;
 	}
 
-	public void setTlsEnabled(boolean tlsEnabled) {
+	public Context<T> setTlsEnabled(boolean tlsEnabled) {
 		this.tlsEnabled = tlsEnabled;
+		return this;
 	}
 }

@@ -4,7 +4,7 @@ package cn.techarts.copycat.ext.mote;
 import java.util.ArrayList;
 import cn.techarts.copycat.core.ByteBuf;
 import cn.techarts.copycat.util.Utility;
-import cn.techarts.copycat.CopycatException;
+import cn.techarts.copycat.Panic;
 import cn.techarts.copycat.decoder.VarLengthFieldFrameDecoder;
 
 public class MoteDecoder extends VarLengthFieldFrameDecoder<MoteFrame> {
@@ -75,7 +75,7 @@ public class MoteDecoder extends VarLengthFieldFrameDecoder<MoteFrame> {
 				return constructor != null ? constructor.newInstance(data, attachment) : null;
 			}
 		}catch(Exception e) {
-			throw new CopycatException(e, "Failed to create frame object.");
+			throw new Panic(e, "Failed to create frame object.");
 		}
 	}
 }

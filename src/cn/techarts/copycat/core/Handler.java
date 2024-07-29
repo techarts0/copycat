@@ -4,7 +4,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
 
-import cn.techarts.copycat.CopycatException;
+import cn.techarts.copycat.Panic;
 import cn.techarts.copycat.util.Utility;
 
 /**
@@ -55,7 +55,7 @@ public interface Handler {
 	default int send(ByteBuffer data, AsynchronousSocketChannel socket) {
     	try {
     		return Utility.sendData(data, socket);
-    	}catch(CopycatException e) {
+    	}catch(Panic e) {
     		this.onError(e, socket);
     		return -1; //An exception is threw.
     	}
@@ -88,7 +88,7 @@ public interface Handler {
 				}
     		});
         } catch (Exception e) {
-            throw new CopycatException(e, "Failed to send data.");
+            throw new Panic(e, "Failed to send data.");
         }
     }
 }
