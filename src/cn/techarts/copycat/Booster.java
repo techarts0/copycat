@@ -17,7 +17,7 @@ import cn.techarts.copycat.core.Session;
  * The server bootstrap class
  * 
  */
-public class Booster<T extends Frame> {
+public class Booster<T extends Frame> implements AutoCloseable{
 	private Monitor monitor = null;
 	private Context<T> context = null;
 	private ExecutorService executorService;
@@ -100,5 +100,9 @@ public class Booster<T extends Frame> {
     
     public Monitor getMonitorObject() {
     	return this.monitor;
+    }
+    
+    public void close() {
+    	releaseResourcesAndCleanup();
     }
 }
