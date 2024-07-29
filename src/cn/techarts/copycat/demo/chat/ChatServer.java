@@ -9,12 +9,11 @@ import cn.techarts.copycat.decoder.LengthFieldFrameDecoder;
 public class ChatServer {
 	public static void main(String[] args){
         var config = new Context<ChatFrame>();
-        config.setPort(9977);
-        config.setMaxThreads(0);
-        config.setDirectBuffer(true);
+        config.port(9977);
+        config.maxThreads(0);
         config.enableVirtualThread();
-        config.setDecoder(new LengthFieldFrameDecoder<ChatFrame>(10, 2), ChatFrame.class);
-        config.setHandler(new ServerChatHandler());
+        config.decoder(new LengthFieldFrameDecoder<ChatFrame>(10, 2), ChatFrame.class);
+        config.handler(new ServerChatHandler());
     	var startup = new Booster<>(config);
     	processCommandLineInstruction();
     	startup.releaseResourcesAndCleanup();

@@ -9,20 +9,20 @@ import cn.techarts.copycat.core.Handler;
  */
 public class Context<T extends Frame> {
 	private int port;
+	private int rcvBuffer = 0;
 	private int maxThreads = 0;
 	private int samplePeriod = 5000;
-	private boolean directBuffer = true;
 	
 	private Handler handler;
 	private Decoder<T> decoder;
-		
-	private int rcvBuffer = 0;
+
+	private boolean directBuffer = true;
 	private boolean keepAlive = false;
 	private boolean reuseAddr = false;
 	private boolean tlsEnabled = false;
 	private boolean virtualThreadEnabled = false;	
 	
-	public Context<T> checkRequiredProperties() {
+	public Context<T> requiredProperties() {
 		if(handler == null) {
 			throw new Panic("The handler is required.");
 		}
@@ -35,17 +35,17 @@ public class Context<T extends Frame> {
 		return this;
 	}
 	
-	public int getPort() {
+	public int port() {
 		return port;
 	}
-	public Context<T> setPort(int port) {
+	public Context<T> port(int port) {
 		this.port = port;
 		return this;
 	}
-	public int getMaxThreads() {
+	public int maxThreads() {
 		return maxThreads;
 	}
-	public Context<T> setMaxThreads(int maxThreads) {
+	public Context<T> maxThreads(int maxThreads) {
 		if(maxThreads > 0) {
 			this.maxThreads = maxThreads;
 		}else {
@@ -53,19 +53,20 @@ public class Context<T extends Frame> {
 		}
 		return this;
 	}
-	public Decoder<T> getDecoder() {
+	public Decoder<T> decoder() {
 		if(this.decoder.isSingleton()) {
 			return this.decoder;
 		}else {
 			return this.decoder.clone(); //Deeply Clone?
 		}
 	}
-	public<D extends Decoder<T>> void setDecoder(D decoder, Class<T> frameClass) {
+	public<D extends Decoder<T>> Context<T> decoder(D decoder, Class<T> frameClass) {
 		this.decoder = decoder;
 		this.decoder.setFrameClass(frameClass);
+		return this;
 	}
 	
-	public Handler getHandler() {
+	public Handler handler() {
 		if(this.handler.isSingleton()) return this.handler;
 		try {
 			return handler.getClass().getConstructor().newInstance();
@@ -73,44 +74,44 @@ public class Context<T extends Frame> {
 			throw new Panic(e, "Failed to create a handler.");
 		}
 	}
-	public Context<T> setHandler(Handler handler) {
+	public Context<T> handler(Handler handler) {
 		this.handler = handler;
 		return this;
 	}
 	
-	public boolean isKeepAlive() {
+	public boolean keepAliveEnabled() {
 		return keepAlive;
 	}
 
-	public Context<T> setKeepAlive(boolean keepAlive) {
-		this.keepAlive = keepAlive;
+	public Context<T> enableKeepAlive() {
+		this.keepAlive = true;
 		return this;
 	}
 
-	public boolean isReuseAddr() {
+	public boolean addrReuseEnabled() {
 		return reuseAddr;
 	}
 
-	public Context<T> setReuseAddr(boolean reuseAddr) {
-		this.reuseAddr = reuseAddr;
+	public Context<T> enableAddrReuse() {
+		this.reuseAddr = true;
 		return this;
 	}
 
-	public int getRcvBuffer() {
+	public int rcvBuffer() {
 		return rcvBuffer;
 	}
 
-	public Context<T> setRcvBuffer(int rcvBuffer) {
+	public Context<T> rcvBuffer(int rcvBuffer) {
 		this.rcvBuffer = rcvBuffer;
 		return this;
 	}
 
-	public boolean isDirectBuffer() {
+	public boolean directBufferEnabled() {
 		return directBuffer;
 	}
 
-	public Context<T> setDirectBuffer(boolean directBuffer) {
-		this.directBuffer = directBuffer;
+	public Context<T> disableDirectBuffer() {
+		this.directBuffer = false;
 		return this;
 	}
 	
@@ -122,16 +123,16 @@ public class Context<T extends Frame> {
 		return this;
 	}
 	
-	public boolean isVirtualThreadEnabled() {
+	public boolean virtualThreadEnabled() {
 		return this.virtualThreadEnabled;
 	}
 
-	public int getSamplePeriod() {
+	public int samplePeriod() {
 		return samplePeriod;
 	}
 	
 	/**Default period (at least) is 5 seconds*/
-	public Context<T> setSamplePeriod(int samplePeriod) {
+	public Context<T> samplePeriod(int samplePeriod) {
 		this.samplePeriod = samplePeriod;
 		if(samplePeriod < 5000) {
 			this.samplePeriod = 5000;
@@ -139,12 +140,12 @@ public class Context<T extends Frame> {
 		return this;
 	}
 
-	public boolean isTlsEnabled() {
+	public boolean tlsEnabled() {
 		return tlsEnabled;
 	}
 
-	public Context<T> setTlsEnabled(boolean tlsEnabled) {
-		this.tlsEnabled = tlsEnabled;
+	public Context<T> enableTLS() {
+		this.tlsEnabled = true;
 		return this;
 	}
 }

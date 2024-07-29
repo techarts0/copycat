@@ -27,19 +27,19 @@ public class Booster<T extends Frame> implements AutoCloseable{
  
     public Booster(Context<T> context) throws Panic{
     	try {
-    		this.context = context.checkRequiredProperties();
-            this.monitor = new Monitor(context.getSamplePeriod());
-            if(context.isVirtualThreadEnabled()) {
+    		this.context = context.requiredProperties();
+            this.monitor = new Monitor(context.samplePeriod());
+            if(context.virtualThreadEnabled()) {
             	executorService = Executors.newVirtualThreadPerTaskExecutor();
             	workerExecutorService = Executors.newVirtualThreadPerTaskExecutor();
             }else {
             	executorService = Executors.newCachedThreadPool();
-            	workerExecutorService = Executors.newFixedThreadPool(context.getMaxThreads());
+            	workerExecutorService = Executors.newFixedThreadPool(context.maxThreads());
             }
             channelGroup = AsynchronousChannelGroup.withCachedThreadPool(executorService, 1);
-            serverSocketChannel = openServerSocket(context.isTlsEnabled(), channelGroup);
+            serverSocketChannel = openServerSocket(context.tlsEnabled(), channelGroup);
             this.setServerSocketOptions();
-            serverSocketChannel.bind(new InetSocketAddress(context.getPort()));
+            serverSocketChannel.bind(new InetSocketAddress(context.port()));
             serverSocketChannel.accept(serverSocketChannel, new ConnectionAcceptor());
         } catch (IOException e) {
             throw new Panic(e, "Failed to start the server.");
@@ -50,7 +50,7 @@ public class Booster<T extends Frame> implements AutoCloseable{
 		@Override
 		public void completed(AsynchronousSocketChannel client, AsynchronousServerSocketChannel server) {
 			var session = new Session<T>(client, context, monitor);
-			if(context.isVirtualThreadEnabled()) {
+			if(context.virtualThreadEnabled()) {
 				workerExecutorService.submit(session);
 			}else {
 				workerExecutorService.execute(session);
@@ -77,16 +77,16 @@ public class Booster<T extends Frame> implements AutoCloseable{
     }
     
     private void setServerSocketOptions() throws IOException {
-    	if(context.getRcvBuffer() > 0) {
-    		serverSocketChannel.setOption(StandardSocketOptions.SO_RCVBUF, context.getRcvBuffer());
+    	if(context.rcvBuffer() > 0) {
+    		serverSocketChannel.setOption(StandardSocketOptions.SO_RCVBUF, context.rcvBuffer());
     	}
-    	this.context.setRcvBuffer(serverSocketChannel.getOption(StandardSocketOptions.SO_RCVBUF));
+    	this.context.rcvBuffer(serverSocketChannel.getOption(StandardSocketOptions.SO_RCVBUF));
     	
-    	if(context.isReuseAddr()) { //default: disabled
-    		serverSocketChannel.setOption(StandardSocketOptions.SO_REUSEADDR, context.isReuseAddr());
+    	if(context.addrReuseEnabled()) { //default: disabled
+    		serverSocketChannel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
     	}
-    	if(context.isKeepAlive()) { //default: disabled
-    		serverSocketChannel.setOption(StandardSocketOptions.SO_KEEPALIVE, context.isKeepAlive());
+    	if(context.keepAliveEnabled()) { //default: disabled
+    		serverSocketChannel.setOption(StandardSocketOptions.SO_KEEPALIVE, true);
     	}
     }
     

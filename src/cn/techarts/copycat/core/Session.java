@@ -11,7 +11,7 @@ import cn.techarts.copycat.Monitor;
 import cn.techarts.copycat.util.Utility;
 
 /**
- * A connection wrapper
+ * Manage the TCP connection life-cycle.
  */
 public class Session<T extends Frame> implements Runnable{
 	private Monitor monitor = null;
@@ -24,12 +24,12 @@ public class Session<T extends Frame> implements Runnable{
 	public Session(AsynchronousSocketChannel connection, Context<T> context, Monitor monitor) {
 		this.monitor = monitor;
 		this.connection = connection;
-		this.handler = context.getHandler();
-		this.decoder = context.getDecoder();
-		this.directBuffer = context.isDirectBuffer();
-		this.recvBufferSize = context.getRcvBuffer();
+		this.handler = context.handler();
+		this.decoder = context.decoder();
+		this.recvBufferSize = context.rcvBuffer();
+		this.directBuffer = context.directBufferEnabled();
 		try {
-			if(context.isKeepAlive()) {
+			if(context.keepAliveEnabled()) {
 				connection.setOption(StandardSocketOptions.SO_KEEPALIVE, true);
 			}
 		}catch(IOException e) {
@@ -54,7 +54,7 @@ public class Session<T extends Frame> implements Runnable{
 		connection.read(buffer, null, new CompletionHandler<Integer, Void>() {
             @Override
             public void completed(Integer length, Void v) {
-            	if(length == -1) {
+            	if(length == -1) { //Error
             		monitor.activeConnection(true);
             		handler.onClose(connection);
             		Thread.currentThread().interrupt();
