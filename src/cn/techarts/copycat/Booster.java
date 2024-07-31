@@ -17,7 +17,7 @@ import cn.techarts.copycat.core.Session;
  * The server bootstrap class
  * 
  */
-public class Booster<T extends Frame> {
+public class Booster<T extends Frame> implements AutoCloseable{
 	private Monitor monitor = null;
 	private Context<T> context = null;
 	private ExecutorService executorService;
@@ -25,24 +25,24 @@ public class Booster<T extends Frame> {
     private AsynchronousChannelGroup channelGroup;
     private AsynchronousServerSocketChannel serverSocketChannel;
  
-    public Booster(Context<T> context) throws CopycatException{
+    public Booster(Context<T> context) throws Panic{
     	try {
-    		this.context = context.checkRequiredProperties();
-            this.monitor = new Monitor(context.getSamplePeriod());
-            if(context.isVirtualThreadEnabled()) {
+    		this.context = context.requiredProperties();
+            this.monitor = new Monitor(context.samplePeriod());
+            if(context.virtualThreadEnabled()) {
             	executorService = Executors.newVirtualThreadPerTaskExecutor();
             	workerExecutorService = Executors.newVirtualThreadPerTaskExecutor();
             }else {
             	executorService = Executors.newCachedThreadPool();
-            	workerExecutorService = Executors.newFixedThreadPool(context.getMaxThreads());
+            	workerExecutorService = Executors.newFixedThreadPool(context.maxThreads());
             }
             channelGroup = AsynchronousChannelGroup.withCachedThreadPool(executorService, 1);
-            serverSocketChannel = AsynchronousServerSocketChannel.open(channelGroup);
+            serverSocketChannel = openServerSocket(context.tlsEnabled(), channelGroup);
             this.setServerSocketOptions();
-            serverSocketChannel.bind(new InetSocketAddress(context.getPort()));
+            serverSocketChannel.bind(new InetSocketAddress(context.port()));
             serverSocketChannel.accept(serverSocketChannel, new ConnectionAcceptor());
         } catch (IOException e) {
-            throw new CopycatException(e);
+            throw new Panic(e, "Failed to start the server.");
         }
     }
     
@@ -50,7 +50,7 @@ public class Booster<T extends Frame> {
 		@Override
 		public void completed(AsynchronousSocketChannel client, AsynchronousServerSocketChannel server) {
 			var session = new Session<T>(client, context, monitor);
-			if(context.isVirtualThreadEnabled()) {
+			if(context.virtualThreadEnabled()) {
 				workerExecutorService.submit(session);
 			}else {
 				workerExecutorService.execute(session);
@@ -60,37 +60,50 @@ public class Booster<T extends Frame> {
 
 		@Override
 		public void failed(Throwable e, AsynchronousServerSocketChannel server) {
-			throw new CopycatException(e, "The server failed to accept connection.");
+			throw new Panic(e, "The server failed to accept connection.");
 		}
     }
     
-    public void releaseResourcesAndCleanup() throws CopycatException {
+    public void releaseResourcesAndCleanup() throws Panic {
     	try {
 	    	if(channelGroup == null) return;
 	    	if(channelGroup.isShutdown()) return;
 	    	this.channelGroup.shutdown();
 	    	this.executorService.shutdown();
 	    	this.workerExecutorService.shutdown();
-    	}catch(Exception e) {
-    		throw new CopycatException(e, "Failed to release resource while shutdown.");
+	  }catch(Exception e) {
+    		throw new Panic(e, "Failed to release resource while shutdown.");
     	}
     }
     
     private void setServerSocketOptions() throws IOException {
-    	if(context.getRcvBuffer() > 0) {
-    		serverSocketChannel.setOption(StandardSocketOptions.SO_RCVBUF, context.getRcvBuffer());
+    	if(context.rcvBuffer() > 0) {
+    		serverSocketChannel.setOption(StandardSocketOptions.SO_RCVBUF, context.rcvBuffer());
     	}
-    	this.context.setRcvBuffer(serverSocketChannel.getOption(StandardSocketOptions.SO_RCVBUF));
+    	this.context.rcvBuffer(serverSocketChannel.getOption(StandardSocketOptions.SO_RCVBUF));
     	
-    	if(context.isReuseAddr()) { //default: disabled
-    		serverSocketChannel.setOption(StandardSocketOptions.SO_REUSEADDR, context.isReuseAddr());
+    	if(context.addrReuseEnabled()) { //default: disabled
+    		serverSocketChannel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
     	}
-    	if(context.isKeepAlive()) { //default: disabled
-    		serverSocketChannel.setOption(StandardSocketOptions.SO_KEEPALIVE, context.isKeepAlive());
+    	if(context.keepAliveEnabled()) { //default: disabled
+    		serverSocketChannel.setOption(StandardSocketOptions.SO_KEEPALIVE, true);
+    	}
+    }
+    
+    private AsynchronousServerSocketChannel openServerSocket(boolean tlsEnabled, AsynchronousChannelGroup group) throws IOException {
+    	if(!tlsEnabled) {
+    		return AsynchronousServerSocketChannel.open(group);
+    	}else { //TODO Needs an implementation of SSL/TLS
+    		return AsynchronousServerSocketChannel.open(group);
     	}
     }
     
     public Monitor getMonitorObject() {
     	return this.monitor;
+    }
+    
+    @Override
+    public void close() {
+    	releaseResourcesAndCleanup();
     }
 }

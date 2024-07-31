@@ -1,5 +1,7 @@
 package cn.techarts.copycat.ext.mote;
 
+import java.nio.ByteBuffer;
+
 import cn.techarts.copycat.util.BitHelper;
 
 /**
@@ -18,17 +20,17 @@ public class TimingFrame extends MoteFrame {
 	}
 	
 	@Override
-	protected void parse() {
-		super.parse();
+	protected void decode() {
+		super.decode();
 		this.timestamp = BitHelper.toInt(payload);
 	}
 
 	@Override
-	public byte[] encode() {
+	public ByteBuffer encode() {
 		this.timestamp = this.seconds();
-		return serialize0(BitHelper.toBytes(timestamp), TYPE);
+		var buffer = this.serialize0(TYPE, 8);
+		return buffer.appendLong(timestamp).toByteBuffer();
 	}
-	
 	
 	public long getTimestamp() {
 		return timestamp;

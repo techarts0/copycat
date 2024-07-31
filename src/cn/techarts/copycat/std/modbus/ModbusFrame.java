@@ -1,6 +1,8 @@
 package cn.techarts.copycat.std.modbus;
 
-import cn.techarts.copycat.CopycatException;
+import java.nio.ByteBuffer;
+
+import cn.techarts.copycat.Panic;
 import cn.techarts.copycat.core.Frame;
 import cn.techarts.copycat.util.BitHelper;
 
@@ -19,10 +21,10 @@ public class ModbusFrame extends Frame {
 	private short numbers;		//The register numbers read or write
 	
 	@Override
-	protected void parse() {
+	protected void decode() {
 		var tmp = new byte[] {rawdata[2], rawdata[3]};
 		if(BitHelper.toShort(tmp) != 0) {
-			throw new CopycatException("Unsupported protocol.");
+			throw new Panic("Unsupported protocol.");
 		}
 		this.mbap = new MBAP();
 		tmp = new byte[] {rawdata[0], rawdata[1]};
@@ -65,7 +67,7 @@ public class ModbusFrame extends Frame {
 	
 	
 	@Override
-	public byte[] encode() {
+	public ByteBuffer encode() {
 		int tmp = this.payload.length;
 		int len = getFrameLength(tmp);
 		this.rawdata = new byte[len];

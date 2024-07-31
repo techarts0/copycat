@@ -1,5 +1,6 @@
 package cn.techarts.copycat.ext.mote;
 
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
 import cn.techarts.copycat.util.BitHelper;
@@ -44,8 +45,8 @@ public class RegisterFrame extends MoteFrame {
 	}
 	
 	@Override
-	protected void parse() {
-		super.parse();
+	protected void decode() {
+		super.decode();
 		var idx = indexOfDelimiter(payload);
 		if(idx == -1) {
 			throw MoteException.invalidSN();
@@ -57,13 +58,12 @@ public class RegisterFrame extends MoteFrame {
 		setProtocol(payload[idx + 1]); // 1 byte only
 	}
 	
-	public byte[] encode() {
+	public ByteBuffer encode() {
 		var vlen = sn.length + token.length;
-		var data = new byte[vlen + 1]; //
-		System.arraycopy(sn, 0, data, 0, sn.length);
-		System.arraycopy(token, 0, data, sn.length, token.length);
-		data[vlen] = protocol;
-		return this.serialize0(data, TYPE);
+		var buffer = this.serialize0(TYPE, vlen + 1);
+		buffer.append(sn).append(token);
+		buffer.appendByte(protocol);
+		return buffer.toByteBuffer();
 	}
 	
 	public byte[] getToken() {

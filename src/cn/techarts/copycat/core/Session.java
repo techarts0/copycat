@@ -6,12 +6,12 @@ import java.nio.channels.CompletionHandler;
 import java.nio.channels.AsynchronousSocketChannel;
 
 import cn.techarts.copycat.Context;
-import cn.techarts.copycat.CopycatException;
+import cn.techarts.copycat.Panic;
 import cn.techarts.copycat.Monitor;
 import cn.techarts.copycat.util.Utility;
 
 /**
- * A connection wrapper
+ * Manage the TCP connection life-cycle.
  */
 public class Session<T extends Frame> implements Runnable{
 	private Monitor monitor = null;
@@ -24,16 +24,16 @@ public class Session<T extends Frame> implements Runnable{
 	public Session(AsynchronousSocketChannel connection, Context<T> context, Monitor monitor) {
 		this.monitor = monitor;
 		this.connection = connection;
-		this.handler = context.getHandler();
-		this.decoder = context.getDecoder();
-		this.directBuffer = context.isDirectBuffer();
-		this.recvBufferSize = context.getRcvBuffer();
+		this.handler = context.handler();
+		this.decoder = context.decoder();
+		this.recvBufferSize = context.rcvBuffer();
+		this.directBuffer = context.directBufferEnabled();
 		try {
-			if(context.isKeepAlive()) {
+			if(context.keepAliveEnabled()) {
 				connection.setOption(StandardSocketOptions.SO_KEEPALIVE, true);
 			}
 		}catch(IOException e) {
-			throw new CopycatException(e, "Failed to set socket keepalive.");
+			throw new Panic(e, "Failed to set socket keepalive.");
 		}
 		this.monitor.activeConnection(false);	//Active and in second connections
 		this.handler.onOpen(this.connection); 	//Just calls once during a session
@@ -54,7 +54,7 @@ public class Session<T extends Frame> implements Runnable{
 		connection.read(buffer, null, new CompletionHandler<Integer, Void>() {
             @Override
             public void completed(Integer length, Void v) {
-            	if(length == -1) {
+            	if(length == -1) { //Error
             		monitor.activeConnection(true);
             		handler.onClose(connection);
             		Thread.currentThread().interrupt();

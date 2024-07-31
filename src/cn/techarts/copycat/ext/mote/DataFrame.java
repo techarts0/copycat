@@ -1,5 +1,7 @@
 package cn.techarts.copycat.ext.mote;
 
+import java.nio.ByteBuffer;
+
 import cn.techarts.copycat.util.BitHelper;
 
 /**
@@ -35,8 +37,8 @@ public class DataFrame extends MoteFrame {
 		}
 	}
 	
-	protected void parse() {
-		super.parse();
+	protected void decode() {
+		super.decode();
 		var idx = indexOfDelimiter(payload);
 		if(idx == -1) {
 			throw MoteException.invalidSN();
@@ -66,16 +68,13 @@ public class DataFrame extends MoteFrame {
 	}
 
 	@Override
-	public byte[] encode() {
+	public ByteBuffer encode() {
 		var len = timestamp == null ? 0 : timestamp.length;
-		var start = sn.length + len;
-		var data = new byte[start + payload.length];
-		System.arraycopy(sn, 0, data, 0, sn.length);
-		if(len > 0) {
-			System.arraycopy(timestamp, 0, data, sn.length, len);
-		}
-		System.arraycopy(payload, 0, data, start, payload.length);
-		return this.serialize0(data, TYPE);
+		var buffer = serialize0(TYPE, sn.length + len + payload.length);
+		buffer.append(sn);
+		buffer.appendOn(timestamp, len > 0);
+		buffer.append(payload);
+		return buffer.toByteBuffer();
 	}
 	
 	public long getTimestamp() {

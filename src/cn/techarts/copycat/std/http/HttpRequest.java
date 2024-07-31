@@ -1,6 +1,7 @@
 package cn.techarts.copycat.std.http;
 
 import java.util.List;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import cn.techarts.copycat.core.Frame;
 
@@ -33,13 +34,13 @@ public class HttpRequest extends Frame {
 	}
 
 	@Override
-	protected void parse() {
+	protected void decode() {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public byte[] encode() {
+	public ByteBuffer encode() {
 		// TODO Auto-generated method stub
 		return null;
 	}

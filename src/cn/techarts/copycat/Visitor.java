@@ -11,6 +11,7 @@ import cn.techarts.copycat.core.Handler;
 import cn.techarts.copycat.util.Utility;
 
 import java.nio.channels.CompletionHandler;
+import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 
 /**
@@ -19,14 +20,12 @@ import java.nio.channels.AsynchronousSocketChannel;
 public class Visitor<T extends Frame> {
 	private Handler handler = null;
 	private Decoder<T> decoder = null;
-	//private ByteBuf decoderCache = null;
 	private boolean directBuffer = false;
 	private int sockRecvBufferSize = 1024;
 	private InetSocketAddress serverAddr = null;
 	private AsynchronousSocketChannel socketChannel;
     
 	public Visitor(String ip, int port) {
-		//this.decoderCache = new ByteBuf(1024);
         serverAddr = new InetSocketAddress(ip, port);
     }
 	
@@ -38,7 +37,7 @@ public class Visitor<T extends Frame> {
 	
 	public Visitor<T> with(Decoder<T> decoder, Class<T> frameClass){
 		if(decoder == null) {
-			throw new CopycatException("The decoder is required.");
+			throw new Panic("The decoder is required.");
 		}
 		this.decoder = decoder;
 		this.decoder.setFrameClass(frameClass);
@@ -47,7 +46,7 @@ public class Visitor<T extends Frame> {
 	
 	public Visitor<T> with(Handler handler){
 		if(decoder == null) {
-			throw new CopycatException("The handler is required.");
+			throw new Panic("The handler is required.");
 		}
 		this.handler = handler;
 		return this;
@@ -55,10 +54,10 @@ public class Visitor<T extends Frame> {
 	
     public Visitor<T> start() {
     	if(decoder == null || handler == null) {
-    		throw new CopycatException("The decoder and handler are required.");
+    		throw new Panic("The decoder and handler are required.");
     	}
     	if(decoder.getFrameClass() == null) {
-    		throw new CopycatException("The frame class in decoder is required.");
+    		throw new Panic("The frame class in decoder is required.");
     	}
     	
         try {
@@ -68,7 +67,7 @@ public class Visitor<T extends Frame> {
            this.prepare2ReceiveDataFromServerAsync();
            return this;
         } catch (IOException e) {
-            throw new CopycatException(e, "Failed to connect server.");
+            throw new Panic(e, "Failed to connect server.");
         }
     }
     
@@ -81,7 +80,6 @@ public class Visitor<T extends Frame> {
             		handler.onClose(socketChannel);
             	}else {
             		var decoderCache = new ByteBuf(buffer);
-            		//decoderCache.append(buffer);
             		var frames = decoder.decode(decoderCache);
                 	if(frames != null && frames.length > 0) {
                 		for(var f : frames) {
@@ -115,7 +113,7 @@ public class Visitor<T extends Frame> {
     }
     
     /**SYNC*/
-    public int send(byte[] data) {
+    public int send(ByteBuffer data) {
     	return handler.send(data, socketChannel);
     }
     
@@ -130,7 +128,7 @@ public class Visitor<T extends Frame> {
     		handler.onClose(socketChannel);
     	}
     	}catch(IOException e) {
-    		throw new CopycatException(e, "Failed to close the connection.");
+    		throw new Panic(e, "Failed to close the connection.");
     	}    	
     }
 }

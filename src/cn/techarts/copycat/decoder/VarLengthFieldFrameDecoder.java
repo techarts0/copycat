@@ -5,7 +5,7 @@ import cn.techarts.copycat.core.Frame;
 import cn.techarts.copycat.core.ByteBuf;
 import cn.techarts.copycat.core.Decoder;
 import cn.techarts.copycat.util.Utility;
-import cn.techarts.copycat.CopycatException;
+import cn.techarts.copycat.Panic;
 
 /**
  * The protocol is similar to MQTT. If the current byte is great than 
@@ -32,7 +32,7 @@ public class VarLengthFieldFrameDecoder<T extends  Frame> extends Decoder<T> {
 			var pos = offset + data.current();
 			do {
 				if(++prefix > maxHeadLength) {
-					throw new CopycatException("Illegal remaining length.");
+					throw new Panic("Illegal remaining length.");
 				}
 				var b = data.lend(pos);
 				remaining += ((b & 127) << (f += 7));

@@ -1,39 +1,29 @@
 package cn.techarts.copycat.demo;
 
-import java.util.Scanner;
-
 import cn.techarts.copycat.Context;
 import cn.techarts.copycat.Booster;
 import cn.techarts.copycat.decoder.LengthFieldFrameDecoder;
+import cn.techarts.copycat.util.cli.Action;
+import cn.techarts.copycat.util.cli.CLI;
 
 public class Server {
 	public static void main(String[] args){
         var config = new Context<EchoFrame>();
-        config.setPort(10086);
-        config.setMaxThreads(0);
-        config.setRcvBuffer(2048);
+        config.port(10086);
+        config.maxThreads(0);
         config.enableVirtualThread();
-        config.setDecoder(new LengthFieldFrameDecoder<>(2, 1), EchoFrame.class);
-        config.setHandler(new EchoHandler());
-    	var startup = new Booster<>(config);
-    	processCommandLineInstruction();
-    	startup.releaseResourcesAndCleanup();
-	}
-	
-	public static void processCommandLineInstruction() {
-    	try {
-			var scanner = new Scanner(System.in);
-	        while(true) {
-		    	System.out.print("copycat>");
-		    	String command = scanner.nextLine();
-		        if("exit".equals(command)) {
-		        	System.out.print("Goodbye!");
-		        	break;
-		        }
-	        }
-	        scanner.close();
-    	}catch(Exception e) {
-    		e.printStackTrace();
+        config.decoder(new LengthFieldFrameDecoder<>(2, 1), EchoFrame.class);
+        config.handler(new EchoHandler());
+    	try(var startup = new Booster<>(config)){
+    		new CLI(new Command()).start(null, "copycat>");
     	}
-    }
+ 	}
+}
+
+class Command{
+	@Action(name="exit")
+	public void exit(String line) {
+		System.out.println("Goodbye!");
+		System.exit(0);
+	}
 }

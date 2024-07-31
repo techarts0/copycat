@@ -1,11 +1,11 @@
 package cn.techarts.copycat.core;
 
-import cn.techarts.copycat.CopycatException;
+import cn.techarts.copycat.Panic;
 
 /**
  * The decoder runs on SINGLETON mode.
- * Receive the byte stream from network and convert to protocol frame structure.<br>
- * We provide 3 basic protocol frame style(delimiter, fixed-length and length-field).<br>
+ * Receives the byte stream from network and convert to protocol frame structure.<br>
+ * We provide 4 basic protocol frame style(delimiter, fixed-length, length-field and variable-length-field).<br>
  * Mostly, you can use these decoders directly, don't need to implement a decoder.
  */
 public abstract class Decoder<T extends Frame> implements Cloneable{
@@ -14,6 +14,10 @@ public abstract class Decoder<T extends Frame> implements Cloneable{
 	
 	public abstract boolean isSingleton();
 	
+	/**
+	 * Recognize the boundary of frame in the byte stream.<p>
+	 * Please note that it's not same to the {@link Frame.decode}.
+	 */
 	public abstract  T[] decode(ByteBuf data);
 	
 	public Class<T> getFrameClass(){
@@ -31,7 +35,7 @@ public abstract class Decoder<T extends Frame> implements Cloneable{
 		try {
 			return (Decoder<T>)super.clone();
 		}catch(CloneNotSupportedException e) {
-			throw new CopycatException("Failed to create decoder.");
+			throw new Panic("Failed to create decoder.");
 		}
 	}
 }

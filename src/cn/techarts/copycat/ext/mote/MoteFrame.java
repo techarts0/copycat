@@ -1,8 +1,10 @@
 package cn.techarts.copycat.ext.mote;
 
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 
+import cn.techarts.copycat.core.ByteBuf;
 import cn.techarts.copycat.core.Frame;
 import cn.techarts.copycat.util.BitHelper;
 import cn.techarts.copycat.util.StrHelper;
@@ -42,11 +44,11 @@ public class MoteFrame extends Frame {
 	public MoteFrame(byte[] raw, int remaining) {
 		this.rawdata = raw;
 		this.length = remaining;
-		this.parse();
+		this.decode();
 	}
 	
 	@Override
-	protected void parse() {
+	protected void decode() {
 		if(rawdata[0] != FLAG) {
 			throw MoteException.itIsNotMote();
 		}
@@ -56,7 +58,7 @@ public class MoteFrame extends Frame {
 	}
 	
 	@Override
-	public byte[] encode() {
+	public ByteBuffer encode() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -64,15 +66,23 @@ public class MoteFrame extends Frame {
 	/**
 	 * Head + Data
 	 */
-	protected byte[] serialize0(byte[] data, byte type) {
+	protected ByteBuffer serialize0(byte[] data, byte type) {
 		length = data == null ? 0 : data.length;
 		var tmp = BitHelper.toRemainingBytes(length);
-		var varLen = tmp.length;
-		var result = new byte[2 + varLen + length];
-		result[0] = FLAG;
-		result[1] = type;
-		System.arraycopy(tmp, 0, result, 2, varLen);
-		System.arraycopy(data, 0, result, 2 + varLen, length);
+		var buffer = new ByteBuf(2 + tmp.length + length);
+		buffer.appendByte(FLAG);
+		buffer.appendByte(type);
+		buffer.append(tmp);
+		buffer.append(data);
+		return buffer.toByteBuffer();
+	}
+	
+	protected ByteBuf serialize0(byte type, int length) {
+		var tmp = BitHelper.toRemainingBytes(length);
+		var result = new ByteBuf(2 + tmp.length + length);
+		result.appendByte(FLAG);
+		result.appendByte(type);
+		result.append(tmp);
 		return result;
 	}
 	

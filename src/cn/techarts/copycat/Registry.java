@@ -6,8 +6,6 @@ import java.nio.channels.AsynchronousSocketChannel;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import cn.techarts.copycat.util.Utility;
-
 /**
  * It' a useful helper for some special scenarios. For example, 
  * If you want to send instructions to a client actively in an IoT application.
@@ -35,7 +33,7 @@ public class Registry {
 			var address = (InetSocketAddress)client.getRemoteAddress();
 			getClients().put(address.getAddress().getHostAddress(), client);
 		}catch(Exception e) {
-			throw new CopycatException(e, "Failed to get the client IP.");
+			throw new Panic(e, "Failed to get the client IP.");
 		}		
 	}
 	
@@ -47,7 +45,7 @@ public class Registry {
 			if(key == null) return;
 			getClients().put(key, client);
 		}catch(Exception e) {
-			throw new CopycatException(e, "Failed to get the client IP.");
+			throw new Panic(e, "Failed to get the client IP.");
 		}		
 	}
 	
@@ -69,16 +67,12 @@ public class Registry {
 		getClients().clear();
 	}
 	
-	public static int send(byte[] data, Object key) {
-		return Utility.sendData(data, get(key));
-	}
-	
 	public static void close(Object key) {
 		var client = get(key);
 		try {
 			if(client != null) client.close();
 		}catch(IOException e) {
-			throw new CopycatException(e, "Failed to close the client.");
+			throw new Panic(e, "Failed to close the client.");
 		}
 	}
 }

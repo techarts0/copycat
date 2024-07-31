@@ -22,4 +22,12 @@ public class CopycatException extends RuntimeException{
 	public CopycatException(Throwable e, String cause) {
 		super(cause, e);
 	}
+	
+	public static CopycatException nullBuffer() {
+		return new CopycatException("Buffer is null.");
+	}
+	
+	public static CopycatException nullAction() {
+		return new CopycatException("The CLI action is required.");
+	}
 }

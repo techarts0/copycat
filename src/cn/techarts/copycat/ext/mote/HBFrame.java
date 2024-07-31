@@ -1,5 +1,7 @@
 package cn.techarts.copycat.ext.mote;
 
+import java.nio.ByteBuffer;
+
 import cn.techarts.copycat.util.BitHelper;
 
 public class HBFrame extends MoteFrame {
@@ -16,14 +18,14 @@ public class HBFrame extends MoteFrame {
 	}
 	
 	@Override
-	protected void parse() {
-		super.parse();
+	protected void decode() {
+		super.decode();
 		var idx = payload.length - 1;
 		setSn(BitHelper.slice(payload, 0, idx));
 	}
 
 	@Override
-	public byte[] encode() {
+	public ByteBuffer encode() {
 		return this.serialize0(this.sn, TYPE);
 	}
 

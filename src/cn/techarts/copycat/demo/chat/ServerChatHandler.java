@@ -1,5 +1,6 @@
 package cn.techarts.copycat.demo.chat;
 
+import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 
 import cn.techarts.copycat.Registry;
@@ -23,7 +24,7 @@ public class ServerChatHandler implements Handler {
 		}else {
 			var client = Registry.get(t.getReceiver());
 			if(client != null) {
-				send(t.getRawData(), client);
+				send(ByteBuffer.wrap(t.getRawData()), client);
 			}else {
 				var text = t.getReceiver() + " is offline.";
 				send(new ChatFrame(0, t.getReceiver(), text), socket);

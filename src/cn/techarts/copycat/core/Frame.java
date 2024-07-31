@@ -1,8 +1,9 @@
 package cn.techarts.copycat.core;
 
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 
-import cn.techarts.copycat.CopycatException;
+import cn.techarts.copycat.Panic;
 
 /**
  * The protocol frame structure
@@ -17,9 +18,9 @@ public abstract class Frame {
 	public Frame(byte[] raw) {
 		this.rawdata = raw;
 		if(raw == null || raw.length == 0) {
-			throw new CopycatException("Raw data is null.");
+			throw new Panic("Raw data is null.");
 		}
-		this.parse();
+		this.decode();
 	}
 	
 	public int length() {
@@ -36,13 +37,15 @@ public abstract class Frame {
 	
 	/**
 	 * You MUST implement the method to convert bytes to your protocol frame structure.
+	 * <p>
+	 * Please note it's not same to the {@link Decoder.decode}.
 	 */
-	protected abstract void parse();
+	protected abstract void decode();
 	
 	/**
 	 * Serialize the properties (as a byte array) to send to peer.
 	 */
-	public abstract byte[] encode();
+	public abstract ByteBuffer encode();
 	
 	@Override
 	public String toString() {

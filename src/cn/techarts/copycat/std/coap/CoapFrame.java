@@ -1,17 +1,19 @@
 package cn.techarts.copycat.std.coap;
 
+import java.nio.ByteBuffer;
+
 import cn.techarts.copycat.core.Frame;
 
 public class CoapFrame extends Frame {
 
 	@Override
-	protected void parse() {
+	protected void decode() {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public byte[] encode() {
+	public ByteBuffer encode() {
 		// TODO Auto-generated method stub
 		return null;
 	}

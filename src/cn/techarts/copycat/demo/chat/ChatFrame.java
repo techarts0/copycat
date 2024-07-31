@@ -1,12 +1,15 @@
 package cn.techarts.copycat.demo.chat;
 
+import java.nio.ByteBuffer;
+
+import cn.techarts.copycat.core.ByteBuf;
 import cn.techarts.copycat.core.Frame;
 import cn.techarts.copycat.util.BitHelper;
 import cn.techarts.copycat.util.StrHelper;
 
 /**
- * |0x4d 0x4d |  sender | receiver | length  | message |
- * | 2 bytes  | 4 bytes |  4 bytes | 2 bytes | N bytes |
+ * |0x4d 0x4d |  sender | receiver |  TYPE  |  length  | message |
+ * | 2 bytes  | 4 bytes |  4 bytes | 1 byte |  2 bytes | N bytes |
  * 
  * If receiver is 0 and remaining length equals 0, it's a login frame.
  * 
@@ -31,7 +34,7 @@ public class ChatFrame extends Frame {
 	}
 
 	@Override
-	protected void parse() {
+	protected void decode() {
 		this.sender = BitHelper.toInt(new byte[] {rawdata[2], rawdata[3], rawdata[4], rawdata[5]});
 		this.receiver = BitHelper.toInt(new byte[] {rawdata[6], rawdata[7], rawdata[8], rawdata[9]});
 		
@@ -45,32 +48,18 @@ public class ChatFrame extends Frame {
 		this.message = StrHelper.toGBKString(msg);
 	}
 
-	@Override
-	public byte[] encode() {
+	public ByteBuffer encode() {
 		var msgLen = message == null ? 0 : message.length();
-		this.rawdata = new byte[12 + msgLen];
-		rawdata[0] = 0x4d;
-		rawdata[1] = 0x4d;
-		var sender = BitHelper.toBytes(this.sender);
-		rawdata[2] = sender[0];
-		rawdata[3] = sender[1];
-		rawdata[4] = sender[2];
-		rawdata[5] = sender[3];
-		
-		var recver = BitHelper.toBytes(this.receiver);
-		rawdata[6] = recver[0];
-		rawdata[7] = recver[1];
-		rawdata[8] = recver[2];
-		rawdata[9] = recver[3];
-				
-		if(receiver == 0 && msgLen == 0) return rawdata;
-		
-		var msg = message.getBytes();
-		var lenBytes = BitHelper.toBytes((short)msgLen);
-		rawdata[10] = lenBytes[0];
-		rawdata[11] = lenBytes[1];
-		System.arraycopy(msg, 0, rawdata, 12, msgLen);
-		return this.rawdata;
+		var buffer = new ByteBuf(12 + msgLen);
+		buffer.append(new byte[] {0x4d, 0x4d});
+		buffer.appendInt(sender);
+		buffer.appendInt(receiver);
+		if(receiver == 0 && msgLen == 0) {
+			return buffer.appendShort((short)0).toByteBuffer();
+		}
+		buffer.appendShort((short)msgLen);
+		buffer.appendUTF8(message);
+		return buffer.toByteBuffer();
 	}
 
 	public int getSender() {
@@ -104,5 +93,4 @@ public class ChatFrame extends Frame {
 	public void setLoginFrame(boolean loginFrame) {
 		this.loginFrame = loginFrame;
 	}
-
 }

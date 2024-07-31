@@ -10,12 +10,11 @@ import cn.techarts.copycat.ext.mote.MoteFrame;
 public class SmartMeterServer {
 	public static void main(String[] args){
         var config = new Context<MoteFrame>();
-        config.setPort(55530);
-        config.setMaxThreads(0);
-        config.setDirectBuffer(true);
+        config.port(55530);
+        config.maxThreads(0);
         config.enableVirtualThread();
-        config.setDecoder(new MoteDecoder(), MoteFrame.class);
-        config.setHandler(new ServerHandler());
+        config.decoder(new MoteDecoder(), MoteFrame.class);
+        config.handler(new ServerHandler());
     	var startup = new Booster<>(config);
     	processCommandLineInstruction();
     	startup.releaseResourcesAndCleanup();

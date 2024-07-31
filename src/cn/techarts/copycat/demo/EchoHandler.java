@@ -1,5 +1,6 @@
 package cn.techarts.copycat.demo;
 
+import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 
 import cn.techarts.copycat.core.Frame;
@@ -16,7 +17,7 @@ public class EchoHandler implements Handler {
 	public<T extends Frame> void onMessage(T frame, AsynchronousSocketChannel socket) {
 		System.out.println(frame.toString());
 		//Echo
-		this.send(frame.getRawData(), socket);
+		this.send(ByteBuffer.wrap(frame.getRawData()), socket);
 	}
 
 	@Override

@@ -1,5 +1,7 @@
 package cn.techarts.copycat.ext.mote;
 
+import java.nio.ByteBuffer;
+
 import cn.techarts.copycat.util.BitHelper;
 
 public class AlarmFrame extends MoteFrame {
@@ -15,8 +17,8 @@ public class AlarmFrame extends MoteFrame {
 	}
 	
 	@Override
-	protected void parse() {
-		super.parse();
+	protected void decode() {
+		super.decode();
 		var idx = indexOfNul(payload, 0);
 		if(idx == -1) {
 			throw MoteException.invalidSN();
@@ -27,10 +29,11 @@ public class AlarmFrame extends MoteFrame {
 	}
 	
 	@Override
-	public byte[] encode() {
-		var data = new byte[sn.length + payload.length];
-		System.arraycopy(sn, 0, data, 0, sn.length);
-		System.arraycopy(payload, 0, data, sn.length, payload.length);
-		return this.serialize0(data, TYPE);
+	public ByteBuffer encode() {
+		var length = sn.length + payload.length;
+		var buffer = serialize0(TYPE, length);
+		buffer.append(this.sn);
+		buffer.append( this.payload);
+		return buffer.toByteBuffer();
 	}
 }
