@@ -11,6 +11,7 @@ public class Server {
         var config = new Context<EchoFrame>();
         config.setPort(10086);
         config.setMaxThreads(0);
+        config.setRcvBuffer(2048);
         config.enableVirtualThread();
         config.setDecoder(new LengthFieldFrameDecoder<>(2, 1), EchoFrame.class);
         config.setHandler(new EchoHandler());
