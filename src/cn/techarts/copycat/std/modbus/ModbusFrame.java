@@ -37,7 +37,7 @@ public class ModbusFrame extends Frame {
 	/**
 	 * Encode a function code 0x04 MODBUS frame to bytes
 	 */
-	public ByteBuffer readInputRegister(short address, short quantity) {
+	public ByteBuffer readInputRegisters(short address, short quantity) {
 		this.funcode = 0x04;
 		this.address = address;
 		this.quantity = quantity;
@@ -47,7 +47,7 @@ public class ModbusFrame extends Frame {
 	/**
 	 * Encode a function code 0x03 MODBUS frame to bytes
 	 */
-	public ByteBuffer readHoldingRegister(short address, short quantity) {
+	public ByteBuffer readHoldingRegisters(short address, short quantity) {
 		this.funcode = 0x03;
 		this.address = address;
 		this.quantity = quantity;
