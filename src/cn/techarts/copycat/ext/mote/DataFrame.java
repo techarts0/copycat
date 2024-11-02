@@ -1,19 +1,3 @@
-/*
- * Copyright (C) 2024 techarts.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package cn.techarts.copycat.ext.mote;
 
 import java.nio.ByteBuffer;
@@ -22,13 +6,12 @@ import cn.techarts.copycat.util.BitHelper;
 
 /**
  * Upstream. Layout of data field:
- * |   SN   |   NUL  |  TS(Optional)  | SENSORS |
- * |N bytes | 1 byte |  8 bytes       |   TT    |
+ * |   SN   |   NUL  |  TS(Optional)            | SENSORS |
+ * |N bytes | 1 byte |  0 OR 4 OR 8 bytes       |   TT    |
  * 
  * If the TS-Type equals 0, the TS field is ignored.
- * 
- * @author rocwon@gmail.com
  */
+
 public class DataFrame extends MoteFrame {
 	
 	public static final byte TYPE = 0X02;
@@ -48,7 +31,7 @@ public class DataFrame extends MoteFrame {
 	private byte[] generateTimeStamp(Precision p) {
 		if(p == Precision.NUL) return null;
 		if(p == Precision.SEC) {
-			return BitHelper.toBytes(seconds());
+			return BitHelper.toBytes((int)seconds());
 		}else {
 			return BitHelper.toBytes(milliseconds());
 		}
@@ -79,9 +62,9 @@ public class DataFrame extends MoteFrame {
 		}
 		this.setTimestamp(tsBytes); //0, 4, or 8 bytes
 		
-		int offset = tsLength + 1, len = payload.length - idx - offset;
+		int offset = idx + tsLength + 1, len = payload.length - offset;
 		
-		this.payload = BitHelper.slice(this.payload, idx + offset, len);
+		this.payload = BitHelper.slice(this.payload,  offset, len);
 	}
 
 	@Override

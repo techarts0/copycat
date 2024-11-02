@@ -1,23 +1,8 @@
-/*
- * Copyright (C) 2024 techarts.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package cn.techarts.copycat.std.modbus;
 
 import java.nio.ByteBuffer;
-import cn.techarts.copycat.core.ByteBuf;
+
+import cn.techarts.copycat.Panic;
 import cn.techarts.copycat.core.Frame;
 import cn.techarts.copycat.util.BitHelper;
 
@@ -25,125 +10,85 @@ import cn.techarts.copycat.util.BitHelper;
  * An implementation of
  * <a href="https://modbus.org/docs/Modbus_Application_Protocol_V1_1b.pdf">MODBUS</a>
  * <B><I>Transparent Transmission:</I></B> Framework does not care the content bytes.<br>
- * Please translate or set the {@value payload} according to your business.<p>
- * Now it just support function code 1, 2, 3, 4, 5, 0X0F, 0X10.<p>
- *  
- * | Transaction | Protocol | Length | Slave Address | PDU |
- * |     2       |    2     |   2    |       1       |  n  |
- * 
- * @author rocwon@gmail.com
+ * Please translate or set the {@value payload} according to your business.
  */
-public abstract class ModbusFrame extends Frame {
-	protected byte funcode; 		//Function code
-	protected byte exception;		//Exception Code
+public class ModbusFrame extends Frame {
+	private MBAP mbap;			//The TCP fixed header
+	private byte funcode; 		//Function code;
+	private byte error;			//Error Code
+	private byte[] payload;		//The real data
+	private short register;		//The register(or first register) address
+	private short numbers;		//The register numbers read or write
 	
-	protected byte[] payload;		//The real data
-	
-	protected short address;		//The first register address for reading or writing
-	protected short quantity;		//The register numbers read or write
-	
-	
-	public ModbusFrame() {}
-	
-	public ModbusFrame(byte[] rawdata) {
-		this.rawdata = rawdata;
-	}
+	@Override
+	protected void decode() {
+		var tmp = new byte[] {rawdata[2], rawdata[3]};
+		if(BitHelper.toShort(tmp) != 0) {
+			throw new Panic("Unsupported protocol.");
+		}
+		this.mbap = new MBAP();
+		tmp = new byte[] {rawdata[0], rawdata[1]};
+		mbap.setTid(BitHelper.toShort(tmp))
+			.setIdentifier(this.rawdata[6]);
 		
-	/**
-	 * Encode a request with function code 0x04 MODBUS frame to bytes
-	 */
-	public ByteBuffer readInputRegisters(short address, short quantity) {
-		this.funcode = 0x04;
-		this.address = address;
-		this.quantity = quantity;
-		return this.encode();
+		this.setFuncode(this.rawdata[7]);
+		if(isExceptionOccurred()) return;
+		if(this.funcode < 0x05) {
+			this.parseFunction1to4();
+		}else {
+			this.parseFunctionGt4();
+		}
 	}
 	
-	/**
-	 * Encode a function code 0x03 MODBUS frame to bytes
-	 */
-	public ByteBuffer readHoldingRegisters(short address, short quantity) {
-		this.funcode = 0x03;
-		this.address = address;
-		this.quantity = quantity;
-		return this.encode();
-	}
-	
-	/**
-	 * Encode a function code 0x06 MODBUS frame to bytes
-	 */
-	public ByteBuffer writeRegister(short address, short value) {
-		this.funcode = 0x06;
-		this.address = address;
-		this.quantity = value;
-		return this.encode();
-	}
-	
-	/**
-	 * Encode a function code 0x10 MODBUS frame to bytes
-	 */
-	public ByteBuffer writeRegisters(short address, short quantity, byte[] value) {
-		this.funcode = 0x10;
-		this.address = address;
-		this.quantity = quantity;
-		this.payload = value;
-		return this.encode();
-	}
-	
-	
-	protected boolean isExceptionOccurred(int index) {
+	protected boolean isExceptionOccurred() {
 		if(funcode <= 0X80) return false;
-		this.exception = this.rawdata[index];
-		return true; //Error has only 2 bytes
+		this.setError(this.rawdata[8]);
+		return true; //An exception is occurred
 	}
 	
-	//Function Code 1, 2
-	//*N = Quantity of Outputs / 8, if the remainder is different of 0 ⇒ N = N+1
-	protected void decodeFunctionCode1And2() {
-		this.payload = new byte[rawdata.length - 9];
-		System.arraycopy(rawdata, 9, payload, 0, payload.length);
-	}
-	
-	//Function Code 3, 4
-	//N* x 2 Bytes (*N = Quantity of Registers)
-	protected void decodeFunctionCode3And4() {
-		this.payload = new byte[this.rawdata[8]];
-		System.arraycopy(rawdata, 9, payload, 0, payload.length);
+	//Function Code(01, 02, 03, 04)
+	private void parseFunction1to4() {
+		var len = rawdata[8];
+		this.payload = new byte[len];
+		System.arraycopy(rawdata, 9, payload, 0, len);
 	}
 			
 	//Function Code(05, 06, 15, 16)
-	protected void decodeFunctionCode56F10() {
+	private void parseFunctionGt4() {
 		var tmp = new byte[] {rawdata[8], rawdata[9]};
-		this.setAddress(BitHelper.toShort(tmp));
+		this.setRegister(BitHelper.toShort(tmp));
 		payload = new byte[] {rawdata[10], rawdata[11]};
 	}
 	
 	
-	protected abstract int getRequestFrameLength();
-		
-	protected void encodeFunctionCode1To6(ByteBuf buffer) {
-		buffer.appendByte(funcode);
-		buffer.appendShort(address);
-		buffer.appendShort(quantity);
+	private int getFrameLength(int len) {
+		return (funcode < 0X0F) ? 12 : (13 + len);
 	}
 	
-	protected void encodeFunctionCode0F(ByteBuf buffer) {
-		buffer.appendByte(funcode);
-		buffer.appendShort(address);
-		buffer.appendShort(quantity);
-		var len = this.payload.length;
-		buffer.appendByte((byte)len);
-		buffer.append(this.payload);
+	
+	@Override
+	public ByteBuffer encode() {
+		int tmp = this.payload.length;
+		int len = getFrameLength(tmp);
+		this.rawdata = new byte[len];
+		//this.data[0] = 
+		//this.data[1] =
+		this.rawdata[2] = 0x00;
+		this.rawdata[3] = 0x00;
+		this.rawdata[4] = 0x00;
+		this.rawdata[5] = 0x00;
+		//this.data[6] = slave;
+		this.rawdata[7] = funcode;
+		
+		
+		if(funcode < 0X0F) {
+			
+		}else { //15, 16
+			
+		}
+		return null;
 	}
 	
-	protected void encodeFunctionCode10(ByteBuf buffer) {
-		buffer.appendByte(funcode);
-		buffer.appendShort(address);
-		buffer.appendShort(quantity);
-		buffer.appendByte((byte)(quantity << 1));
-		buffer.append(this.payload);
-	}
-		
 	public byte getFuncode() {
 		return funcode;
 	}
@@ -153,44 +98,30 @@ public abstract class ModbusFrame extends Frame {
 	}
 
 	public byte getError() {
-		return funcode <= 0X80 ? 0 : funcode;
+		return error;
 	}
 	
 	public boolean isAnErrorFrame() {
-		return this.funcode > 0X80;
-	}	
-
-	/**Quantity or value in request*/
-	public short getQuantity() {
-		return quantity;
-	}
-	
-	public short getValue() {
-		return quantity;
+		return error > 0;
 	}
 
-	/**Quantity or value in request*/
-	public void setQuantity(short numbers) {
-		this.quantity = numbers;
-	}
-	
-	public void setValue(short value) {
-		this.quantity = value;
+	public void setError(byte error) {
+		this.error = error;
 	}
 
-	public byte getException() {
-		return exception;
+	public short getRegister() {
+		return register;
 	}
 
-	public void setException(byte exception) {
-		this.exception = exception;
+	public void setRegister(short register) {
+		this.register = register;
 	}
 
-	public short getAddress() {
-		return address;
+	public short getNumbers() {
+		return numbers;
 	}
 
-	public void setAddress(short address) {
-		this.address = address;
+	public void setNumbers(short numbers) {
+		this.numbers = numbers;
 	}
 }

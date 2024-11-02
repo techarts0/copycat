@@ -40,7 +40,8 @@ public class MeterHandler implements Handler {
 		if(frame instanceof HBFrame) {
 			System.out.println(">> Server is online.");
 		}else if(frame instanceof TimingFrame) {
-			System.out.println("Received UTC time-stamp from server.");
+			var f = (TimingFrame)frame;
+			System.out.println("Received UTC time-stamp from server: " + f.getSeconds());
 		}else if(frame instanceof ControlFrame) {
 			System.out.println("Received an control instruction from server.");
 		}else if(frame instanceof StatusFrame) {

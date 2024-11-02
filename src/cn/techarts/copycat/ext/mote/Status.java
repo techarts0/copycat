@@ -1,40 +1,22 @@
-/*
- * Copyright (C) 2024 techarts.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package cn.techarts.copycat.ext.mote;
 
-/**
- * @author rocwon@gmail.com
- */
+
 public enum Status {
-	OK(0X00),
-	FAILED(0X81), //129
-	RESEND(0X82); //130
+	OK((byte)0X00),
+	FAILED((byte)0X81), //129
+	RESEND((byte)0X82); //130
 	
-	private int status;
+	private byte status;
 	
-	Status(int status){
+	Status(byte status){
 		this.setStatus(status);
 	}
 
-	public int getStatus() {
+	public byte getStatus() {
 		return status;
 	}
 
-	public void setStatus(int status) {
+	public void setStatus(byte status) {
 		this.status = status;
 	}
 }

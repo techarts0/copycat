@@ -8,7 +8,9 @@ import cn.techarts.copycat.core.Handler;
 import cn.techarts.copycat.ext.mote.DataFrame;
 import cn.techarts.copycat.ext.mote.HBFrame;
 import cn.techarts.copycat.ext.mote.RegisterFrame;
+import cn.techarts.copycat.ext.mote.Status;
 import cn.techarts.copycat.ext.mote.StatusFrame;
+import cn.techarts.copycat.ext.mote.TimingFrame;
 import cn.techarts.copycat.util.BitHelper;
 
 public class ServerHandler implements Handler {
@@ -43,7 +45,11 @@ public class ServerHandler implements Handler {
 			var f = (RegisterFrame)frame;
 			Registry.put(f.getSn(), socket);
 			System.out.println(f.getSn() + " registered sucessfully.");
-			this.send(new StatusFrame(f.getSn(), (byte)0).encode(), socket);
+			if(f.getPrecision() != 0) {
+				this.send(new TimingFrame(f.getPrecision()).encode(), socket);
+			}else {
+				this.send(new StatusFrame(f.getSn(), Status.OK).encode(), socket);
+			}
 		}else if(frame instanceof HBFrame) {
 			var f = (HBFrame)frame;
 			System.out.println(f.getSn() + " is online.");
@@ -52,7 +58,7 @@ public class ServerHandler implements Handler {
 			var f = (DataFrame)frame;
 			var data = BitHelper.toInt(f.getPayload());
 			System.out.println(">> " + f.getSn() + "(KW/H): " + data);
-			this.send(new StatusFrame(f.getSn(), (byte)0).encode(), socket);
+			this.send(new StatusFrame(f.getSn(), Status.OK).encode(), socket);
 		}else if(frame instanceof StatusFrame) {
 			var f = (StatusFrame)frame;
 			System.out.println("Received response " + f.getSn());

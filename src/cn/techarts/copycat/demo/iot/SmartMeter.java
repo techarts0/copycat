@@ -22,13 +22,13 @@ public class SmartMeter implements Runnable{
 		var client = new Visitor<MoteFrame>("localhost", 55530);
 		client.with(new MoteDecoder(), MoteFrame.class);
     	client.with(new MeterHandler()).start();
-		client.send(new RegisterFrame(sn, "123456").encode());
+		client.send(new RegisterFrame(sn, "123456", Precision.SEC).encode());
 		client.send(new HBFrame(sn).encode());
 		var degree = 0;
 		var random = new Random();
     	while(true) {
     		var data = BitHelper.toBytes(degree++);
-    		client.send(new DataFrame(sn, data, Precision.NUL).encode());
+    		client.send(new DataFrame(sn, data, Precision.MS).encode());
     		try {
     			Thread.sleep((random.nextInt(5) + 1) * 1000);
     		}catch(Exception e) {

@@ -1,31 +1,14 @@
-/*
- * Copyright (C) 2024 techarts.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package cn.techarts.copycat.util;
 
 import java.nio.ByteBuffer;
 import java.lang.reflect.Array;
 import java.nio.channels.AsynchronousSocketChannel;
+
 import cn.techarts.copycat.Panic;
 import cn.techarts.copycat.core.Frame;
 
 /**
  * An internal utility class that contains series helper methods.
- * 
- * @author rocwon@gmail.com
  */
 public class Utility {
 	
@@ -92,24 +75,4 @@ public class Utility {
 			return ByteBuffer.allocateDirect(capacity);
 		}
 	}
-	
-	/**
-	 * @return CRC16 checksum of the given bytes.
-	 */
-	public static byte[] CRC16(byte[] bytes) {
-		int POLYNOMIAL = 0x0000a001;
-		int result = 0x0000ffff, len = bytes.length;
-        for (int i = 0; i < len; i++) {
-        	result ^= ((int) bytes[i] & 0x000000ff);
-            for (int j = 0; j < 8; j++) {
-                if ((result & 0x00000001) != 0) {
-                	result >>= 1;
-            		result ^= POLYNOMIAL;
-                } else {
-                	result >>= 1;
-                }
-            }
-        }
-        return BitHelper.toBytesLE((short)result);
-    }
 }

@@ -1,19 +1,3 @@
-/*
- * Copyright (C) 2024 techarts.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package cn.techarts.copycat.ext.mote;
 
 import java.nio.ByteBuffer;
@@ -28,7 +12,7 @@ import cn.techarts.copycat.util.StrHelper;
 /**
  * A customized protocol for general IoT application.<br>
  * If you don't want to design your own protocol, mote is your best choice.<br> 
- * Trust me, it fullfills your requirement in most scenarios.
+ * Trust me, it fulfills your requirement in most scenarios.
  * <p>Frame Structure:</p>
  * 
  * |   Flag  | Type   |  Remaining Length  | Data  |
@@ -41,7 +25,7 @@ import cn.techarts.copycat.util.StrHelper;
  *  Generally, the device SN is stuffed in the head of data field and ended with 
  *  a specific ASCII char NUL(or 0X04, 0X08). All upstream packets contain a device SN 
  *  and down-stream packets without it.
- * @author rocwon@gmail.com
+ * 
  */
 public class MoteFrame extends Frame {
 	public static final char NUL = 0X00;	// NUL
