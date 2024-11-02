@@ -38,15 +38,15 @@ public class MeterHandler implements Handler {
 	@Override
 	public <T extends Frame> void onMessage(T frame, AsynchronousSocketChannel socket) {
 		if(frame instanceof HBFrame) {
-			System.out.println(">> Server is online.");
+			System.out.println("## Received heart-beating.");
 		}else if(frame instanceof TimingFrame) {
 			var f = (TimingFrame)frame;
-			System.out.println("Received UTC time-stamp from server: " + f.getSeconds());
+			System.out.println("** Received UTC timestamp: " + f.getSeconds());
 		}else if(frame instanceof ControlFrame) {
-			System.out.println("Received an control instruction from server.");
+			System.out.println(">> Received a control command.");
 		}else if(frame instanceof StatusFrame) {
 			var sf = (StatusFrame)frame;
-			System.out.println(sf.getSn() + " upload data successfully.");
+			System.out.println("$$ " + sf.getSn() + " uploaded data to server.");
 		}else {
 			System.out.println("The frame type is unsupported.");
 		}

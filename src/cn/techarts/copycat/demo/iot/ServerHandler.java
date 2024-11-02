@@ -52,16 +52,16 @@ public class ServerHandler implements Handler {
 			}
 		}else if(frame instanceof HBFrame) {
 			var f = (HBFrame)frame;
-			System.out.println(f.getSn() + " is online.");
+			System.out.println("## " + f.getSn() + " is online.");
 			this.send(new HBFrame(f.getSn()).encode(), socket);
 		}else if(frame instanceof DataFrame) {
 			var f = (DataFrame)frame;
 			var data = BitHelper.toInt(f.getPayload());
-			System.out.println(">> " + f.getSn() + "(KW/H): " + data);
+			System.out.println(">> " + f.getSn() + " current reading(kw/h): " + data);
 			this.send(new StatusFrame(f.getSn(), Status.OK).encode(), socket);
 		}else if(frame instanceof StatusFrame) {
 			var f = (StatusFrame)frame;
-			System.out.println("Received response " + f.getSn());
+			System.out.println("Received response from" + f.getSn());
 		}else {
 			System.out.println("The frame type is unsupported.");
 		}

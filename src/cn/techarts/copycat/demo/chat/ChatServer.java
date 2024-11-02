@@ -14,10 +14,10 @@ public class ChatServer {
         config.enableVirtualThread();
         config.decoder(new LengthFieldFrameDecoder<ChatFrame>(10, 2), ChatFrame.class);
         config.handler(new ServerChatHandler());
-    	var startup = new Booster<>(config);
-    	processCommandLineInstruction();
-    	startup.releaseResourcesAndCleanup();
-	}
+    	try(var startup = new Booster<>(config)){
+    		processCommandLineInstruction();
+    	}
+   }
 	
 	public static void processCommandLineInstruction() {
     	try {

@@ -82,7 +82,10 @@ public class Booster<T extends Frame> implements AutoCloseable{
 		}
     }
     
-    public void releaseResourcesAndCleanup() throws Panic {
+    /**
+     * @see close
+     */
+    private void releaseResourcesAndCleanup() throws Panic {
     	try {
 	    	if(channelGroup == null) return;
 	    	if(channelGroup.isShutdown()) return;

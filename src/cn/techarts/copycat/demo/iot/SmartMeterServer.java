@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 import cn.techarts.copycat.Booster;
 import cn.techarts.copycat.Context;
+import cn.techarts.copycat.Panic;
 import cn.techarts.copycat.ext.mote.MoteDecoder;
 import cn.techarts.copycat.ext.mote.MoteFrame;
 
@@ -15,16 +16,18 @@ public class SmartMeterServer {
         config.enableVirtualThread();
         config.decoder(new MoteDecoder(), MoteFrame.class);
         config.handler(new ServerHandler());
-    	var startup = new Booster<>(config);
-    	processCommandLineInstruction();
-    	startup.releaseResourcesAndCleanup();
+    	try (var startup = new Booster<>(config)) {
+			processCommandLineInstruction();
+		} catch (Panic e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public static void processCommandLineInstruction() {
     	try {
 			var scanner = new Scanner(System.in);
 	        while(true) {
-		    	System.out.println("------IoT Server is Running------");
+		    	System.out.println("------Smart Meter Gateway is Running------");
 		    	String command = scanner.nextLine();
 		        if("exit".equals(command)) {
 		        	System.out.print("Goodbye!");

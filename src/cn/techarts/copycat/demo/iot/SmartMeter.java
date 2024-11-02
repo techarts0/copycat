@@ -24,7 +24,7 @@ public class SmartMeter implements Runnable{
     	client.with(new MeterHandler()).start();
 		client.send(new RegisterFrame(sn, "123456", Precision.SEC).encode());
 		client.send(new HBFrame(sn).encode());
-		var degree = 0;
+		var degree = 1;
 		var random = new Random();
     	while(true) {
     		var data = BitHelper.toBytes(degree++);
@@ -38,14 +38,13 @@ public class SmartMeter implements Runnable{
 	}
 
 	public static void main(String[] args) {
-		System.out.println("Please tell me the number of meters:");
+		System.out.print("How many meters:");
 		var scanner = new Scanner(System.in);
 		int n = scanner.nextInt();
 		scanner.close();
 		for(int i = 0; i < n; i++) {
-			var sn = "Meter-00" + (i + 1);
+			var sn = "Meter-0" + (i + 1);
 			new Thread(new SmartMeter(sn)).start();
 		}
-	
 	}
 }
