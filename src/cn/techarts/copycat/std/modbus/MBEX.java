@@ -1,18 +1,35 @@
+/*
+ * Copyright (C) 2024 techarts.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package cn.techarts.copycat.std.modbus;
 
 /**
- * MODBUS Exception Codes
+ * MODBUS Exception Codes (SLAVE = SERVER)
+ * @author rocwon@gmail.com
  */
 public enum MBEX {
 	ILLEGAL_FUNCTION(1),
 	ILLEGAL_DATA_ADDRESS(2),
 	ILLEGAL_DATA_VALUE(3),
 	SLAVE_DEVICE_FAILURE(4),
-	ACKNOWLEDGE(5),
+	SLAVE_ACKNOWLEDGE(5),
 	SLAVE_DEVICE_BUSY(6),
 	MEMORY_PARITY_ERROR(7),
-	GATEWAY_PATH_UNAVAILABLE(0x0a),
-	GATEWAY_TARGET_DEVICE_FAILED_TO_RESPOND(0x0b);
+	GATEWAY_INVALID_PATH(0x0a),
+	GATEWAY_NO_RESPONDING(0x0b);
 
 	private int code;
 	
