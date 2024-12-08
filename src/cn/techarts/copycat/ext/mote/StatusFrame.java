@@ -43,7 +43,7 @@ public class StatusFrame extends MoteFrame {
 		super.decode();
 		var idx = indexOfDelimiter(payload);
 		if(idx != -1) {
-			setSn(BitHelper.slice(payload, 0, idx));
+			sn = BitHelper.slice(payload, 0, idx);
 		}
 		setStatus(payload[idx + 1]);
 	}

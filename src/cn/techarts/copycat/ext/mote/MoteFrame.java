@@ -77,7 +77,7 @@ public class MoteFrame extends Frame {
 	
 	@Override
 	public ByteBuffer encode() {
-		// TODO Auto-generated method stub
+		// Implemented in sub-classes.
 		return null;
 	}
 	
@@ -154,18 +154,17 @@ public class MoteFrame extends Frame {
 		}
 		return -1;
 	}
-
-	public void setSn(byte[] sn) {
-		this.sn = sn;
-	}
 	
 	/**
-	 * With the end delimiter char '0'
+	 * With the end delimiter char 0/4/8
 	 * */
 	public void setSn(String sn, char endChar) {
-		if(sn == null || sn.isEmpty()) return;
-		var tmp = new StringBuilder(sn).append(endChar);
-		this.sn = tmp.toString().getBytes(StandardCharsets.US_ASCII);
+		if(sn == null || sn.isEmpty()) {
+			this.sn = new byte[] {(byte)endChar};
+		}else {
+			var tmp = new StringBuilder(sn).append(endChar);
+			this.sn = tmp.toString().getBytes(StandardCharsets.US_ASCII);	
+		}
 	}
 	
 	/**

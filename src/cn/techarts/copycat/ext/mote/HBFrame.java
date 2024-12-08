@@ -40,7 +40,7 @@ public class HBFrame extends MoteFrame {
 	protected void decode() {
 		super.decode();
 		var idx = payload.length - 1;
-		setSn(BitHelper.slice(payload, 0, idx));
+		sn = BitHelper.slice(payload, 0, idx);
 	}
 
 	@Override

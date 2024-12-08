@@ -58,10 +58,9 @@ public class DataFrame extends MoteFrame {
 	protected void decode() {
 		super.decode();
 		var idx = indexOfDelimiter(payload);
-		if(idx == -1) {
-			throw MoteException.invalidSN();
-		}
-		this.setSn(BitHelper.slice(payload, 0, idx));
+		if(idx == -1) return; //Without SN and TS
+		
+		sn = BitHelper.slice(payload, 0, idx);
 		
 		byte[] tsBytes = null; // Next n bytes of TIMESTAMP
 		byte tsLength = payload[idx]; //Time-Stamp-Length

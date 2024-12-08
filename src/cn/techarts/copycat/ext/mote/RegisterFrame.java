@@ -97,6 +97,7 @@ public class RegisterFrame extends MoteFrame {
 		setPrecision(payload[idx2 + 2]); // 1 byte only
 	}
 	
+	@Override
 	public ByteBuffer encode() {
 		var vlen = sn.length + token.length;
 		var buffer = serialize0(TYPE, vlen + 2);

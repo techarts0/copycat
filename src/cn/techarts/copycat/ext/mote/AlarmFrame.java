@@ -43,7 +43,7 @@ public class AlarmFrame extends MoteFrame {
 			throw MoteException.invalidSN();
 		}
 		var len = payload.length - idx - 1;
-		this.setSn(BitHelper.slice(payload, 0, idx));
+		this.sn = BitHelper.slice(payload, 0, idx);
 		payload = BitHelper.slice(payload, idx + 1, len);
 	}
 	
